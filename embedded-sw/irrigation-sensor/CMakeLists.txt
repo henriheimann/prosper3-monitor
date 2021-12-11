@@ -29,6 +29,10 @@ set(CMAKE_C_STANDARD 11)
 add_compile_options(-mcpu=cortex-m4 -mthumb -mthumb-interwork)
 add_compile_options(-ffunction-sections -fdata-sections -fno-common -fmessage-length=0)
 
+add_definitions("-DTTN_KEYS_DEVICE_ADDRESS=$ENV{TTN_KEYS_DEVICE_ADDRESS}")
+add_definitions("-DTTN_KEYS_APPLICATION_SESSION_KEY=$ENV{TTN_KEYS_APPLICATION_SESSION_KEY}")
+add_definitions("-DTTN_KEYS_NETWORK_SESSION_KEY=$ENV{TTN_KEYS_NETWORK_SESSION_KEY}")
+
 # uncomment to mitigate c++17 absolute addresses warnings
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-register")
 
@@ -46,11 +50,11 @@ else ()
     add_compile_options(-Og -g)
 endif ()
 
-include_directories(Core/Inc Drivers/STM32L4xx_HAL_Driver/Inc Drivers/STM32L4xx_HAL_Driver/Inc/Legacy Drivers/CMSIS/Device/ST/STM32L4xx/Include Drivers/CMSIS/Include)
+include_directories(Core/Inc Drivers/STM32L4xx_HAL_Driver/Inc Drivers/STM32L4xx_HAL_Driver/Inc/Legacy Drivers/CMSIS/Device/ST/STM32L4xx/Include Drivers/CMSIS/Include Drivers/Components Application)
 
 add_definitions(-DDEBUG -DUSE_HAL_DRIVER -DSTM32L422xx)
 
-file(GLOB_RECURSE SOURCES "Core/*.*" "Drivers/*.*")
+file(GLOB_RECURSE SOURCES "Core/*.*" "Drivers/*.*" "Application/*.*")
 
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32L422KBTX_FLASH.ld)
 
@@ -59,6 +63,12 @@ add_link_options(-mcpu=cortex-m4 -mthumb -mthumb-interwork)
 add_link_options(-T ${LINKER_SCRIPT})
 
 add_executable(${PROJECT_NAME}.elf ${SOURCES} ${LINKER_SCRIPT})
+
+add_subdirectory("Components/eeprom")
+target_link_libraries(${PROJECT_NAME}.elf stm32-hal-eeprom)
+
+add_subdirectory("Components/rfm95")
+target_link_libraries(${PROJECT_NAME}.elf stm32-hal-rfm95)
 
 set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)
 set(BIN_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.bin)

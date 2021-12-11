@@ -1,0 +1,6 @@
+[submodule "embedded-sw/irrigation-sensor/Components/rfm95"]
+	path = embedded-sw/irrigation-sensor/Components/rfm95
+	url = https://henriheimann@github.com/henriheimann/stm32-hal-rfm95
+[submodule "embedded-sw/irrigation-sensor/Components/eeprom"]
+	path = embedded-sw/irrigation-sensor/Components/eeprom
+	url = https://henriheimann@github.com/henriheimann/stm32-hal-eeprom.git

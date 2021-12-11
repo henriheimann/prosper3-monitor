@@ -1,4 +1,4 @@
 .DS_Store
-hardware/**/gerbers/
-hardware/**/*-bak
-hardware/**/fp-info-cache
+
+.idea/
+.iml
