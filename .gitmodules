@@ -4,3 +4,15 @@
 [submodule "embedded-sw/irrigation-sensor/Components/eeprom"]
 	path = embedded-sw/irrigation-sensor/Components/eeprom
 	url = https://henriheimann@github.com/henriheimann/stm32-hal-eeprom.git
+[submodule "embedded-sw/climate-sensor/Components/rfm95"]
+	path = embedded-sw/climate-sensor/Components/rfm95
+	url = https://henriheimann@github.com/henriheimann/stm32-hal-rfm95
+[submodule "embedded-sw/climate-sensor/Components/sht3x"]
+	path = embedded-sw/climate-sensor/Components/sht3x
+	url = https://henriheimann@github.com/henriheimann/stm32-hal-sht3x.git
+[submodule "embedded-sw/climate-sensor/Components/eeprom"]
+	path = embedded-sw/climate-sensor/Components/eeprom
+	url = https://henriheimann@github.com/henriheimann/stm32-hal-eeprom.git
+[submodule "embedded-sw/climate-sensor/Components/mlx90614"]
+	path = embedded-sw/climate-sensor/Components/mlx90614
+	url = https://henriheimann@github.com/henriheimann/stm32-hal-mlx90614.git

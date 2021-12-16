@@ -1,0 +1,58 @@
+{
+  "end_device_ids": {
+    "device_id": "{{device_id}}",
+    "application_ids": {
+      "application_id": "{{application_id}}"
+    },
+    "dev_eui": "70B3D57ED0049FA1",
+    "dev_addr": "260BEF32"
+  },
+  "correlation_ids": [
+    "as:up:01FPZA3QQQ1WJ8TQVCFF8RS786",
+    "gs:conn:01FPZ8WMD6AG3N8GZVZ64E630S",
+    "gs:up:host:01FPZ8WMDKE2PR3H7MKXVKD75C",
+    "gs:uplink:01FPZA3QH4TB3Y0P6NR5RNMA20",
+    "ns:uplink:01FPZA3QH5QC70BY58GEXZMZH5",
+    "rpc:/ttn.lorawan.v3.GsNs/HandleUplink:01FPZA3QH55066AX07XD9YGX2J",
+    "rpc:/ttn.lorawan.v3.NsAs/HandleUplink:01FPZA3QQPK0R8S8TQH0TJR3GK"
+  ],
+  "received_at": "2021-12-15T15:06:59.192962283Z",
+  "uplink_message": {
+    "f_port": 1,
+    "f_cnt": 3,
+    "frm_payload": "{{payload_base64}}",
+    "rx_metadata": [
+      {
+        "gateway_ids": {
+          "gateway_id": "my-ttig-0001",
+          "eui": "58A0CBFFFE802B70"
+        },
+        "time": "2021-12-15T15:06:58.910156965Z",
+        "timestamp": 1279931523,
+        "rssi": -31,
+        "channel_rssi": -31,
+        "snr": 9.75,
+        "uplink_token": "ChoKGAoMbXktdHRpZy0wMDAxEghYoMv//oArcBCD6ajiBBoMCJKJ6I0GELq0ntMDILi/9I6gJSoMCJKJ6I0GEKXJ/7ED"
+      }
+    ],
+    "settings": {
+      "data_rate": {
+        "lora": {
+          "bandwidth": 125000,
+          "spreading_factor": 7
+        }
+      },
+      "coding_rate": "4/5",
+      "frequency": "868100000",
+      "timestamp": 1279931523,
+      "time": "2021-12-15T15:06:58.910156965Z"
+    },
+    "received_at": "2021-12-15T15:06:58.981750783Z",
+    "consumed_airtime": "0.061696s",
+    "network_ids": {
+      "net_id": "000013",
+      "tenant_id": "ttn",
+      "cluster_id": "ttn-eu1"
+    }
+  }
+}

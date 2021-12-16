@@ -59,6 +59,8 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define VIN_SENSE_Pin GPIO_PIN_0
 #define VIN_SENSE_GPIO_Port GPIOA
+#define RFM_DIO5_Pin GPIO_PIN_2
+#define RFM_DIO5_GPIO_Port GPIOA
 #define RFM95_NRST_Pin GPIO_PIN_3
 #define RFM95_NRST_GPIO_Port GPIOA
 #define RFM95_NSS_Pin GPIO_PIN_4

@@ -1,0 +1,14 @@
+apiVersion: 1
+
+datasources:
+  - name: InfluxDB
+    type: influxdb
+    access: proxy
+    url: http://uem-influxdb:8086
+    secureJsonData:
+      token: admin-token
+    jsonData:
+      version: Flux
+      organization: uem-org
+      defaultBucket: uem-bucket
+      tlsSkipVerify: true
