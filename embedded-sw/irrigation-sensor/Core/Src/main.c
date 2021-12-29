@@ -19,8 +19,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
-#include "aes.h"
 #include "i2c.h"
+#include "rtc.h"
 #include "spi.h"
 #include "tsc.h"
 #include "gpio.h"
@@ -84,7 +84,12 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+  // Check and handle if the system was resumed from StandBy mode
+  if(__HAL_PWR_GET_FLAG(PWR_FLAG_SB) != RESET)
+  {
+    // Clear Standby flag
+    __HAL_PWR_CLEAR_FLAG(PWR_FLAG_SB);
+  }
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -93,10 +98,32 @@ int main(void)
   MX_I2C1_Init();
   MX_SPI1_Init();
   MX_TSC_Init();
-  MX_AES_Init();
+  MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 
   application_main();
+
+  HAL_PWREx_EnableGPIOPullDown(PWR_GPIO_A, PWR_GPIO_BIT_7); // MOSI
+  HAL_PWREx_EnableGPIOPullDown(PWR_GPIO_A, PWR_GPIO_BIT_5); // SCK
+  HAL_PWREx_EnableGPIOPullUp(PWR_GPIO_A, PWR_GPIO_BIT_3); // NRST
+  HAL_PWREx_EnableGPIOPullDown(PWR_GPIO_A, PWR_GPIO_BIT_4); // NSS
+  HAL_PWREx_EnablePullUpPullDownConfig();
+  HAL_PWREx_DisableSRAM2ContentRetention();
+  HAL_PWREx_EnableBORPVD_ULP();
+
+  // Disable all used wakeup sources
+  HAL_RTCEx_DeactivateWakeUpTimer(&hrtc);
+
+  // Clear all related wakeup flags
+  __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
+
+  // Setting the Wake up time 1s * 0x0E10 = 1h
+  // 10min = 0x0258
+  // 10 sec = 0x000a
+  HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 0x0258, RTC_WAKEUPCLOCK_CK_SPRE_16BITS, 0);
+
+  // Enter the Standby mode
+  HAL_PWR_EnterSTANDBYMode();
 
   /* USER CODE END 2 */
 
@@ -129,10 +156,11 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_MSI;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.MSIState = RCC_MSI_ON;
   RCC_OscInitStruct.MSICalibrationValue = 0;
-  RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6;
+  RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_10;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -147,7 +175,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
   {
     Error_Handler();
   }

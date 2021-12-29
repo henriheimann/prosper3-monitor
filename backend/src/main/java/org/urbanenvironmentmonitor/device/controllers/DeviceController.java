@@ -2,9 +2,9 @@ package org.urbanenvironmentmonitor.device.controllers;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.urbanenvironmentmonitor.device.controllers.dtos.CreateDeviceRequest;
-import org.urbanenvironmentmonitor.device.controllers.dtos.DeviceResponse;
-import org.urbanenvironmentmonitor.device.controllers.dtos.UpdateDeviceRequest;
+import org.urbanenvironmentmonitor.device.dtos.CreateDeviceRequest;
+import org.urbanenvironmentmonitor.device.dtos.DeviceResponse;
+import org.urbanenvironmentmonitor.device.dtos.UpdateDeviceRequest;
 import org.urbanenvironmentmonitor.device.services.DeviceService;
 import org.urbanenvironmentmonitor.live.LiveMeasurementService;
 import reactor.core.publisher.Flux;
@@ -26,30 +26,26 @@ public class DeviceController
 	@PostMapping("")
 	private Mono<DeviceResponse> createDevice(@RequestBody CreateDeviceRequest createDeviceRequest)
 	{
-		return deviceService.createDevice(createDeviceRequest.getName())
-				.map(DeviceResponse::new);
+		return deviceService.createDevice(createDeviceRequest.getName());
 	}
 
 	@GetMapping("")
 	private Flux<DeviceResponse> getDevices()
 	{
-		return deviceService.getDevices()
-				.map(DeviceResponse::new);
+		return deviceService.getDevices();
 	}
 
 	@GetMapping("/{id}")
 	private Mono<DeviceResponse> getDevice(@PathVariable long id)
 	{
-		return deviceService.getDevice(id)
-				.map(DeviceResponse::new);
+		return deviceService.getDevice(id);
 	}
 
 	@PutMapping("/{id}")
 	private Mono<DeviceResponse> updateDevice(@PathVariable long id,
 	                                          @RequestBody UpdateDeviceRequest updateDeviceRequest)
 	{
-		return deviceService.updateDevice(id, updateDeviceRequest)
-				.map(DeviceResponse::new);
+		return deviceService.updateDevice(id, updateDeviceRequest);
 	}
 
 	@DeleteMapping("/{id}")

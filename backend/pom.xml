@@ -35,9 +35,8 @@
         </dependency>
         <dependency>
             <groupId>com.playtika.reactivefeign</groupId>
-            <artifactId>feign-reactor-spring-cloud-starter</artifactId>
+            <artifactId>feign-reactor-webclient</artifactId>
             <version>3.1.5</version>
-            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>io.r2dbc</groupId>
@@ -82,6 +81,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-jre8</artifactId>
+            <version>2.32.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

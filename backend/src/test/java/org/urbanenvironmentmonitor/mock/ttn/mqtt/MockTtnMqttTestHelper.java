@@ -4,17 +4,19 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.flywaydb.core.internal.util.FileCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.nio.charset.Charset;
 import java.util.Base64;
 
-@Service
-public class MockTtnMqttService
+@Component
+public class MockTtnMqttTestHelper
 {
 	@Autowired
+	@Qualifier("mockTtnMqttClient")
 	private MqttClient mockTtnMqttClient;
 
 	@Value("classpath:ttn/mqtt/uplink_message_template.json")

@@ -1,14 +1,17 @@
 package org.urbanenvironmentmonitor.device.entities;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Setter
 @Getter
+@ToString
+@EqualsAndHashCode
 @Table("devices")
-public class Device
+public class DeviceEntity
 {
 	@Id
 	private Long id;
@@ -16,4 +19,9 @@ public class Device
 	private String name;
 
 	private String ttnId;
+
+	public DeviceEntity(String name)
+	{
+		this.name = name;
+	}
 }

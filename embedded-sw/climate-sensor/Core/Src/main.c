@@ -83,7 +83,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  // Check and handle if the system was resumed from StandBy mode */
+  // Check and handle if the system was resumed from StandBy mode
   if(__HAL_PWR_GET_FLAG(PWR_FLAG_SB) != RESET)
   {
   	// Clear Standby flag
