@@ -1,0 +1,103 @@
+version: "2"
+
+services:
+  uem-reverse-proxy:
+    image: nginx:latest
+    container_name: uem-reverse-proxy
+    depends_on:
+      - uem-grafana
+      - uem-backend
+      - uem-frontend
+    ports:
+      - "80:80"
+    volumes:
+      - ./config/nginx/templates:/etc/nginx/templates
+    env_file:
+      - .env
+    networks:
+      - uem-backend-net
+    restart: unless-stopped
+
+  uem-backend:
+    image: uem-backend
+    container_name: uem-backend
+    depends_on:
+      - uem-influxdb
+      - uem-postgres
+    env_file:
+      - .env
+    networks:
+      - uem-backend-net
+    restart: unless-stopped
+
+  uem-frontend:
+    image: uem-frontend
+    container_name: uem-frontend
+    depends_on:
+      - uem-backend
+    env_file:
+      - .env
+    networks:
+      - uem-backend-net
+    restart: unless-stopped
+
+  uem-postgres:
+    image: postgres:14.1
+    container_name: uem-postgres
+    volumes:
+      - ./volumes/postgres/data:/var/lib/postgresql/data
+    env_file:
+      .env
+    networks:
+      - uem-backend-net
+    restart: unless-stopped
+
+  uem-influxdb:
+    image: influxdb:2.1
+    container_name: uem-influxdb
+    volumes:
+      - ./volumes/influxdb/data:/var/lib/influxdb2
+      - ./volumes/influxdb/config:/etc/influxdb2
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: "${INFLUXDB_USER}"
+      DOCKER_INFLUXDB_INIT_PASSWORD: "${INFLUXDB_PASSWORD}"
+      DOCKER_INFLUXDB_INIT_ORG: "${INFLUXDB_ORG}"
+      DOCKER_INFLUXDB_INIT_BUCKET: "${INFLUXDB_BUCKET}"
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: "${INFLUXDB_TOKEN}"
+    networks:
+      - uem-backend-net
+    restart: unless-stopped
+
+  uem-telegraf:
+    image: telegraf:1.20
+    container_name: uem-telegraf
+    depends_on:
+      - uem-influxdb
+      - uem-test-mosquitto
+    volumes:
+      - ./config/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+    env_file:
+      - .env
+    networks:
+      - uem-backend-net
+    restart: unless-stopped
+
+  uem-grafana:
+    image: grafana/grafana-oss:8.3.2
+    container_name: uem-grafana
+    volumes:
+      - ./volumes/grafana/data:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - uem-backend-net
+    env_file:
+      - .env
+    environment:
+      - GF_SERVER_DOMAIN=localhost:3000
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+    restart: unless-stopped
+
+networks:
+  uem-backend-net:

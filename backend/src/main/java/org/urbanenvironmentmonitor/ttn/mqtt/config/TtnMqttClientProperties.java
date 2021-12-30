@@ -11,4 +11,6 @@ public class TtnMqttClientProperties
 {
 	private String url;
 	private String clientId;
+	private String username;
+	private String password;
 }
