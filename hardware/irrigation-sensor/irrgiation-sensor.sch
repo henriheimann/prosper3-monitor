@@ -437,7 +437,7 @@ U 1 1 61798444
 P 6300 5600
 F 0 "BT1" H 6408 5646 50  0000 L CNN
 F 1 "Keystone-2462" H 6408 5555 50  0000 L CNN
-F 2 "my-footprints-library:BatteryHolder_Keystone_2462_2xAA_NoSilkscreen" V 6300 5660 50  0001 C CNN
+F 2 "my-footprints-library:BatteryHolder_Keystone_2468_2xAAA_NoSilkscreen" V 6300 5660 50  0001 C CNN
 F 3 "~" V 6300 5660 50  0001 C CNN
 F 4 "2462" H 6300 5600 50  0001 C CNN "#manf"
 F 5 "36-2468-ND" H 6300 5600 50  0001 C CNN "digikey#"
@@ -541,7 +541,6 @@ Wire Wire Line
 Wire Wire Line
 	3050 5400 4800 5400
 NoConn ~ 3150 4800
-NoConn ~ 3150 4900
 NoConn ~ 3150 5200
 NoConn ~ 3150 5300
 Wire Wire Line
@@ -591,7 +590,7 @@ F 6 "223-RFM95W-868S2" H 2650 5150 50  0001 C CNN "mouser#"
 	1    0    0    -1  
 $EndComp
 Text GLabel 3150 5000 2    50   Input ~ 0
-RFM95_IRQ
+RFM95_DIO0
 Wire Wire Line
 	1550 5400 2250 5400
 Text GLabel 1550 5400 0    50   Input ~ 0
@@ -728,8 +727,8 @@ Text GLabel 8800 5100 1    50   Input ~ 0
 VIN_SENSE
 Wire Wire Line
 	4800 5400 4800 5750
-Text GLabel 4700 9450 0    50   Input ~ 0
-RFM95_IRQ
+Text GLabel 4700 9350 0    50   Input ~ 0
+RFM95_DIO0
 Text GLabel 5900 8650 2    50   Input ~ 0
 RFM95_DIO5
 Text GLabel 6300 8450 2    50   Input ~ 0
@@ -768,8 +767,6 @@ Text GLabel 5900 8750 2    50   Input ~ 0
 RFM95_NRST
 Text GLabel 5900 8850 2    50   Input ~ 0
 RFM95_NSS
-Wire Wire Line
-	5800 8450 5900 8450
 $Comp
 L power:PWR_FLAG #FLG0101
 U 1 1 6179851A
@@ -1152,7 +1149,6 @@ Wire Wire Line
 	1800 4300 1800 4450
 NoConn ~ 5900 9550
 NoConn ~ 5900 9650
-NoConn ~ 4700 9350
 $Comp
 L Device:R R5
 U 1 1 61798605
@@ -1316,20 +1312,9 @@ U 1 1 617106E7
 P 12700 4850
 F 0 "H1" H 12800 4896 50  0000 L CNN
 F 1 "MountingHole" H 12800 4805 50  0000 L CNN
-F 2 "MountingHole:MountingHole_3.2mm_M3" H 12700 4850 50  0001 C CNN
+F 2 "MountingHole:MountingHole_2.2mm_M2" H 12700 4850 50  0001 C CNN
 F 3 "~" H 12700 4850 50  0001 C CNN
 	1    12700 4850
-	1    0    0    -1  
-$EndComp
-$Comp
-L Mechanical:MountingHole H2
-U 1 1 61711343
-P 12700 5100
-F 0 "H2" H 12800 5146 50  0000 L CNN
-F 1 "MountingHole" H 12800 5055 50  0000 L CNN
-F 2 "MountingHole:MountingHole_3.2mm_M3" H 12700 5100 50  0001 C CNN
-F 3 "~" H 12700 5100 50  0001 C CNN
-	1    12700 5100
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1338,7 +1323,7 @@ U 1 1 61718E29
 P 12700 5350
 F 0 "H3" H 12800 5396 50  0000 L CNN
 F 1 "MountingHole" H 12800 5305 50  0000 L CNN
-F 2 "MountingHole:MountingHole_3.2mm_M3" H 12700 5350 50  0001 C CNN
+F 2 "MountingHole:MountingHole_2.2mm_M2" H 12700 5350 50  0001 C CNN
 F 3 "~" H 12700 5350 50  0001 C CNN
 	1    12700 5350
 	1    0    0    -1  
@@ -1349,7 +1334,7 @@ Text GLabel 4700 9750 0    50   Input ~ 0
 TSC_IO2
 Text GLabel 4700 9650 0    50   Input ~ 0
 TSC_IO1
-Text GLabel 5600 1850 0    50   Input ~ 0
+Text GLabel 5600 2000 0    50   Input ~ 0
 TSC_IO1
 $Comp
 L power:GND #PWR0133
@@ -1398,7 +1383,7 @@ Wire Wire Line
 	5900 2000 5900 2100
 Wire Wire Line
 	5900 2400 5900 2600
-Text GLabel 5600 2000 0    50   Input ~ 0
+Text GLabel 5600 1850 0    50   Input ~ 0
 TSC_IO2
 Text GLabel 6300 1850 2    50   Input ~ 0
 SENSOR_PLANE
@@ -1406,4 +1391,21 @@ Wire Wire Line
 	6050 1850 6300 1850
 Wire Wire Line
 	8000 5200 8800 5200
+Text GLabel 3150 4900 2    50   Input ~ 0
+RFM95_DIO1
+Wire Wire Line
+	5900 8450 5800 8450
+Text GLabel 4700 9450 0    50   Input ~ 0
+RFM95_DIO1
+$Comp
+L Mechanical:MountingHole H2
+U 1 1 61E00267
+P 12700 5100
+F 0 "H2" H 12800 5146 50  0000 L CNN
+F 1 "MountingHole" H 12800 5055 50  0000 L CNN
+F 2 "MountingHole:MountingHole_2.2mm_M2" H 12700 5100 50  0001 C CNN
+F 3 "~" H 12700 5100 50  0001 C CNN
+	1    12700 5100
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

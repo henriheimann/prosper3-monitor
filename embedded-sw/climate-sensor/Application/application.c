@@ -1,4 +1,5 @@
 #include "application.h"
+#include "data_packet.h"
 
 #include <stdio.h>
 #include <i2c.h>
@@ -157,14 +158,6 @@ static float read_photo_diode_current()
 	return photo_diode_current;
 }
 
-typedef struct {
-	int16_t temperature;
-	uint16_t humidity;
-	int16_t ir_temperature;
-	uint32_t brightness_current;
-	uint8_t battery_voltage;
-} __packed data_packet_t;
-
 void application_main()
 {
 	float input_voltage;
@@ -215,6 +208,7 @@ void application_main()
 	}
 
 	data_packet_t data_packet = {0};
+	data_packet.type = CLIMATE_SENSOR;
 
 	if (sht3x_success) {
 		data_packet.temperature = (int16_t)roundf(sht3x_temperature * 100);
