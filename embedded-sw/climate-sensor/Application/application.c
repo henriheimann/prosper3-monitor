@@ -1,7 +1,6 @@
 #include "application.h"
 #include "data_packet.h"
 
-#include <stdio.h>
 #include <i2c.h>
 #include <spi.h>
 #include <adc.h>
@@ -54,10 +53,12 @@ eeprom_handle_t eeprom_handle = {
 		.page_size = EEPROM_24LC32A_PAGE_SIZE
 };
 
+#ifdef CLIMATE_SENSOR_INCLUDE_MLX90614
 mlx90614_handle_t mlx90614_handle = {
 		.i2c_handle = &hi2c1,
 		.device_address = MLX90614_DEFAULT_ADDRESS
 };
+#endif
 
 static bool reload_frame_counter(uint16_t *tx_counter, uint16_t *rx_counter)
 {
@@ -166,8 +167,10 @@ void application_main()
 	bool sht3x_success = false;
 	float sht3x_temperature, sht3x_humidity;
 
+#ifdef CLIMATE_SENSOR_INCLUDE_MLX90614
 	bool mlx90614_success = false;
 	float  mlx90614_object_temperature, mlx90614_ambient_temperature;
+#endif
 
 	HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
 	input_voltage = read_input_voltage();
@@ -181,31 +184,35 @@ void application_main()
 	HAL_GPIO_WritePin(I2C_ENABLE_GPIO_Port, I2C_ENABLE_Pin, GPIO_PIN_RESET);
 	HAL_Delay(1);
 
-	rfm95_init(&rfm95_handle);
-
 	// Take photo diode measurements, this takes some time. I2C devices can boot in the meantime.
 	photo_diode_current = read_photo_diode_current();
 
 	// SHT3x requires only 1ms to be ready
 	uint32_t elapsed_ticks = HAL_GetTick() - i2c_enable_tick;
 	if (elapsed_ticks == 0) {
-		HAL_Delay(1);
+		HAL_Delay(1 - elapsed_ticks);
 	}
 
 	if (sht3x_init(&sht3x_handle) && sht3x_read_temperature_and_humidity(&sht3x_handle, &sht3x_temperature, &sht3x_humidity)) {
 		sht3x_success = true;
 	}
 
-	// MLX90614 required around 250ms to be ready
+#ifdef CLIMATE_SENSOR_INCLUDE_MLX90614
+	// MLX90614 required around 300ms to be ready
 	elapsed_ticks = HAL_GetTick() - i2c_enable_tick;
 	if (elapsed_ticks < 300) {
 		HAL_Delay(300 - elapsed_ticks);
 	}
 
+	mlx90614_configure_emissivity(&mlx90614_handle, 0.95f);
+
 	if (mlx90614_read_object_temperature(&mlx90614_handle, &mlx90614_object_temperature) &&
-		mlx90614_read_ambient_temperature(&mlx90614_handle, &mlx90614_ambient_temperature)) {
+	        mlx90614_read_ambient_temperature(&mlx90614_handle, &mlx90614_ambient_temperature)) {
 		mlx90614_success = true;
 	}
+
+	mlx90614_sleep(&mlx90614_handle);
+#endif
 
 	data_packet_t data_packet = {0};
 	data_packet.type = CLIMATE_SENSOR;
@@ -218,14 +225,20 @@ void application_main()
 		data_packet.humidity = INT16_MAX;
 	}
 
+#ifdef CLIMATE_SENSOR_INCLUDE_MLX90614
 	if (mlx90614_success) {
 		data_packet.ir_temperature = (int16_t)roundf(mlx90614_object_temperature * 100);
 	} else {
 		data_packet.ir_temperature = INT16_MAX;
 	}
+#else
+	data_packet.ir_temperature = INT16_MAX;
+#endif
 
 	data_packet.brightness_current = (uint32_t)photo_diode_current;
 	data_packet.battery_voltage = (uint8_t)roundf(input_voltage * 10);
+
+	rfm95_init(&rfm95_handle);
 
 	rfm95_send_data(&rfm95_handle, (uint8_t*)(&data_packet), sizeof(data_packet));
 

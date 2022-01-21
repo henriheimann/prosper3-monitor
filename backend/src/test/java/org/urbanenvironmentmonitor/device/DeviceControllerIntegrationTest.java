@@ -1,4 +1,4 @@
-package org.urbanenvironmentmonitor.device.controllers;
+package org.urbanenvironmentmonitor.device;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

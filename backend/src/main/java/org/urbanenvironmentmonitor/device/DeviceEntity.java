@@ -1,4 +1,4 @@
-package org.urbanenvironmentmonitor.device.entities;
+package org.urbanenvironmentmonitor.device;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;

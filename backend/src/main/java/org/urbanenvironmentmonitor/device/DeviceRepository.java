@@ -1,7 +1,6 @@
-package org.urbanenvironmentmonitor.device.repositories;
+package org.urbanenvironmentmonitor.device;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
-import org.urbanenvironmentmonitor.device.entities.DeviceEntity;
 
 public interface DeviceRepository extends ReactiveCrudRepository<DeviceEntity, Long>
 {

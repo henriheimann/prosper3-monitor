@@ -23,7 +23,7 @@
 #define TTN_KEYS_NETWORK_SESSION_KEY {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 #endif
 
-#define FRAME_COUNTER_MAGIC_UPPER_BYTE 0x99
+#define FRAME_COUNTER_MAGIC_UPPER_BYTE 0x11
 #define FRAME_COUNTER_MAGIC_LOWER_BYTE 0x99
 
 static bool reload_frame_counter(uint16_t *tx_counter, uint16_t *rx_counter);
@@ -150,27 +150,43 @@ static uint32_t tsc_read_value()
 
 void application_main()
 {
-	HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
-	float input_voltage = adc_read_input_voltage();
+	// Turn on I2C Bus and wait for EEPROM to be ready
+	HAL_GPIO_WritePin(I2C_ENABLE_GPIO_Port, I2C_ENABLE_Pin, GPIO_PIN_RESET);
+	HAL_Delay(10);
 
-	if (input_voltage < 2.0f) {
-		return;
+	// RFM95 module draws a lot of power so immediately init and put it to sleep after power up
+	rfm95_init(&rfm95_handle);
+
+	while (true) {
+		uint32_t moisture_counter = tsc_read_value();
+		HAL_Delay(1000 + moisture_counter / 5);
 	}
+
+	// Input voltage is only accurate after 1s?
+	/*uint32_t tick = HAL_GetTick();
+	if (tick < 1000) {
+		HAL_Delay(1000 - tick);
+	}
+
+	HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
 
 	float temperature = adc_read_internal_temperature();
 	uint32_t moisture_counter = tsc_read_value();
 
-	data_packet_t data_packet = {0};
+	float input_voltage = adc_read_input_voltage();
+
+	// Immediately return if input voltage is too low
+	if (input_voltage < 2.0f) {
+		return;
+	}
+
+	data_packet_t data_packet = { 0 };
 	data_packet.type = IRRIGATION_SENSOR;
 	data_packet.battery_voltage = (uint8_t)roundf(input_voltage * 10);
 	data_packet.temperature = (int16_t)roundf(temperature * 100);
 	data_packet.moisture_counter = moisture_counter;
 
-	HAL_GPIO_WritePin(I2C_ENABLE_GPIO_Port, I2C_ENABLE_Pin, GPIO_PIN_RESET);
-	HAL_Delay(1);
-
-	rfm95_init(&rfm95_handle);
-	rfm95_send_data(&rfm95_handle, (uint8_t*)(&data_packet), sizeof(data_packet));
+	rfm95_send_data(&rfm95_handle, (uint8_t*)(&data_packet), 8);*/
 
 	HAL_GPIO_WritePin(I2C_ENABLE_GPIO_Port, I2C_ENABLE_Pin, GPIO_PIN_SET);
 }

@@ -74,7 +74,6 @@ services:
     container_name: uem-telegraf
     depends_on:
       - uem-influxdb
-      - uem-test-mosquitto
     volumes:
       - ./config/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
     env_file:

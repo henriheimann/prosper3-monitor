@@ -29,6 +29,8 @@ set(CMAKE_C_STANDARD 11)
 add_compile_options(-mcpu=cortex-m4 -mthumb -mthumb-interwork)
 add_compile_options(-ffunction-sections -fdata-sections -fno-common -fmessage-length=0)
 
+option(CLIMATE_SENSOR_INCLUDE_MLX90614 "Option to signal that the hardware contains the MLX90614 IR temperature sensor" ON)
+
 if(DEFINED ENV{TTN_KEYS_DEVICE_ADDRESS})
     add_definitions("-DTTN_KEYS_DEVICE_ADDRESS=$ENV{TTN_KEYS_DEVICE_ADDRESS}")
 endif()
@@ -37,6 +39,9 @@ if(DEFINED ENV{TTN_KEYS_APPLICATION_SESSION_KEY})
 endif()
 if(DEFINED ENV{TTN_KEYS_NETWORK_SESSION_KEY})
     add_definitions("-DTTN_KEYS_NETWORK_SESSION_KEY=$ENV{TTN_KEYS_NETWORK_SESSION_KEY}")
+endif()
+if(CLIMATE_SENSOR_INCLUDE_MLX90614)
+    add_definitions("-DCLIMATE_SENSOR_INCLUDE_MLX90614")
 endif()
 
 # uncomment to mitigate c++17 absolute addresses warnings

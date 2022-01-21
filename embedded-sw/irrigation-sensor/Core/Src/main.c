@@ -117,10 +117,12 @@ int main(void)
   // Clear all related wakeup flags
   __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
 
-  // Setting the Wake up time 1s * 0x0E10 = 1h
+  // Setting the Wake up time 1s *
+  // 1h = 0x0E10
   // 10min = 0x0258
   // 10 sec = 0x000a
   // 60 sec = 0x003c
+
   HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 0x0258, RTC_WAKEUPCLOCK_CK_SPRE_16BITS, 0);
 
   // Enter the Standby mode

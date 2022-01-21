@@ -1,4 +1,4 @@
-package org.urbanenvironmentmonitor.influxdb.services;
+package org.urbanenvironmentmonitor.influxdb;
 
 import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.query.FluxRecord;

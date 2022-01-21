@@ -1,11 +1,9 @@
-package org.urbanenvironmentmonitor.device.services;
+package org.urbanenvironmentmonitor.device;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.urbanenvironmentmonitor.device.dtos.*;
-import org.urbanenvironmentmonitor.device.entities.DeviceEntity;
-import org.urbanenvironmentmonitor.device.repositories.DeviceRepository;
 import org.urbanenvironmentmonitor.ttn.TtnService;
 import org.urbanenvironmentmonitor.ttn.exception.TtnApiNotFoundException;
 import reactor.core.publisher.Flux;
@@ -27,9 +25,9 @@ public class DeviceService
 	}
 
 	@Transactional
-	public Mono<DeviceResponse> createDevice(String name)
+	public Mono<DeviceResponse> createDevice(CreateDeviceRequest createDeviceRequest)
 	{
-		return deviceRepository.save(new DeviceEntity(name))
+		return deviceRepository.save(new DeviceEntity(createDeviceRequest.getName()))
 				.zipWith(ttnService.createEndDevice()
 						.map(Optional::of)
 						.doOnError(e -> log.warn("Unable to create TTN end device", e))
@@ -65,6 +63,7 @@ public class DeviceService
 				});
 	}
 
+	@Transactional
 	public Mono<DeviceResponse> getDevice(long id)
 	{
 		return deviceRepository.findById(id)
@@ -92,12 +91,14 @@ public class DeviceService
 				});
 	}
 
+	@Transactional
 	public Flux<DeviceResponse> getDevices()
 	{
 		return deviceRepository.findAll()
 				.map(deviceEntity -> new DeviceResponse(deviceEntity.getId(), deviceEntity.getName()));
 	}
 
+	@Transactional
 	public Mono<DeviceResponse> updateDevice(long id, UpdateDeviceRequest updateDeviceRequest)
 	{
 		return deviceRepository.findById(id)
@@ -108,6 +109,7 @@ public class DeviceService
 				.map(deviceEntity -> new DeviceResponse(deviceEntity.getId(), deviceEntity.getName()));
 	}
 
+	@Transactional
 	public Mono<Void> deleteDevice(long id)
 	{
 		return deviceRepository.findById(id)

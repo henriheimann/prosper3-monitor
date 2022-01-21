@@ -1,7 +1,7 @@
 package org.urbanenvironmentmonitor.testdata;
 
 import lombok.experimental.UtilityClass;
-import org.urbanenvironmentmonitor.device.entities.DeviceEntity;
+import org.urbanenvironmentmonitor.device.DeviceEntity;
 
 @UtilityClass
 public class TestDeviceEntities

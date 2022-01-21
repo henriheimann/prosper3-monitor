@@ -1,14 +1,12 @@
-package org.urbanenvironmentmonitor.device.services;
+package org.urbanenvironmentmonitor.device;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import org.urbanenvironmentmonitor.device.dtos.DeviceResponse;
-import org.urbanenvironmentmonitor.device.dtos.TtnDeviceResponse;
-import org.urbanenvironmentmonitor.device.dtos.TtnSyncResponse;
-import org.urbanenvironmentmonitor.device.dtos.TtnSyncState;
-import org.urbanenvironmentmonitor.device.entities.DeviceEntity;
-import org.urbanenvironmentmonitor.device.repositories.DeviceRepository;
+import org.urbanenvironmentmonitor.device.DeviceService;
+import org.urbanenvironmentmonitor.device.dtos.*;
+import org.urbanenvironmentmonitor.device.DeviceEntity;
+import org.urbanenvironmentmonitor.device.DeviceRepository;
 import org.urbanenvironmentmonitor.testdata.TestDeviceEntities;
 import org.urbanenvironmentmonitor.testdata.TestEndDevices;
 import org.urbanenvironmentmonitor.testdata.TestWebClientResponseException;
@@ -53,7 +51,7 @@ class DeviceServiceTest
 				LocalDateTime.of(2021, 1, 1, 12, 43), LocalDateTime.of(2021, 2, 5, 19, 22));
 		when(ttnServiceMock.createEndDevice()).thenReturn(Mono.just(endDevice));
 
-		Mono<DeviceResponse> response = deviceService.createDevice("name");
+		Mono<DeviceResponse> response = deviceService.createDevice(new CreateDeviceRequest("name"));
 
 		StepVerifier.create(response)
 				.expectNext(new DeviceResponse(1L, "name", new TtnSyncResponse(TtnSyncState.VALID,
@@ -76,7 +74,7 @@ class DeviceServiceTest
 		Exception exception = new RuntimeException("Any error");
 		when(ttnServiceMock.createEndDevice()).thenReturn(Mono.error(exception));
 
-		Mono<DeviceResponse> response = deviceService.createDevice("name");
+		Mono<DeviceResponse> response = deviceService.createDevice(new CreateDeviceRequest("name"));
 
 		StepVerifier.create(response)
 				.expectNext(new DeviceResponse(1L, "name", new TtnSyncResponse(TtnSyncState.NO_ASSOCIATION, null)))

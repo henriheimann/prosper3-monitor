@@ -1,14 +1,16 @@
-package org.urbanenvironmentmonitor.device.controllers;
+package org.urbanenvironmentmonitor.device;
 
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.urbanenvironmentmonitor.device.dtos.CreateDeviceRequest;
 import org.urbanenvironmentmonitor.device.dtos.DeviceResponse;
 import org.urbanenvironmentmonitor.device.dtos.UpdateDeviceRequest;
-import org.urbanenvironmentmonitor.device.services.DeviceService;
 import org.urbanenvironmentmonitor.live.LiveMeasurementService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/devices")
@@ -24,38 +26,39 @@ public class DeviceController
 	}
 
 	@PostMapping("")
-	private Mono<DeviceResponse> createDevice(@RequestBody CreateDeviceRequest createDeviceRequest)
+	public Mono<DeviceResponse> createDevice(@Valid @RequestBody CreateDeviceRequest createDeviceRequest)
 	{
-		return deviceService.createDevice(createDeviceRequest.getName());
+		return deviceService.createDevice(createDeviceRequest);
 	}
 
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("")
-	private Flux<DeviceResponse> getDevices()
+	public Flux<DeviceResponse> getDevices()
 	{
 		return deviceService.getDevices();
 	}
 
 	@GetMapping("/{id}")
-	private Mono<DeviceResponse> getDevice(@PathVariable long id)
+	public Mono<DeviceResponse> getDevice(@PathVariable long id)
 	{
 		return deviceService.getDevice(id);
 	}
 
 	@PutMapping("/{id}")
-	private Mono<DeviceResponse> updateDevice(@PathVariable long id,
+	public Mono<DeviceResponse> updateDevice(@PathVariable long id,
 	                                          @RequestBody UpdateDeviceRequest updateDeviceRequest)
 	{
 		return deviceService.updateDevice(id, updateDeviceRequest);
 	}
 
 	@DeleteMapping("/{id}")
-	private Mono<Void> deleteDevice(@PathVariable long id)
+	public Mono<Void> deleteDevice(@PathVariable long id)
 	{
 		return deviceService.deleteDevice(id);
 	}
 
 	@GetMapping(value = "/{id}/live-measurements", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-	private Flux<String> getDeviceLiveMeasurements(@PathVariable String id)
+	public Flux<String> getDeviceLiveMeasurements(@PathVariable String id)
 	{
 		return measurementService.getMeasurements();
 	}
