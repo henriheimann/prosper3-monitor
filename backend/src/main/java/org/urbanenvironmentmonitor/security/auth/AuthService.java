@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.urbanenvironmentmonitor.security.auth.dtos.LoginRequest;
 import org.urbanenvironmentmonitor.security.auth.dtos.LoginResponse;
-import org.urbanenvironmentmonitor.security.auth.dtos.LogoutRequest;
 import org.urbanenvironmentmonitor.security.auth.exceptions.InvalidCredentialsException;
 import org.urbanenvironmentmonitor.user.UserService;
 import reactor.core.publisher.Mono;

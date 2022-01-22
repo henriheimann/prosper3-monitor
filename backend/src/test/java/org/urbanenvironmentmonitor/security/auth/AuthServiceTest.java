@@ -3,7 +3,6 @@ package org.urbanenvironmentmonitor.security.auth;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.urbanenvironmentmonitor.device.dtos.*;
 import org.urbanenvironmentmonitor.security.auth.dtos.LoginRequest;
 import org.urbanenvironmentmonitor.security.auth.dtos.LoginResponse;
 import org.urbanenvironmentmonitor.security.auth.exceptions.InvalidCredentialsException;
@@ -11,8 +10,6 @@ import org.urbanenvironmentmonitor.user.UserEntity;
 import org.urbanenvironmentmonitor.user.UserService;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
