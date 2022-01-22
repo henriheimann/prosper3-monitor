@@ -77,6 +77,31 @@ public abstract class AbstractIntegrationTest
 		return uriSpec.exchange();
 	}
 
+	protected WebTestClient.ResponseSpec delete(String uri, String token)
+	{
+		var uriSpec = client.delete().uri(uri);
+
+		if (token != null) {
+			uriSpec = uriSpec.header("Authorization", "Bearer " + token);
+		}
+
+		return uriSpec.exchange();
+	}
+
+	protected WebTestClient.ResponseSpec put(String uri, String token, String body)
+	{
+		var uriSpec = client.put().uri(uri)
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(body);
+
+		if (token != null) {
+			uriSpec = uriSpec.header("Authorization", "Bearer " + token);
+		}
+
+		return uriSpec.exchange();
+	}
+
 	protected String getToken(String username, String password)
 	{
 		String cachedToken = tokenCache.get(username);

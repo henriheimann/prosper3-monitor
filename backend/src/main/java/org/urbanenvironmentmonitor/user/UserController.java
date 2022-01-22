@@ -22,32 +22,35 @@ public class UserController
 		this.userService = userService;
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("")
 	public Flux<UserResponse> getAllUsers()
 	{
 		return userService.getAllUsers();
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("")
 	public Mono<UserResponse> createUser(@Valid @RequestBody CreateUserRequest createUserRequest)
 	{
 		return userService.createUser(createUserRequest);
 	}
 
+	@PreAuthorize("hasRole('ADMIN') || #username == authentication.name")
 	@GetMapping("/{username}")
 	public Mono<UserResponse> getUser(@PathVariable String username)
 	{
 		return userService.getUser(username);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{username}")
 	public Mono<Void> deleteUser(@PathVariable String username)
 	{
 		return userService.deleteUser(username);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{username}")
 	public Mono<UserResponse> updateUser(@PathVariable String username,
 	                                     @Valid @RequestBody UpdateUserRequest updateUserRequest)
@@ -55,6 +58,7 @@ public class UserController
 		return userService.updateUser(username, updateUserRequest);
 	}
 
+	@PreAuthorize("#username == authentication.name")
 	@PutMapping("/{username}/password")
 	public Mono<Void> updateUserPassword(@PathVariable String username,
 	                                     @Valid @RequestBody UpdateUserPasswordRequest updateUserPasswordRequest)

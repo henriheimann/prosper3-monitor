@@ -64,6 +64,12 @@ public class SharedControllerAdvice
 		return createSingleErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "internal_server_error", null, locale);
 	}
 
+	@ExceptionHandler({ResourceNotFoundException.class})
+	public ResponseEntity<ErrorResponse> exceptionHandler(ResourceNotFoundException e, Locale locale)
+	{
+		return createSingleErrorResponse(HttpStatus.NOT_FOUND, "not_found", null, locale);
+	}
+
 	@ExceptionHandler({InvalidCredentialsException.class})
 	public ResponseEntity<ErrorResponse> invalidCredentialsExceptionHandler(Exception e, Locale locale)
 	{
