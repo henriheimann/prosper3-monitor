@@ -31,7 +31,6 @@ public class DeviceController
 		return deviceService.createDevice(createDeviceRequest);
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("")
 	public Flux<DeviceResponse> getDevices()
 	{

@@ -45,7 +45,6 @@ public abstract class AbstractIntegrationTest
 		tokenRepository.deleteAll()
 				.then(Mono.zip(userRepository.deleteAll(), deviceRepository.deleteAll()))
 				.then(startupService.setupStartupUsers())
-				.doOnError((e) -> e.printStackTrace())
 				.block();
 
 		tokenCache.clear();

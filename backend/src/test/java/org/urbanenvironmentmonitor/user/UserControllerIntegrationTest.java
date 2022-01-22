@@ -285,6 +285,14 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 		post("/auth/login", null, """
 				{
 					"username": "user",
+					"password": "password"
+				}
+				""")
+				.expectStatus().isUnauthorized();
+
+		post("/auth/login", null, """
+				{
+					"username": "user",
 					"password": "new_password"
 				}
 				""")
@@ -302,5 +310,43 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 				}
 				""")
 				.expectStatus().isUnauthorized();
+	}
+
+	@Test
+	void updateUserPasswordReturnsUnauthorizedForMissingToken()
+	{
+		put("/users/user/password", null, """
+				{
+					"oldPassword": "password",
+					"newPassword": "new_password"
+				}
+				""")
+				.expectStatus().isUnauthorized();
+	}
+
+	@Test
+	void updateUserPasswordReturnsForbiddenForDifferentUser()
+	{
+		String userToken = getToken("user", "password");
+		put("/users/admin/password", userToken, """
+				{
+					"oldPassword": "password",
+					"newPassword": "new_password"
+				}
+				""")
+				.expectStatus().isForbidden();
+	}
+
+	@Test
+	void updateUserPasswordReturnsBadRequestForInvalidJson()
+	{
+		String userToken = getToken("user", "password");
+		put("/users/user/password", userToken, """
+				{
+					"oldPassword": "password",
+					"newPassword": ""
+				}
+				""")
+				.expectStatus().isBadRequest();
 	}
 }
