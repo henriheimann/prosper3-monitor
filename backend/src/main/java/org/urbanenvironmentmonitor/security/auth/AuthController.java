@@ -1,7 +1,6 @@
 package org.urbanenvironmentmonitor.security.auth;
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,11 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.urbanenvironmentmonitor.security.auth.dtos.LoginRequest;
 import org.urbanenvironmentmonitor.security.auth.dtos.LoginResponse;
-import org.urbanenvironmentmonitor.security.auth.dtos.LogoutRequest;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/auth")

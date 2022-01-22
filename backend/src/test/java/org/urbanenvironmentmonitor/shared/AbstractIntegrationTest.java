@@ -64,16 +64,25 @@ public abstract class AbstractIntegrationTest
 
 	protected WebTestClient.ResponseSpec post(String uri, String token, String body)
 	{
-		var uriSpec = client.post().uri(uri)
-				.accept(MediaType.APPLICATION_JSON)
-				.contentType(MediaType.APPLICATION_JSON)
-				.bodyValue(body);
+		WebTestClient.RequestBodySpec requestBodySpec = client.post().uri(uri)
+				.accept(MediaType.APPLICATION_JSON);
 
-		if (token != null) {
-			uriSpec = uriSpec.header("Authorization", "Bearer " + token);
+		WebTestClient.RequestHeadersSpec<?> requestHeaderSpec;
+
+		if (body != null) {
+			requestHeaderSpec = requestBodySpec
+					.contentType(MediaType.APPLICATION_JSON)
+					.bodyValue(body);
+		} else {
+			requestHeaderSpec = requestBodySpec;
 		}
 
-		return uriSpec.exchange();
+		if (token != null) {
+			requestHeaderSpec = requestHeaderSpec
+					.header("Authorization", "Bearer " + token);
+		}
+
+		return requestHeaderSpec.exchange();
 	}
 
 	protected WebTestClient.ResponseSpec delete(String uri, String token)
