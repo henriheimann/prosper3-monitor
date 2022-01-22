@@ -2,7 +2,6 @@ package org.urbanenvironmentmonitor.security.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +13,6 @@ import reactor.core.publisher.Mono;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Base64;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -27,17 +25,16 @@ public class TokenService
 	private final SecureRandom secureRandom = new SecureRandom();
 	private final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
 
-	@Scheduled(initialDelay = 0, fixedDelay = 1, timeUnit = TimeUnit.HOURS)
-	public void removeExpiredTokensFromDatabase()
+	@Transactional
+	public Mono<Void> removeExpiredTokensFromDatabase()
 	{
-		tokenRepository.findAll()
+		return tokenRepository.findAll()
 				.filter(tokenEntity -> tokenEntity.getExpiry().isBefore(LocalDateTime.now()))
 				.collectList()
 				.doOnNext(tokenEntities -> log.info("Removing {} expired tokens from database", tokenEntities.size()))
 				.flatMapMany(Flux::fromIterable)
 				.flatMap(tokenRepository::delete)
-				.then()
-				.subscribe();
+				.then();
 	}
 
 	@Transactional

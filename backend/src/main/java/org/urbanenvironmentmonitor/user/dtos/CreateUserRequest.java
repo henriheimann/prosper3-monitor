@@ -6,16 +6,17 @@ import org.urbanenvironmentmonitor.user.UserRole;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Data
 public class CreateUserRequest
 {
-	@NotBlank
+	@NotBlank(message = "username_cannot_be_blank")
 	private String username;
 
-	@NotEmpty
+	@NotEmpty(message = "password_cannot_be_empty")
 	private String password;
 
-	@NotNull
+	@NotNull(message = "user_role_cannot_be_null")
 	private UserRole role;
 }

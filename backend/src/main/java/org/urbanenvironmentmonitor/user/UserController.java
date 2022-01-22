@@ -1,5 +1,6 @@
 package org.urbanenvironmentmonitor.user;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.urbanenvironmentmonitor.user.dtos.CreateUserRequest;
 import org.urbanenvironmentmonitor.user.dtos.UpdateUserPasswordRequest;
@@ -21,12 +22,14 @@ public class UserController
 		this.userService = userService;
 	}
 
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("")
 	public Flux<UserResponse> getAllUsers()
 	{
 		return userService.getAllUsers();
 	}
 
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping("")
 	public Mono<UserResponse> createUser(@Valid @RequestBody CreateUserRequest createUserRequest)
 	{
