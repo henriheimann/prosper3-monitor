@@ -6,7 +6,7 @@ import org.urbanenvironmentmonitor.shared.AbstractIntegrationTest;
 class UserControllerIntegrationTest extends AbstractIntegrationTest
 {
 	@Test
-	void getAllUsersReturnsStartupAndCreatedUsers()
+	void getAllUsers_returnsAllUsers()
 	{
 		String adminToken = getToken("admin", "password");
 
@@ -40,14 +40,14 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void getAllUsersReturnsUnauthorizedForMissingToken()
+	void getAllUsers_returnsUnauthorized_forMissingToken()
 	{
 		get("/users", null)
 				.expectStatus().isUnauthorized();
 	}
 
 	@Test
-	void getAllUsersReturnsForbiddenAsUser()
+	void getAllUsers_returnsForbidden_forNonAdmin()
 	{
 		String userToken = getToken("user", "password");
 		get("/users", userToken)
@@ -55,7 +55,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void createUserReturnsTheCreatedUser()
+	void createUser_returnsTheCreatedUser()
 	{
 		String adminToken = getToken("admin", "password");
 		post("/users", adminToken, """
@@ -72,7 +72,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void createUserReturnsUnauthorizedForMissingToken()
+	void createUser_returnsUnauthorized_forMissingToken()
 	{
 		post("/users", null, """
 				{
@@ -85,7 +85,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void createUserReturnsForbiddenAsUser()
+	void createUser_returnsForbidden_forNonAdmins()
 	{
 		String userToken = getToken("user", "password");
 		post("/users", userToken, """
@@ -99,7 +99,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void createUserReturnsBadRequestForInvalidJson()
+	void createUser_returnsBadRequest_forInvalidJson()
 	{
 		String adminToken = getToken("admin", "password");
 		post("/users", adminToken, """
@@ -117,7 +117,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void createUserReturnsBadRequestForInvalidlyFormattedJson()
+	void createUser_returnsBadRequest_forInvalidlyFormattedJson()
 	{
 		String adminToken = getToken("admin", "password");
 		post("/users", adminToken, """
@@ -131,7 +131,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void getUserReturnsStartupUserAsAdmin()
+	void getUser_returnsUser_forAdmin()
 	{
 		String adminToken = getToken("admin", "password");
 
@@ -143,7 +143,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void getUserReturnsStartupUserAsUser()
+	void getUser_returnsUser_forUserHimself()
 	{
 		String userToken = getToken("user", "password");
 
@@ -155,7 +155,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void getUserReturnsForbiddenForOtherUserAsStartupUser()
+	void getUser_returnsForbidden_forOtherUsers()
 	{
 		String userToken = getToken("user", "password");
 
@@ -164,7 +164,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void getUserReturnsNotFoundForInvalidUserAsStartupAdmin()
+	void getUser_returnsNotFound_forInvalidUserAsAdmin()
 	{
 		String adminToken = getToken("admin", "password");
 
@@ -173,7 +173,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void getUserReturnsForbiddenForInvalidUserAsStartupAdmin()
+	void getUser_returnsForbidden_forInvalidUserAsUser()
 	{
 		String userToken = getToken("user", "password");
 
@@ -182,7 +182,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void deleteUserReturnsOkAndDeletesUser()
+	void deleteUser_returnsOkAndDeletesUser()
 	{
 		String adminToken = getToken("admin", "password");
 
@@ -203,14 +203,14 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void deleteUserReturnsUnauthorizedForMissingToken()
+	void deleteUser_returnsUnauthorized_forMissingToken()
 	{
 		delete("/users/admin", null)
 				.expectStatus().isUnauthorized();
 	}
 
 	@Test
-	void deleteUserReturnsForbiddenAsStartupUser()
+	void deleteUser_returnsForbidden_forNonAdmins()
 	{
 		String userToken = getToken("user", "password");
 		delete("/users/user", userToken)
@@ -218,7 +218,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void updateUserReturnsUpdatedUser()
+	void updateUser_returnsUpdatedUser()
 	{
 		String adminToken = getToken("admin", "password");
 		put("/users/user", adminToken, """
@@ -233,7 +233,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void updateUserReturnsUnauthorizedForMissingToken()
+	void updateUser_returnsUnauthorized_forMissingToken()
 	{
 		put("/users/user", null, """
 				{
@@ -244,7 +244,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void updateUserReturnsForbiddenAsStartupUser()
+	void updateUser_returnsForbidden_forNonAdmins()
 	{
 		String userToken = getToken("user", "password");
 		put("/users/user", userToken, """
@@ -256,7 +256,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void updateUserReturnsBadRequestForInvalidJson()
+	void updateUser_returnsBadRequest_forInvalidJson()
 	{
 		String adminToken = getToken("admin", "password");
 		put("/users/user", adminToken, """
@@ -271,7 +271,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void updateUserPasswordReturnsOkAndUpdatesUserPassword()
+	void updateUserPassword_returnsOkAndUpdatesUserPassword()
 	{
 		String userToken = getToken("user", "password");
 		put("/users/user/password", userToken, """
@@ -300,7 +300,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void updateUserPasswordReturnsUnauthorizedForWrongOldPassword()
+	void updateUserPassword_returnsUnauthorized_forWrongOldPassword()
 	{
 		String userToken = getToken("user", "password");
 		put("/users/user/password", userToken, """
@@ -313,7 +313,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void updateUserPasswordReturnsUnauthorizedForMissingToken()
+	void updateUserPassword_returnsUnauthorized_forMissingToken()
 	{
 		put("/users/user/password", null, """
 				{
@@ -325,7 +325,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void updateUserPasswordReturnsForbiddenForDifferentUser()
+	void updateUserPassword_returnsForbidden_forDifferentUser()
 	{
 		String userToken = getToken("user", "password");
 		put("/users/admin/password", userToken, """
@@ -338,7 +338,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest
 	}
 
 	@Test
-	void updateUserPasswordReturnsBadRequestForInvalidJson()
+	void updateUserPassword_returnsBadRequest_forInvalidJson()
 	{
 		String userToken = getToken("user", "password");
 		put("/users/user/password", userToken, """
