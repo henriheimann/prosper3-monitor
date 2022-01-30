@@ -1,0 +1,78 @@
+version: "2"
+
+services:
+  p3m-postgres:
+    image: postgres:14.1
+    container_name: p3m-postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./volumes/postgres/data:/var/lib/postgresql/data
+      - ./config/postgres/init.sh:/docker-entrypoint-initdb.d/init.sh
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: p3m
+      POSTGRES_TEST_DB: p3m-test
+    networks:
+      - p3m-backend-net
+    restart: unless-stopped
+
+  p3m-influxdb:
+    image: influxdb:2.1
+    container_name: p3m-influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./volumes/influxdb/data:/var/lib/influxdb2
+      - ./volumes/influxdb/config:/etc/influxdb2
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: user
+      DOCKER_INFLUXDB_INIT_PASSWORD: password
+      DOCKER_INFLUXDB_INIT_ORG: p3m-org
+      DOCKER_INFLUXDB_INIT_BUCKET: p3m-bucket
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: admin-token
+    networks:
+      - p3m-backend-net
+    restart: unless-stopped
+
+  p3m-telegraf:
+    image: telegraf:1.20
+    container_name: p3m-telegraf
+    depends_on:
+      - p3m-influxdb
+      - p3m-test-mosquitto
+    volumes:
+      - ./config/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+    networks:
+      - p3m-backend-net
+    restart: unless-stopped
+
+  p3m-grafana:
+    image: grafana/grafana-oss:8.3.2
+    container_name: p3m-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./volumes/grafana/data:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - p3m-backend-net
+    restart: unless-stopped
+
+  p3m-test-mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: p3m-test-mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./volumes/mosquitto/data:/mosquitto/data
+      - ./config/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    networks:
+      - p3m-backend-net
+    restart: unless-stopped
+
+networks:
+  p3m-backend-net:

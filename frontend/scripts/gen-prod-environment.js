@@ -4,9 +4,9 @@ const targetPath = './src/environments/environment.prod.ts';
 
 const envConfigFile = `export const environment = {
   production: true,
-  backendUrl: '${process.env.UEM_BACKEND_URL}',
-  deploymentUrl: '${process.env.UEM_DEPLOYMENT_URL}',
-  oauthClientLogin: '${process.env.UEM_BACKEND_OAUTH_CLIENT_ID}:${process.env.UEM_BACKEND_OAUTH_CLIENT_SECRET}'
+  backendUrl: '${process.env.P3M_BACKEND_URL}',
+  deploymentUrl: '${process.env.P3M_DEPLOYMENT_URL}',
+  oauthClientLogin: '${process.env.P3M_BACKEND_OAUTH_CLIENT_ID}:${process.env.P3M_BACKEND_OAUTH_CLIENT_SECRET}'
 };
 `;
 

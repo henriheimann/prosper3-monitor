@@ -130,21 +130,11 @@ static uint32_t tsc_read_value()
 
 void application_main()
 {
-	// Start LPTIM1 for precision timings
-	HAL_LPTIM_Counter_Start_IT(&hlptim1, 0xffff);
-
-	// Turn on I2C Bus and wait for EEPROM to be ready
-	HAL_GPIO_WritePin(I2C_ENABLE_GPIO_Port, I2C_ENABLE_Pin, GPIO_PIN_RESET);
-	HAL_Delay(10);
-
 	// RFM95 module draws a lot of power so immediately init and put it to sleep after power up
 	rfm95_init(&rfm95_handle);
 
-	// Input voltage is only accurate after 1s?
-	uint32_t tick = HAL_GetTick();
-	if (tick < 1000) {
-		HAL_Delay(1000 - tick);
-	}
+	// Wait one second for input voltage measurement
+	precision_sleep_until(get_precision_tick() + 32768);
 
 	HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
 
@@ -155,14 +145,11 @@ void application_main()
 
 	// Immediately return if input voltage is too low
 	if (input_voltage < 2.0f) {
-		return;
+		//return;
 	}
 
 	// Save input voltage in global variable used by rfm95 callback
-	battery_level = (uint8_t)((input_voltage - 2.0f) / 1.3f);
-	if (battery_level == 0xff) {
-		battery_level = 0xfe;
-	}
+	battery_level = (uint8_t)((input_voltage - 2.0f) * 254.0f / 1.3f);
 
 	data_packet_t data_packet = { 0 };
 	data_packet.type = IRRIGATION_SENSOR;
@@ -171,10 +158,6 @@ void application_main()
 	data_packet.moisture_counter = moisture_counter;
 
 	rfm95_send_receive_cycle(&rfm95_handle, (uint8_t*)(&data_packet), 8);
-
-	HAL_GPIO_WritePin(I2C_ENABLE_GPIO_Port, I2C_ENABLE_Pin, GPIO_PIN_SET);
-
-	HAL_LPTIM_Counter_Stop_IT(&hlptim1);
 }
 
 void on_after_interrupts_configured()

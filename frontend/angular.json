@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "uem-frontend": {
+    "p3monitor-frontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -15,12 +15,12 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "uem",
+      "prefix": "p3m",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/uem-frontend",
+            "outputPath": "dist/p3m-frontend",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "uem-frontend:build:production"
+              "browserTarget": "p3m-frontend:build:production"
             },
             "development": {
-              "browserTarget": "uem-frontend:build:development"
+              "browserTarget": "p3m-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "uem-frontend:build"
+            "browserTarget": "p3m-frontend:build"
           }
         },
         "test": {
@@ -107,5 +107,5 @@
       }
     }
   },
-  "defaultProject": "uem-frontend"
+  "defaultProject": "p3m-frontend"
 }

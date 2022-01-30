@@ -20,7 +20,7 @@ jobs:
           java-version: 17
 
       - name: Start Development Environment
-        working-directory: ./deployment/uem-local-dev
+        working-directory: ./deployment/p3m-local-dev
         run: |
           docker-compose up -d
 

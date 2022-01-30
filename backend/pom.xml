@@ -10,10 +10,10 @@
         <relativePath/>
     </parent>
 
-    <groupId>org.urbanenvironmentmonitor</groupId>
+    <groupId>de.p3monitor</groupId>
     <artifactId>backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>uem-backend</name>
+    <name>p3m-backend</name>
 
     <properties>
         <java.version>16</java.version>

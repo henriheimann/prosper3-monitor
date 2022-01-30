@@ -1,0 +1,33 @@
+server {
+  listen       80;
+  listen  [::]:80;
+
+  server_name localhost;
+
+  location / {
+    proxy_pass ${P3M_FRONTEND_URL}/;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    add_header Content-Security-Policy "default-src * data: 'unsafe-eval' 'unsafe-inline'" always;
+  }
+
+  location /grafana/ {
+    proxy_pass ${GRAFANA_URL}/;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    add_header Content-Security-Policy "default-src * data: 'unsafe-eval' 'unsafe-inline'" always;
+  }
+
+  location /api/ {
+    proxy_pass ${P3M_BACKEND_URL}/;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    add_header Content-Security-Policy "default-src * data: 'unsafe-eval' 'unsafe-inline'" always;
+  }
+}

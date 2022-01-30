@@ -103,7 +103,18 @@ int main(void)
   MX_LPTIM1_Init();
   /* USER CODE BEGIN 2 */
 
+  HAL_LPTIM_Counter_Start_IT(&hlptim1, 0xffff);
+
+  HAL_GPIO_WritePin(I2C_ENABLE_GPIO_Port, I2C_ENABLE_Pin, GPIO_PIN_RESET);
+  HAL_Delay(10);
+
   application_main();
+
+  HAL_GPIO_WritePin(I2C_ENABLE_GPIO_Port, I2C_ENABLE_Pin, GPIO_PIN_SET);
+  HAL_LPTIM_Counter_Stop_IT(&hlptim1);
+  HAL_NVIC_DisableIRQ(EXTI0_IRQn);
+  HAL_NVIC_DisableIRQ(EXTI1_IRQn);
+  HAL_NVIC_DisableIRQ(EXTI2_IRQn);
 
   HAL_PWREx_EnableGPIOPullDown(PWR_GPIO_A, PWR_GPIO_BIT_7); // MOSI
   HAL_PWREx_EnableGPIOPullDown(PWR_GPIO_A, PWR_GPIO_BIT_5); // SCK
