@@ -1,0 +1,130 @@
+version: "2"
+
+services:
+  p3m-reverse-proxy:
+    image: nginx:latest
+    container_name: p3m-reverse-proxy
+    depends_on:
+      - p3m-grafana
+      - p3m-backend
+      - p3m-frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/nginx/templates:/etc/nginx/templates
+      - ./config/nginx/certs:/etc/ssl/certs
+      - ./volumes/certbot/etc:/etc/letsencrypt
+      - ./volumes/certbot/var:/var/lib/letsencrypt
+      - ./volumes/nginx/webroot:/var/www/html
+    env_file:
+      - .env
+      - .env-secrets
+    networks:
+      - p3m-backend-net
+    restart: unless-stopped
+
+  p3m-certbot:
+    image: certbot/certbot
+    container_name: p3m-certbot
+    depends_on:
+      - p3m-reverse-proxy
+    volumes:
+      - ./volumes/certbot/etc:/etc/letsencrypt
+      - ./volumes/certbot/var:/var/lib/letsencrypt
+      - ./volumes/nginx/webroot:/var/www/html
+    env_file:
+      - .env
+      - .env-secrets
+    command: certonly --webroot --webroot-path=/var/www/html --email $LETS_ENCRYPT_MAIL --agree-tos --no-eff-email --force-renewal -d $DEPLOYMENT_DOMAIN -d www.$DEPLOYMENT_DOMAIN
+
+  p3m-backend:
+    image: p3m-backend
+    container_name: p3m-backend
+    depends_on:
+      - p3m-influxdb
+      - p3m-postgres
+    env_file:
+      - .env
+      - .env-secrets
+    networks:
+      - p3m-backend-net
+    restart: unless-stopped
+
+  p3m-frontend:
+    image: p3m-frontend
+    container_name: p3m-frontend
+    depends_on:
+      - p3m-backend
+    env_file:
+      - .env
+      - .env-secrets
+    networks:
+      - p3m-backend-net
+    restart: unless-stopped
+
+  p3m-postgres:
+    image: postgres:14.1
+    container_name: p3m-postgres
+    volumes:
+      - ./volumes/postgres/data:/var/lib/postgresql/data
+    env_file:
+      - .env
+      - .env-secrets
+    networks:
+      - p3m-backend-net
+    restart: unless-stopped
+
+  p3m-influxdb:
+    image: influxdb:2.1
+    container_name: p3m-influxdb
+    volumes:
+      - ./volumes/influxdb/data:/var/lib/influxdb2
+      - ./volumes/influxdb/config:/etc/influxdb2
+    env_file:
+      - .env
+      - .env-secrets
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: "${INFLUXDB_USER}"
+      DOCKER_INFLUXDB_INIT_PASSWORD: "${INFLUXDB_PASSWORD}"
+      DOCKER_INFLUXDB_INIT_ORG: "${INFLUXDB_ORG}"
+      DOCKER_INFLUXDB_INIT_BUCKET: "${INFLUXDB_BUCKET}"
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: "${INFLUXDB_TOKEN}"
+    networks:
+      - p3m-backend-net
+    restart: unless-stopped
+
+  p3m-telegraf:
+    image: telegraf:1.20
+    container_name: p3m-telegraf
+    depends_on:
+      - p3m-influxdb
+    volumes:
+      - ./config/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+    env_file:
+      - .env
+      - .env-secrets
+    networks:
+      - p3m-backend-net
+    restart: unless-stopped
+
+  p3m-grafana:
+    image: grafana/grafana-oss:8.3.2
+    container_name: p3m-grafana
+    volumes:
+      - ./volumes/grafana/data:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - p3m-backend-net
+    env_file:
+      - .env
+      - .env-secrets
+    environment:
+      - GF_SERVER_DOMAIN=localhost:3000
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+    restart: unless-stopped
+
+networks:
+  p3m-backend-net:

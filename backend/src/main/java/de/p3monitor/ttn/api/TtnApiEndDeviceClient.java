@@ -30,14 +30,26 @@ public interface TtnApiEndDeviceClient
 	Mono<EndDevice> getEndDevice(@Param("applicationId") String applicationId,
 	                             @Param("endDeviceId") String endDeviceId);
 
-	@RequestLine("GET /api/v3/ns/applications/{applicationId}/devices/{endDeviceId}")
+	@RequestLine("GET /api/v3/ns/applications/{applicationId}/devices/{endDeviceId}?field_mask=session")
 	Mono<EndDevice> getEndDeviceFromNetworkServer(@Param("applicationId") String applicationId,
 	                                              @Param("endDeviceId") String endDeviceId);
 
-	@RequestLine("GET /api/v3/as/applications/{applicationId}/devices/{endDeviceId}")
+	@RequestLine("GET /api/v3/as/applications/{applicationId}/devices/{endDeviceId}?field_mask=session")
 	Mono<EndDevice> getEndDeviceFromApplicationServer(@Param("applicationId") String applicationId,
 	                                                  @Param("endDeviceId") String endDeviceId);
 
-	@RequestLine("GET /api/v3/applications/{applicationId}/devices?field_mask=name")
+	@RequestLine("GET /api/v3/applications/{applicationId}/devices")
 	Mono<EndDevicesResponse> getEndDevicesList(@Param("applicationId") String applicationId);
+
+	@RequestLine("DELETE /api/v3/applications/{applicationId}/devices/{endDeviceId}")
+	Mono<Void> deleteEndDevice(@Param("applicationId") String applicationId,
+	                             @Param("endDeviceId") String endDeviceId);
+
+	@RequestLine("DELETE /api/v3/ns/applications/{applicationId}/devices/{endDeviceId}")
+	Mono<Void> deleteEndDeviceFromNetworkServer(@Param("applicationId") String applicationId,
+	                                              @Param("endDeviceId") String endDeviceId);
+
+	@RequestLine("DELETE /api/v3/as/applications/{applicationId}/devices/{endDeviceId}")
+	Mono<Void> deleteEndDeviceFromApplicationServer(@Param("applicationId") String applicationId,
+	                                                  @Param("endDeviceId") String endDeviceId);
 }

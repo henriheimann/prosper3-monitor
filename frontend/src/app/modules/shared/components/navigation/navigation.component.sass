@@ -1,0 +1,33 @@
+@import "../../../../../assets/styles/styles.sass"
+
+.navbar
+  padding: 0
+  height: $navbar-height
+
+  .nav-link
+    height: $navbar-height
+    line-height: $navbar-height
+
+.navbar.overflow
+  height: $navbar-overflow-height
+
+  .nav-link
+    height: $navbar-overflow-height
+    line-height: $navbar-overflow-height
+
+// .navbar-nav .nav-item
+.nav-item
+  margin: 0 1rem
+
+.nav-item.active > .nav-link
+  border-bottom: 4px solid $body-color
+
+.nav-link
+  padding: 0 !important
+  cursor: pointer
+
+.dropdown-menu > hr
+  margin: 0.5rem 0
+
+.dropdown-item
+  padding: 0.5rem 1.5rem

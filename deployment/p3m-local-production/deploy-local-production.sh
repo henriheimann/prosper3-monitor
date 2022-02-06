@@ -1,10 +1,11 @@
-#!/bin/bash
+#!/bin/zsh
 
 # exit when any command fails
 set -e
 
 # source .env file
 source <(grep -v -e '^#\|^[[:space:]]*$' .env | sed -e 's/\r$//' -e 's/^/export /' -e 's/=/="/' -e 's/$/"/')
+source <(grep -v -e '^#\|^[[:space:]]*$' .env-secrets | sed -e 's/\r$//' -e 's/^/export /' -e 's/=/="/' -e 's/$/"/')
 
 # build frontend image
 cd ../../frontend/

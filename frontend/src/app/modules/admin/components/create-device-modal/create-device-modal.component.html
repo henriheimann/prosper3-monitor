@@ -1,0 +1,23 @@
+<div class="modal-header">
+  <h3 class="pull-left">Sensor erstellen</h3>
+  <button type="button" class="close pull-right" (click)="onCloseClicked()">
+    <span>&times;</span>
+  </button>
+</div>
+<form [formGroup]="createDeviceForm" (ngSubmit)="onSubmitClicked()">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" formControlName="name" />
+    </div>
+    <div class="form-group">
+      <label for="ttnId">TTN ID</label>
+      <input type="text" class="form-control" id="ttnId" disabled value="Wird bei Erstellung generiert..." />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary" [disabled]="createDeviceForm.invalid">
+      Sensor erstellen
+    </button>
+  </div>
+</form>

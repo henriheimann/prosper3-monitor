@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <h3 class="pull-left">Geräteschlüssel</h3>
+  <button type="button" class="close pull-right" (click)="onCloseClicked()">
+    <span>&times;</span>
+  </button>
+</div>
+<div class="modal-body" *ngIf="device$ | async as device; else loading">
+  <div class="form-group">
+    <label for="deviceAddress">Device Address</label>
+    <input type="text" class="form-control" id="deviceAddress" disabled [value]="device?.ttnDeviceAddress" />
+  </div>
+  <div class="form-group">
+    <label for="nwsk">Network Session Key</label>
+    <input type="text" class="form-control" id="nwsk" disabled [value]="device?.ttnNetworkSessionKey" />
+  </div>
+  <div class="form-group">
+    <label for="ask">Application Session Key</label>
+    <input type="text" class="form-control" id="ask" disabled [value]="device?.ttnApplicationSessionKey" />
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</ng-template>

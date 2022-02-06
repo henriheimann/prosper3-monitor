@@ -1,8 +1,11 @@
 CREATE TABLE devices
 (
-    id      SERIAL PRIMARY KEY,
-    name    VARCHAR(256) NOT NULL,
-    ttn_id  VARCHAR(256)
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(256) NOT NULL,
+    ttn_id VARCHAR(256),
+    ttn_device_address VARCHAR(256),
+    ttn_network_session_key VARCHAR(256),
+    ttn_application_session_key VARCHAR(256)
 );
 
 CREATE TYPE user_role_enum AS ENUM ('USER', 'ADMIN');

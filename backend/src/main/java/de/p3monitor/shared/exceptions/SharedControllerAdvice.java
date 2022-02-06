@@ -3,6 +3,7 @@ package de.p3monitor.shared.exceptions;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 @ControllerAdvice
 public class SharedControllerAdvice
 {
@@ -91,6 +93,8 @@ public class SharedControllerAdvice
 	@ExceptionHandler({WebExchangeBindException.class})
 	public ResponseEntity<ErrorResponse> webExchangeBindExceptionHandler(WebExchangeBindException e, Locale locale)
 	{
+		log.info("WebExchangeBindException");
+
 		List<String> errorMessages = e.getAllErrors().stream()
 				.map(DefaultMessageSourceResolvable::getDefaultMessage)
 				.filter(Objects::nonNull)

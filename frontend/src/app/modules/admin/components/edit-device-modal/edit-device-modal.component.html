@@ -1,0 +1,23 @@
+<div class="modal-header">
+  <h3 class="pull-left">Sensor bearbeiten</h3>
+  <button type="button" class="close pull-right" (click)="onCloseClicked()">
+    <span>&times;</span>
+  </button>
+</div>
+<form [formGroup]="editDeviceForm" (ngSubmit)="onSubmitClicked()">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" formControlName="name" />
+    </div>
+    <div class="form-group">
+      <label for="ttnId">TTN ID</label>
+      <input type="text" class="form-control" id="ttnId" disabled [value]="device?.ttnId" />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary" [disabled]="editDeviceForm.invalid">
+      Sensor bearbeiten
+    </button>
+  </div>
+</form>

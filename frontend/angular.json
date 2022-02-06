@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "p3monitor-frontend": {
+    "p3m-frontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -31,9 +31,13 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.sass"
+              "src/assets/styles/styles.sass"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/jquery/dist/jquery.min.js",
+              "./node_modules/popper.js/dist/umd/popper.min.js",
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -99,9 +103,13 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.sass"
+              "src/assets/styles/styles.sass"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/jquery/dist/jquery.min.js",
+              "./node_modules/popper.js/dist/umd/popper.min.js",
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js"
+            ]
           }
         }
       }

@@ -31,11 +31,13 @@ public class EndDevice
 	@Getter
 	@Setter
 	@ToString
+	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Session
 	{
 		@Getter
 		@Setter
 		@ToString
+		@JsonIgnoreProperties(ignoreUnknown = true)
 		public static class Keys
 		{
 			@Getter

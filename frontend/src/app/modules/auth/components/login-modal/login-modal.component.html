@@ -1,0 +1,23 @@
+<div class="modal-header">
+  <h3 class="pull-left">Login</h3>
+  <button type="button" class="close pull-right" (click)="onCloseClicked()">
+    <span>&times;</span>
+  </button>
+</div>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmitClicked()">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="inputUsername">Nutzername</label>
+      <input type="text" class="form-control" id="inputUsername" formControlName="username" />
+    </div>
+    <div class="form-group">
+      <label for="inputPassword">Passwort</label>
+      <input type="password" class="form-control" id="inputPassword" formControlName="password" />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid || (loggingIn$ | async)">
+      Login
+    </button>
+  </div>
+</form>

@@ -1,0 +1,26 @@
+<div class="modal-header">
+  <h3 class="pull-left">Nutzer bearbeiten</h3>
+  <button type="button" class="close pull-right" (click)="onCloseClicked()">
+    <span>&times;</span>
+  </button>
+</div>
+<form [formGroup]="editUserForm" (ngSubmit)="onSubmitClicked()">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="username">Nutzername</label>
+      <input type="text" class="form-control" id="username" disabled [value]="user?.username" />
+    </div>
+    <div class="form-group">
+      <label for="role">Rolle</label>
+      <select class="form-control" id="role" formControlName="role">
+        <option value="ADMIN">Administrator</option>
+        <option value="USER">Nutzer</option>
+      </select>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary" [disabled]="editUserForm.invalid">
+      Nutzer bearbeiten
+    </button>
+  </div>
+</form>

@@ -45,6 +45,8 @@ services:
       - p3m-test-mosquitto
     volumes:
       - ./config/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+      - ./config/telegraf/secrets:/etc/telegraf/telegraf.d
+    command: telegraf --config /etc/telegraf/telegraf.conf --config-directory /etc/telegraf/telegraf.d/
     networks:
       - p3m-backend-net
     restart: unless-stopped

@@ -1,0 +1,16 @@
+<span>
+  <span [ngClass]="iconColorClass">
+    <i class="bi bi-circle-fill"></i>
+  </span>
+  <span class="ml-1" *ngIf="difference === undefined; else show_difference">
+    Noch nie gesehen
+  </span>
+  <ng-template #show_difference>
+    <span class="ml-1" *ngIf="difference || 0 > 0">
+      {{ 'Online vor ' + this.difference + ' ' + this.differenceUnit }}
+    </span>
+    <span class="ml-1" *ngIf="difference == 0">
+      Gerade jetzt
+    </span>
+  </ng-template>
+</span>

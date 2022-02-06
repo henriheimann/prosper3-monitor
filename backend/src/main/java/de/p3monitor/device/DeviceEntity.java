@@ -20,6 +20,12 @@ public class DeviceEntity
 
 	private String ttnId;
 
+	private String ttnDeviceAddress;
+
+	private String ttnNetworkSessionKey;
+
+	private String ttnApplicationSessionKey;
+
 	public DeviceEntity(String name)
 	{
 		this.name = name;

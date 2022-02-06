@@ -1,0 +1,40 @@
+<div *ngIf="users$ | async as users; else loading" class="container-xl p-0 pl-sm-3 pr-sm-3">
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="align-middle">Nutzername</th>
+        <th class="align-middle">Rolle</th>
+        <th class="text-right">
+          <button class="btn btn-white p-2" type="button" (click)="onCreateUserClicked()">
+            <i class="bi bi-plus-circle-fill"></i>
+            <span class="pl-2">Hinzufügen</span>
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td class="align-middle font-weight-bold">{{ user.username }}</td>
+        <td class="align-middle">{{ user.role }}</td>
+        <td class="text-right">
+          <button class="btn btn-white p-2 mr-2" type="button" (click)="onEditUserClicked(user)">
+            <i class="bi bi-pencil-fill"></i>
+            <span class="pl-2 d-none d-sm-inline">Bearbeiten</span>
+          </button>
+          <button class="btn btn-white p-2" type="button" (click)="onDeleteUserClicked(user)">
+            <i class="bi-trash-fill"></i>
+            <span class="pl-2 d-none d-sm-inline">Löschen</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #loading>
+  <div class="d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</ng-template>

@@ -1,5 +1,5 @@
 {
-  "name": "p3monitor-frontend",
+  "name": "p3m-frontend",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -20,7 +20,15 @@
     "@angular/router": "~13.0.0",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.11.4",
+    "bootstrap": "^4.6.0",
+    "bootstrap-icons": "^1.4.1",
+    "ngx-bootstrap": "^6.2.0",
+    "jquery": "^3.6.0",
+    "popper.js": "^1.16.1",
+    "@ngrx/store": "~13.0.0",
+    "@ngrx/store-devtools": "~13.0.0",
+    "@ngrx/effects": "~13.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~13.0.4",

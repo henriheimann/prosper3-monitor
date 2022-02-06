@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 @SuppressWarnings("ReactiveStreamsUnusedPublisher")
 class DeviceServiceTest
 {
-	private DeviceRepository deviceRepositoryMock;
+	/*private DeviceRepository deviceRepositoryMock;
 	private TtnService ttnServiceMock;
 
 	private DeviceService deviceService;
@@ -162,5 +162,5 @@ class DeviceServiceTest
 				.expectNext(new DeviceResponse(1L, "name", new TtnSyncResponse(TtnSyncState.TTN_REQUEST_ERROR, null)))
 				.expectComplete()
 				.verify();
-	}
+	}*/
 }

@@ -1,11 +1,10 @@
 package de.p3monitor.ttn;
 
-import de.p3monitor.ttn.api.dtos.CreateEndDeviceRequest;
-import de.p3monitor.ttn.api.dtos.DeviceAddressResponse;
-import de.p3monitor.ttn.api.dtos.EndDevice;
-import de.p3monitor.ttn.api.dtos.EndDevicesResponse;
+import de.p3monitor.ttn.api.dtos.*;
 import de.p3monitor.ttn.config.TtnProperties;
 import de.p3monitor.ttn.exception.TtnApiNotFoundException;
+import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import de.p3monitor.ttn.api.TtnApiApplicationClient;
@@ -13,10 +12,12 @@ import de.p3monitor.ttn.api.TtnApiEndDeviceClient;
 import de.p3monitor.ttn.api.TtnApiNetworkServerClient;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
+import reactor.util.function.Tuple3;
 
 import java.security.SecureRandom;
 import java.util.List;
 
+@Slf4j
 @Service
 public class TtnService
 {
@@ -81,12 +82,22 @@ public class TtnService
 		return endDevice;
 	}
 
+	private EndDevice mergeEndDevices(Tuple3<EndDevice, EndDevice, EndDevice> tuple)
+	{
+		var endDevice = tuple.getT1();
+		var nsEndDevice = tuple.getT2();
+		var asEndDevice = tuple.getT3();
+
+		endDevice.setSession(nsEndDevice.getSession());
+		endDevice.getSession().getKeys().setAppSessionKey(asEndDevice.getSession().getKeys().getAppSessionKey());
+
+		return endDevice;
+	}
+
 	public Mono<EndDevice> createEndDevice()
 	{
-		return Mono.zip(
-						Mono.just("70B3D57ED004A4B6"),
-						//ttnApiApplicationClient.generateDeviceEui(ttnProperties.getApplicationId())
-						//		.map(ApplicationDeviceEuiResponse::getDevEui),
+		return Mono.zip(ttnApiApplicationClient.generateDeviceEui(ttnProperties.getApplicationId())
+								.map(ApplicationDeviceEuiResponse::getDevEui),
 						ttnApiNetworkServerClient.generateDeviceAddress()
 								.map(DeviceAddressResponse::getDeviceAddress)
 				)
@@ -99,7 +110,7 @@ public class TtnService
 						ttnApiEndDeviceClient.creatEndDeviceOnApplicationServer(ttnProperties.getApplicationId(),
 								CreateEndDeviceRequest.applicationServerRequest(endDevice))
 				))
-				.map(Tuple2::getT1);
+				.map(this::mergeEndDevices);
 	}
 
 	public Mono<EndDevice> getEndDevice(String endDeviceId)
@@ -107,14 +118,25 @@ public class TtnService
 		return Mono.zip(ttnApiEndDeviceClient.getEndDevice(ttnProperties.getApplicationId(), endDeviceId),
 				ttnApiEndDeviceClient.getEndDeviceFromNetworkServer(ttnProperties.getApplicationId(), endDeviceId),
 				ttnApiEndDeviceClient.getEndDeviceFromApplicationServer(ttnProperties.getApplicationId(), endDeviceId))
-				.map(Tuple2::getT1)
-				.onErrorMap(WebClientResponseException.class, e -> {
-					if (e.getRawStatusCode() == 404) {
+				.map(this::mergeEndDevices)
+				.onErrorMap(e -> {
+					if (e instanceof FeignException && ((FeignException)e).status() == 404) {
 						return new TtnApiNotFoundException(e);
 					} else {
+						log.error("Error executing TTN request", e);
 						return e;
 					}
 				});
+	}
+
+	public Mono<Void> deleteEndDevice(String endDeviceId)
+	{
+		return ttnApiEndDeviceClient.deleteEndDeviceFromNetworkServer(ttnProperties.getApplicationId(), endDeviceId)
+				.onErrorResume((e) -> Mono.empty())
+				.then(ttnApiEndDeviceClient.deleteEndDeviceFromApplicationServer(ttnProperties.getApplicationId(), endDeviceId))
+				.onErrorResume((e) -> Mono.empty())
+				.then(ttnApiEndDeviceClient.deleteEndDevice(ttnProperties.getApplicationId(), endDeviceId))
+				.onErrorResume((e) -> Mono.empty());
 	}
 
 	public Mono<List<EndDevice>> getEndDevices()
