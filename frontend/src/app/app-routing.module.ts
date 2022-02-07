@@ -6,11 +6,11 @@ const routes: Routes = [
     path: '',
     pathMatch: 'full',
     redirectTo: '/climate'
-  },
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

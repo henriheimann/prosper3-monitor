@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ImprintAndDataProtectionComponent } from "./imprint-and-data-protection/imprint-and-data-protection.component";
+import { ImprintAndDataProtectionComponent } from './imprint-and-data-protection/imprint-and-data-protection.component';
 
 const routes: Routes = [
   {
@@ -13,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class LegalRoutingModule { }
+export class LegalRoutingModule {}

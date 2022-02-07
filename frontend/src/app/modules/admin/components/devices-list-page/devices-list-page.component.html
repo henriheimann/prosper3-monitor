@@ -1,62 +1,62 @@
 <div *ngIf="devices$ | async as devices; else loading" class="container-xl p-0 pl-sm-3 pr-sm-3">
   <table class="table">
     <thead>
-    <tr>
-      <th class="align-middle">Name</th>
-      <th class="align-middle d-none d-lg-table-cell">Letzter Kontakt</th>
-      <th class="align-middle d-none d-sm-table-cell">TTN ID</th>
-      <th class="text-right">
-        <button class="btn btn-white p-2 mr-2" type="button" (click)="onTtnSyncClicked()">
-          <i class="bi bi-cloud-arrow-down-fill"></i>
-          <span class="pl-2 d-none d-md-inline">TTN Sync</span>
-        </button>
-        <button class="btn btn-white p-2" type="button" (click)="onCreateDeviceClicked()">
-          <i class="bi bi-plus-circle-fill"></i>
-          <span class="pl-2">Hinzufügen</span>
-        </button>
-      </th>
-    </tr>
+      <tr>
+        <th class="align-middle">Name</th>
+        <th class="align-middle d-none d-lg-table-cell">Letzter Kontakt</th>
+        <th class="align-middle d-none d-sm-table-cell">TTN ID</th>
+        <th class="text-right">
+          <button class="btn btn-white p-2 mr-2" type="button" (click)="onTtnSyncClicked()">
+            <i class="bi bi-cloud-arrow-down-fill"></i>
+            <span class="pl-2 d-none d-md-inline">TTN Sync</span>
+          </button>
+          <button class="btn btn-white p-2" type="button" (click)="onCreateDeviceClicked()">
+            <i class="bi bi-plus-circle-fill"></i>
+            <span class="pl-2">Hinzufügen</span>
+          </button>
+        </th>
+      </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let device of devices">
-      <td class="align-middle d-flex flex-column d-lg-none">
-        <span class="font-weight-bold">
-          {{ device.name }}
-        </span>
-        <small>
-          <p3m-last-contact [dateString]="device.lastContact"></p3m-last-contact>
-        </small>
-      </td>
-      <td class="align-middle d-none d-lg-table-cell">
-        <span class="font-weight-bold">
-          {{ device.name }}
-        </span>
-      </td>
-      <td class="align-middle d-none d-lg-table-cell">
-        <small>
-          <p3m-last-contact [dateString]="device.lastContact"></p3m-last-contact>
-        </small>
-      </td>
-      <td class="align-middle d-none d-sm-table-cell">
-        <small>
-          {{ device.ttnId }}
-        </small>
-      </td>
-      <td class="align-middle text-right">
-        <button class="btn btn-white p-2 mr-2" type="button" (click)="onShowKeysClicked(device)">
-          <i class="bi bi-file-lock2-fill"></i>
-          <span class="pl-2 d-none d-md-inline">Schlüssel</span>
-        </button>
-        <button class="btn btn-white p-2 mr-2" type="button" (click)="onEditDeviceClicked(device)">
-          <i class="bi bi-pencil-fill"></i>
-          <span class="pl-2 d-none d-md-inline">Bearbeiten</span>
-        </button>
-        <button class="btn btn-white p-2" type="button" (click)="onDeleteDeviceClicked(device)">
-          <i class="bi-trash-fill"></i>
-          <span class="pl-2 d-none d-md-inline">Löschen</span>
-        </button>
-      </td>
-    </tr>
+      <tr *ngFor="let device of devices">
+        <td class="align-middle d-flex flex-column d-lg-none">
+          <span class="font-weight-bold">
+            {{ device.name }}
+          </span>
+          <small>
+            <p3m-last-contact [dateString]="device.lastContact"></p3m-last-contact>
+          </small>
+        </td>
+        <td class="align-middle d-none d-lg-table-cell">
+          <span class="font-weight-bold">
+            {{ device.name }}
+          </span>
+        </td>
+        <td class="align-middle d-none d-lg-table-cell">
+          <small>
+            <p3m-last-contact [dateString]="device.lastContact"></p3m-last-contact>
+          </small>
+        </td>
+        <td class="align-middle d-none d-sm-table-cell">
+          <small>
+            {{ device.ttnId }}
+          </small>
+        </td>
+        <td class="align-middle text-right">
+          <button class="btn btn-white p-2 mr-2" type="button" (click)="onShowKeysClicked(device)">
+            <i class="bi bi-file-lock2-fill"></i>
+            <span class="pl-2 d-none d-md-inline">Schlüssel</span>
+          </button>
+          <button class="btn btn-white p-2 mr-2" type="button" (click)="onEditDeviceClicked(device)">
+            <i class="bi bi-pencil-fill"></i>
+            <span class="pl-2 d-none d-md-inline">Bearbeiten</span>
+          </button>
+          <button class="btn btn-white p-2" type="button" (click)="onDeleteDeviceClicked(device)">
+            <i class="bi-trash-fill"></i>
+            <span class="pl-2 d-none d-md-inline">Löschen</span>
+          </button>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>

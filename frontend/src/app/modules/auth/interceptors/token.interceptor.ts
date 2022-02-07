@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { selectToken } from "../store/auth.selectors";
-import { Store } from "@ngrx/store";
-import { catchError } from "rxjs/operators";
-import { logoutUser, requestUnauthorized } from "../store/auth.actions";
+import { selectToken } from '../store/auth.selectors';
+import { Store } from '@ngrx/store';
+import { catchError } from 'rxjs/operators';
+import { logoutUser, requestUnauthorized } from '../store/auth.actions';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -33,13 +33,14 @@ export class TokenInterceptor implements HttpInterceptor {
     }
 
     return next.handle(request).pipe(
-      catchError(error => {
+      catchError((error) => {
         console.log(error);
         if (error.status === 401) {
-          console.log("401");
+          console.log('401');
           this.store.dispatch(requestUnauthorized());
         }
         return throwError(error);
-      }));
+      })
+    );
   }
 }

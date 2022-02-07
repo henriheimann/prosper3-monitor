@@ -1,28 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;1,400;1,500&display=swap')
-$font-family-sans-serif: "Jost", "Helvetica Neue", Arial, sans-serif
-$font-weight-bold: 500
-$font-weight-bolder: 600
 
-@import "~bootstrap/scss/functions"
-
-// Declare p3 colors
-$darkblue: #0c2251
-$cyan: #008198
-$lightcyan: #80b2a9
-$orange: #f18736
-$red: #e63716
-$white: #ffffff
-
-$primary: $cyan
-
-// Add custom colors
-$colors: ("darkblue": $darkblue, "lightcyan": $lightcyan)
-
-$dropdown-link-hover-bg: darken($white, 5%)
-$dropdown-link-active-bg: darken($white, 10%)
-
-$navbar-height: 70px
-$navbar-overflow-height: 40px
+@import "variables"
 
 @import "~bootstrap/scss/bootstrap"
 @import "~bootstrap-icons/font/bootstrap-icons.css"
@@ -35,12 +13,6 @@ body, html
 
 .btn-white
   @include button-variant($white, $white)
-
-  //&:hover
-  //  text-decoration: underline !important
-
-.shadow-fab
-  box-shadow: 0 0 0.5rem rgba($black, .15) !important
 
 .table
   th

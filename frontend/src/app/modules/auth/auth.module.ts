@@ -1,18 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from "../shared/shared.module";
-import { StoreModule } from "@ngrx/store";
+import { SharedModule } from '../shared/shared.module';
+import { StoreModule } from '@ngrx/store';
 import * as fromAuth from './store/auth.reducer';
-import { AuthEffects } from "./store/auth.effects";
-import { EffectsModule } from "@ngrx/effects";
+import { AuthEffects } from './store/auth.effects';
+import { EffectsModule } from '@ngrx/effects';
 import { LoginModalComponent } from './components/login-modal/login-modal.component';
 import { ChangePasswordModalComponent } from './components/change-password-modal/change-password-modal.component';
 
 @NgModule({
-  declarations: [
-    LoginModalComponent,
-    ChangePasswordModalComponent
-  ],
+  declarations: [LoginModalComponent, ChangePasswordModalComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -20,6 +17,4 @@ import { ChangePasswordModalComponent } from './components/change-password-modal
     EffectsModule.forFeature([AuthEffects])
   ]
 })
-export class AuthModule {
-
-}
+export class AuthModule {}

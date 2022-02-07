@@ -6,7 +6,6 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./last-contact.component.sass']
 })
 export class LastContactComponent {
-
   date: Date | undefined;
 
   difference: number | undefined;

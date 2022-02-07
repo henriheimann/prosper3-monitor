@@ -18,11 +18,10 @@ export const initialState: AuthState = {
   user: null
 };
 
-
 export const reducer = createReducer(
   initialState,
 
-  on(AuthActions.loginUser, state => {
+  on(AuthActions.loginUser, (state) => {
     return {
       ...state,
       loggingIn: true
@@ -43,7 +42,7 @@ export const reducer = createReducer(
     loggingIn: false
   })),
 
-  on(AuthActions.loginUserFailure, state => {
+  on(AuthActions.loginUserFailure, (state) => {
     return {
       ...state,
       user: null,
@@ -52,7 +51,7 @@ export const reducer = createReducer(
     };
   }),
 
-  on(AuthActions.loadUserFromLocalStorage, state => {
+  on(AuthActions.loadUserFromLocalStorage, (state) => {
     return {
       ...state,
       loggingIn: true
@@ -68,7 +67,7 @@ export const reducer = createReducer(
     };
   }),
 
-  on(AuthActions.loadUserFromLocalStorageFailure, state => {
+  on(AuthActions.loadUserFromLocalStorageFailure, (state) => {
     return {
       ...state,
       user: null,
@@ -77,13 +76,13 @@ export const reducer = createReducer(
     };
   }),
 
-  on(AuthActions.logoutUser, state => {
+  on(AuthActions.logoutUser, (state) => {
     return {
       ...state
     };
   }),
 
-  on(AuthActions.logoutUserSuccess, state => {
+  on(AuthActions.logoutUserSuccess, (state) => {
     return {
       ...state,
       user: null,
@@ -91,7 +90,7 @@ export const reducer = createReducer(
     };
   }),
 
-  on(AuthActions.logoutUserSuccess, state => {
+  on(AuthActions.logoutUserSuccess, (state) => {
     return {
       ...state,
       user: null,
@@ -99,7 +98,7 @@ export const reducer = createReducer(
     };
   }),
 
-  on(AuthActions.requestUnauthorized, state => {
+  on(AuthActions.requestUnauthorized, (state) => {
     return {
       ...state,
       user: null,
@@ -107,4 +106,3 @@ export const reducer = createReducer(
     };
   })
 );
-

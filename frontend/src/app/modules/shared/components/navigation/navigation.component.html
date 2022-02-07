@@ -1,67 +1,62 @@
 <nav class="navbar navbar-light bg-white shadow-sm navbar-expand justify-content-between pl-2 pr-2">
   <div class="nav-item dropdown">
     <button class="btn btn-white dropdown-toggle p-1" type="button" data-toggle="dropdown" style="height: 58px">
-      <img *ngIf="routeStartsWith('/climate')" srcset="assets/images/nav-climate-monitor.png 5x" alt="Klimamonitor"/>
-      <img *ngIf="routeStartsWith('/plants')" srcset="assets/images/nav-plant-monitor.png 5x" alt="Pflanzenmonitor"/>
-      <img *ngIf="routeStartsWith('/admin')" srcset="assets/images/nav-administration.png 5x" alt="Administration"/>
+      <img *ngIf="routeStartsWith('/climate')" srcset="assets/images/nav-climate-monitor.png 5x" alt="Klimamonitor" />
+      <img *ngIf="routeStartsWith('/plants')" srcset="assets/images/nav-plant-monitor.png 5x" alt="Pflanzenmonitor" />
+      <img *ngIf="routeStartsWith('/admin')" srcset="assets/images/nav-administration.png 5x" alt="Administration" />
     </button>
     <div class="dropdown-menu">
       <a class="dropdown-item" [routerLink]="['/climate']">
-        <img srcset="assets/images/nav-climate-monitor.png 5x"alt="Klimamonitor"/>
+        <img srcset="assets/images/nav-climate-monitor.png 5x" alt="Klimamonitor" />
       </a>
       <a class="dropdown-item" [routerLink]="['/plants']">
-        <img srcset="assets/images/nav-plant-monitor.png 5x" alt="Pflanzenmonitor"/>
+        <img srcset="assets/images/nav-plant-monitor.png 5x" alt="Pflanzenmonitor" />
       </a>
-      <hr>
+      <hr />
       <a class="dropdown-item" href="/grafana">
-        <img srcset="assets/images/nav-grafana.png 5x" alt="Grafana"/>
+        <img srcset="assets/images/nav-grafana.png 5x" alt="Grafana" />
       </a>
       <a class="dropdown-item" href="#">
-        <img srcset="assets/images/nav-api-documentation.png 5x" alt="API-Dokumentation"/>
+        <img srcset="assets/images/nav-api-documentation.png 5x" alt="API-Dokumentation" />
       </a>
-      <ng-container *ngIf="(isUserAdmin$ | async)">
-        <hr>
+      <ng-container *ngIf="isUserAdmin$ | async">
+        <hr />
         <a class="dropdown-item" [routerLink]="['/admin']">
-          <img srcset="assets/images/nav-administration.png 5x" alt="Administration"/>
+          <img srcset="assets/images/nav-administration.png 5x" alt="Administration" />
         </a>
       </ng-container>
     </div>
   </div>
   <ul class="navbar-nav d-none d-sm-flex" *ngIf="routeStartsWith('/admin')">
-    <ng-container *ngTemplateOutlet="navitems">
-    </ng-container>
+    <ng-container *ngTemplateOutlet="navitems"> </ng-container>
   </ul>
-  <div class="nav-item" *ngIf="!(isLoggedIn$ | async)">
+  <div class="nav-item" *ngIf="(isLoggedIn$ | async) === false">
     <button class="btn btn-white font-weight-bold p-2" type="button" (click)="onLoginClicked()">Login</button>
   </div>
-  <div class="nav-item dropdown" *ngIf="(isLoggedIn$ | async)">
-    <button class="btn btn-white font-weight-bold p-2" type="button" data-toggle="dropdown"><i class="bi-person-circle pr-2"></i>{{ loggedInUsername$ | async }}</button>
+  <div class="nav-item dropdown" *ngIf="isLoggedIn$ | async">
+    <button class="btn btn-white font-weight-bold p-2" type="button" data-toggle="dropdown">
+      <i class="bi-person-circle pr-2"></i>{{ loggedInUsername$ | async }}
+    </button>
     <div class="dropdown-menu dropdown-menu-right">
-      <a class="dropdown-item" (click)="onLogoutClicked()">
-        Logout
-      </a>
-      <a class="dropdown-item" (click)="onChangePasswordClicked()">
-        Passwort ändern
-      </a>
+      <a class="dropdown-item" (click)="onLogoutClicked()"> Logout </a>
+      <a class="dropdown-item" (click)="onChangePasswordClicked()"> Passwort ändern </a>
     </div>
   </div>
 </nav>
-<nav class="navbar navbar-light overflow bg-white shadow-sm navbar-expand justify-content-center d-sm-none" *ngIf="routeStartsWith('/admin')">
+<nav
+  class="navbar navbar-light overflow bg-white shadow-sm navbar-expand justify-content-center d-sm-none"
+  *ngIf="routeStartsWith('/admin')"
+>
   <ul class="navbar-nav">
-    <ng-container *ngTemplateOutlet="navitems">
-    </ng-container>
+    <ng-container *ngTemplateOutlet="navitems"> </ng-container>
   </ul>
 </nav>
 
 <ng-template #navitems>
   <li class="nav-item" [routerLinkActive]="['active']">
-    <a class="nav-link font-weight-bold" [routerLink]="['/admin/sensors']">
-      Sensoren
-    </a>
+    <a class="nav-link font-weight-bold" [routerLink]="['/admin/sensors']"> Sensoren </a>
   </li>
   <li class="nav-item" [routerLinkActive]="['active']">
-    <div class="nav-link font-weight-bold" [routerLink]="['/admin/users']">
-      Nutzer
-    </div>
+    <div class="nav-link font-weight-bold" [routerLink]="['/admin/users']">Nutzer</div>
   </li>
 </ng-template>

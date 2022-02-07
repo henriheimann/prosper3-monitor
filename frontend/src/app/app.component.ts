@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from "@ngrx/store";
-import { loadUserFromLocalStorage } from "./modules/auth/store/auth.actions";
+import { Store } from '@ngrx/store';
+import { loadUserFromLocalStorage } from './modules/auth/store/auth.actions';
 
 @Component({
   selector: 'p3m-root',
@@ -8,9 +8,7 @@ import { loadUserFromLocalStorage } from "./modules/auth/store/auth.actions";
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent implements OnInit {
-
-  constructor(private store: Store) {
-  }
+  constructor(private store: Store) {}
 
   ngOnInit(): void {
     this.store.dispatch(loadUserFromLocalStorage());

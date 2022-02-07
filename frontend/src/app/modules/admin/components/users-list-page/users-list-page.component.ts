@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { UserService } from "../../../shared/services/user.service";
-import { UserModel } from "../../../shared/models/user.model";
-import { BsModalService } from "ngx-bootstrap/modal";
-import { ConfirmModalComponent } from "../../../shared/components/confirm-modal/confirm-modal.component";
-import { EditUserModalComponent } from "../edit-user-modal/edit-user-modal.component";
-import { CreateUserModalComponent } from "../create-user-modal/create-user-modal.component";
+import { UserService } from '../../../shared/services/user.service';
+import { UserModel } from '../../../shared/models/user.model';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
+import { EditUserModalComponent } from '../edit-user-modal/edit-user-modal.component';
+import { CreateUserModalComponent } from '../create-user-modal/create-user-modal.component';
 
 @Component({
   selector: 'p3m-users-list-page',
@@ -12,14 +12,13 @@ import { CreateUserModalComponent } from "../create-user-modal/create-user-modal
   styleUrls: ['./users-list-page.component.sass']
 })
 export class UsersListPageComponent {
-
   users$ = this.userService.getAll();
 
-  constructor(private userService: UserService, private modalService: BsModalService) { }
+  constructor(private userService: UserService, private modalService: BsModalService) {}
 
   onCreateUserClicked() {
     this.modalService.show(CreateUserModalComponent, {
-      class: 'modal-dialog-centered',
+      class: 'modal-dialog-centered'
     });
   }
 

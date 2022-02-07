@@ -6,11 +6,10 @@ import { UsersListPageComponent } from './components/users-list-page/users-list-
 import { DevicesListPageComponent } from './components/devices-list-page/devices-list-page.component';
 import { CreateUserModalComponent } from './components/create-user-modal/create-user-modal.component';
 import { EditUserModalComponent } from './components/edit-user-modal/edit-user-modal.component';
-import { SharedModule } from "../shared/shared.module";
+import { SharedModule } from '../shared/shared.module';
 import { ShowKeysModalComponent } from './components/show-keys-modal/show-keys-modal.component';
 import { EditDeviceModalComponent } from './components/edit-device-modal/edit-device-modal.component';
 import { CreateDeviceModalComponent } from './components/create-device-modal/create-device-modal.component';
-
 
 @NgModule({
   declarations: [
@@ -22,10 +21,6 @@ import { CreateDeviceModalComponent } from './components/create-device-modal/cre
     EditDeviceModalComponent,
     CreateDeviceModalComponent
   ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    AdminRoutingModule
-  ]
+  imports: [CommonModule, SharedModule, AdminRoutingModule]
 })
-export class AdminModule { }
+export class AdminModule {}

@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DevicesListPageComponent } from "./components/devices-list-page/devices-list-page.component";
-import { UsersListPageComponent } from "./components/users-list-page/users-list-page.component";
-import { RoleGuard } from "../auth/guards/role.guard";
+import { DevicesListPageComponent } from './components/devices-list-page/devices-list-page.component';
+import { UsersListPageComponent } from './components/users-list-page/users-list-page.component';
+import { RoleGuard } from '../auth/guards/role.guard';
 
 const routes: Routes = [
   {
@@ -21,7 +21,7 @@ const routes: Routes = [
         component: UsersListPageComponent
       }
     ],
-    canActivate: [ RoleGuard ],
+    canActivate: [RoleGuard],
     data: {
       requiredRoles: ['ADMIN']
     }
@@ -32,4 +32,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AdminRoutingModule { }
+export class AdminRoutingModule {}

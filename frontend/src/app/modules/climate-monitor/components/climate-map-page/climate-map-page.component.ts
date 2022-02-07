@@ -5,11 +5,6 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './climate-map-page.component.html',
   styleUrls: ['./climate-map-page.component.sass']
 })
-export class ClimateMapPageComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+export class ClimateMapPageComponent {
+  constructor() {}
 }

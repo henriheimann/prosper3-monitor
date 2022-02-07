@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { BsModalRef } from "ngx-bootstrap/modal";
-import { Store } from "@ngrx/store";
-import { selectIsLoggedIn, selectLoggingIn } from "../../store/auth.selectors";
-import { loginUser } from "../../store/auth.actions";
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { Store } from '@ngrx/store';
+import { selectIsLoggedIn, selectLoggingIn } from '../../store/auth.selectors';
+import { loginUser } from '../../store/auth.actions';
 
 @Component({
   selector: 'p3m-login-modal',
@@ -11,7 +11,6 @@ import { loginUser } from "../../store/auth.actions";
   styleUrls: ['./login-modal.component.sass']
 })
 export class LoginModalComponent {
-
   loginForm = new FormGroup({
     username: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required)

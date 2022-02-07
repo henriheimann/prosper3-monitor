@@ -12,29 +12,28 @@ import {
   loginUserGetTokenSuccess,
   loginUserGetUserSuccess,
   logoutUserFailure,
-  logoutUserSuccess, requestUnauthorized
+  logoutUserSuccess
 } from './auth.actions';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { selectAuthState } from './auth.selectors';
-import { AuthService } from "../services/auth.service";
-import { UserService } from "../../shared/services/user.service";
+import { AuthService } from '../services/auth.service';
+import { UserService } from '../../shared/services/user.service';
 
 @Injectable()
 export class AuthEffects {
-
   loginUser$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(AuthActions.loginUser),
-      switchMap(action => {
+      switchMap((action) => {
         return this.authService.login(action.username, action.password).pipe(
-          map(response => {
+          map((response) => {
             return loginUserGetTokenSuccess({
               username: action.username,
               token: response.token
             });
           }),
-          catchError(error => of(loginUserFailure({error})))
+          catchError((error) => of(loginUserFailure({ error })))
         );
       })
     );
@@ -45,14 +44,15 @@ export class AuthEffects {
       ofType(AuthActions.loginUserGetTokenSuccess),
       switchMap((action) =>
         this.userService.getByUsername(action.username).pipe(
-          map((user) => loginUserGetUserSuccess({user})),
-          catchError((error) => of(loginUserFailure({error})))
+          map((user) => loginUserGetUserSuccess({ user })),
+          catchError((error) => of(loginUserFailure({ error })))
         )
       )
     )
   );
 
-  onLoginUserGetUserSuccessSaveUserAndTokenToLocationStorage$ = createEffect(() =>
+  onLoginUserGetUserSuccessSaveUserAndTokenToLocationStorage$ = createEffect(
+    () =>
       this.actions$.pipe(
         ofType(AuthActions.loginUserGetUserSuccess),
         withLatestFrom(this.store.select(selectAuthState)),
@@ -62,22 +62,28 @@ export class AuthEffects {
           }
         })
       ),
-    {dispatch: false}
+    { dispatch: false }
   );
 
-  onLoginUserFailurePrintError$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(AuthActions.loginUserFailure),
-      tap(action => console.log('login failure: ' + JSON.stringify(action.error)))
-    );
-  }, {dispatch: false});
+  onLoginUserFailurePrintError$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(AuthActions.loginUserFailure),
+        tap((action) => console.log('login failure: ' + JSON.stringify(action.error)))
+      );
+    },
+    { dispatch: false }
+  );
 
-  onLoginUserFailureClearLocalStorage$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(AuthActions.loginUserFailure),
-      tap(() => this.authService.clearLocalStorage())
-    );
-  }, {dispatch: false});
+  onLoginUserFailureClearLocalStorage$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(AuthActions.loginUserFailure),
+        tap(() => this.authService.clearLocalStorage())
+      );
+    },
+    { dispatch: false }
+  );
 
   loadUserFromLocalStorage$ = createEffect(() => {
     return this.actions$.pipe(
@@ -102,44 +108,54 @@ export class AuthEffects {
             this.authService.clearLocalStorage();
             return logoutUserSuccess();
           }),
-          catchError(error => {
+          catchError((error) => {
             this.authService.clearLocalStorage();
-            return of(logoutUserFailure({error}));
+            return of(logoutUserFailure({ error }));
           })
         );
       })
     );
   });
 
-  onLogoutUserSuccessRedirectToLandingPage$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(AuthActions.logoutUserSuccess),
-      tap(() => {
-        this.router.navigate(['']).then(() => {
-          console.log('logout success');
-        });
-      })
-    );
-  }, {dispatch: false});
+  onLogoutUserSuccessRedirectToLandingPage$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(AuthActions.logoutUserSuccess),
+        tap(() => {
+          this.router.navigate(['']).then(() => {
+            console.log('logout success');
+          });
+        })
+      );
+    },
+    { dispatch: false }
+  );
 
-  logoutUserFailurePrintError$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(AuthActions.logoutUserFailure),
-      tap(action => console.log('login failure: ' + JSON.stringify(action.error)))
-    );
-  }, {dispatch: false});
+  logoutUserFailurePrintError$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(AuthActions.logoutUserFailure),
+        tap((action) => console.log('login failure: ' + JSON.stringify(action.error)))
+      );
+    },
+    { dispatch: false }
+  );
 
-  requestUnauthorizedClearLocalStorage$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(AuthActions.requestUnauthorized),
-      tap(action => this.authService.clearLocalStorage())
-    );
-  }, {dispatch: false});
+  requestUnauthorizedClearLocalStorage$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(AuthActions.requestUnauthorized),
+        tap((action) => this.authService.clearLocalStorage())
+      );
+    },
+    { dispatch: false }
+  );
 
-  constructor(private actions$: Actions,
-              private store: Store,
-              private authService: AuthService,
-              private userService: UserService,
-              private router: Router) {
-  }
+  constructor(
+    private actions$: Actions,
+    private store: Store,
+    private authService: AuthService,
+    private userService: UserService,
+    private router: Router
+  ) {}
 }

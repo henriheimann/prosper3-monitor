@@ -7,7 +7,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   styleUrls: ['./confirm-modal.component.scss']
 })
 export class ConfirmModalComponent {
-
   titleText = 'Confirm operation';
   bodyText = 'Are you sure to want to perform this operation?';
   confirmButtonText = 'Confirm';
@@ -15,7 +14,7 @@ export class ConfirmModalComponent {
   onConfirm: (() => any) | undefined;
   onAbort: (() => any) | undefined;
 
-  constructor(private modalRef: BsModalRef) { }
+  constructor(private modalRef: BsModalRef) {}
 
   onCloseClicked(): void {
     if (this.onAbort) {

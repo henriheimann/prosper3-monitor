@@ -5,11 +5,6 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './plant-map-page.component.html',
   styleUrls: ['./plant-map-page.component.sass']
 })
-export class PlantMapPageComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+export class PlantMapPageComponent {
+  constructor() {}
 }
