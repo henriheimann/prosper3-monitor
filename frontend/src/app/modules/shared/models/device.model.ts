@@ -1,6 +1,8 @@
 export interface DeviceModel {
   id: number;
   name: string;
+  latitude: number;
+  longitude: number;
   ttnId?: string;
   ttnDeviceAddress?: string;
   ttnNetworkSessionKey?: string;

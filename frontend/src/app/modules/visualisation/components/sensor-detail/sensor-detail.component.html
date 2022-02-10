@@ -1,0 +1,84 @@
+<div class="position-relative" style="z-index: 3" *ngIf="(selectedDevice$ | async) as device">
+  <div class="bg-white rounded shadow-sm border-0 position-absolute mr-2 mt-2" style="width: 300px; right: 0; top: 0">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h5 class="modal-title">
+            {{ device.name }}
+          </h5>
+          <small>
+            <p3m-last-contact [dateString]="device?.lastContact?.timestamp"></p3m-last-contact>
+          </small>
+        </div>
+        <button type="button" class="close" (click)="onCloseClicked()">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body container border-bottom">
+        <table class="table table-sm table-borderless mb-0">
+          <tbody>
+            <tr *ngIf="device?.lastContact?.moistureCounter">
+              <td class="font-weight-bold">
+                Bewässerung
+              </td>
+              <td class="text-right">
+                {{ device?.lastContact?.moistureCounter }}
+              </td>
+            </tr>
+            <tr *ngIf="device?.lastContact?.temperature">
+              <td class="font-weight-bold">
+                Temperatur
+              </td>
+              <td class="text-right">
+                {{ device?.lastContact?.temperature }}
+              </td>
+            </tr>
+            <tr *ngIf="device?.lastContact?.irTemperature">
+              <td class="font-weight-bold">
+                Infrarot Temperatur
+              </td>
+              <td class="text-right">
+                {{ device?.lastContact?.irTemperature }}
+              </td>
+            </tr>
+            <tr *ngIf="device?.lastContact?.humidity">
+              <td class="font-weight-bold">
+                Luftfeuchtigkeit
+              </td>
+              <td class="text-right">
+                {{ device?.lastContact?.humidity }}
+              </td>
+            </tr>
+            <tr *ngIf="device?.lastContact?.brightnessCurrent">
+              <td class="font-weight-bold">
+                Helligkeit
+              </td>
+              <td class="text-right">
+                {{ device?.lastContact?.brightnessCurrent }}
+              </td>
+            </tr>
+            <tr *ngIf="device?.lastContact?.batteryVoltage">
+              <td class="font-weight-bold">
+                Batteriespannung
+              </td>
+              <td class="text-right">
+                {{ device?.lastContact?.batteryVoltage }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-body d-flex flex-row justify-content-center p-2">
+        <button class="btn btn-white p-2 mr-2" type="button" (click)="onEditClicked()">
+          <i class="bi bi-pencil-fill"></i>
+          <span class="pl-2">Bearbeiten</span>
+        </button>
+        <button class="btn btn-white p-2" type="button" (click)="onMoveClicked()">
+          <i class="bi bi-arrows-move"></i>
+          <span class="pl-2">Verschieben</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -63,6 +63,7 @@ public class WebSecurityConfig
 				.addFilterAt(authenticationWebFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
 				.authorizeExchange()
 				.pathMatchers("/auth/login").permitAll()
+				.pathMatchers(HttpMethod.GET, "/devices").permitAll()
 				.pathMatchers(HttpMethod.OPTIONS).permitAll()
 				.anyExchange().authenticated()
 				.and()

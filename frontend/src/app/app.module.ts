@@ -14,7 +14,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TokenInterceptor } from './modules/auth/interceptors/token.interceptor';
 import { LegalModule } from './modules/legal/legal.module';
-import { VisualisationsModule } from './modules/visualisations/visualisations.module';
+import { VisualisationModule } from './modules/visualisation/visualisation.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,7 +25,7 @@ import { VisualisationsModule } from './modules/visualisations/visualisations.mo
     AdminModule,
     AuthModule,
     LegalModule,
-    VisualisationsModule,
+    VisualisationModule,
     SharedModule,
     StoreModule.forRoot({}, {}),
     StoreDevtoolsModule.instrument({
