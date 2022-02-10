@@ -145,7 +145,7 @@ export class AuthEffects {
     () => {
       return this.actions$.pipe(
         ofType(AuthActions.requestUnauthorized),
-        tap((action) => this.authService.clearLocalStorage())
+        tap(() => this.authService.clearLocalStorage())
       );
     },
     { dispatch: false }

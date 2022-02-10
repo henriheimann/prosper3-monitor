@@ -31,12 +31,14 @@
               "src/assets"
             ],
             "styles": [
-              "src/assets/styles/styles.sass"
+              "src/assets/styles/styles.sass",
+              "./node_modules/mapbox-gl/dist/mapbox-gl.css"
             ],
             "scripts": [
               "./node_modules/jquery/dist/jquery.min.js",
               "./node_modules/popper.js/dist/umd/popper.min.js",
-              "./node_modules/bootstrap/dist/js/bootstrap.min.js"
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "./node_modules/mapbox-gl/dist/mapbox-gl.js"
             ]
           },
           "configurations": {
@@ -44,8 +46,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "2mb"
+                  "maximumWarning": "1mb",
+                  "maximumError": "4mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -103,12 +105,14 @@
               "src/assets"
             ],
             "styles": [
-              "src/assets/styles/styles.sass"
+              "src/assets/styles/styles.sass",
+              "./node_modules/mapbox-gl/dist/mapbox-gl.css"
             ],
             "scripts": [
               "./node_modules/jquery/dist/jquery.min.js",
               "./node_modules/popper.js/dist/umd/popper.min.js",
-              "./node_modules/bootstrap/dist/js/bootstrap.min.js"
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "./node_modules/mapbox-gl/dist/mapbox-gl.js"
             ]
           }
         },

@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 
 services:
   p3m-postgres:
@@ -59,6 +59,20 @@ services:
     volumes:
       - ./volumes/grafana/data:/var/lib/grafana
       - ./config/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - p3m-backend-net
+    restart: unless-stopped
+
+  p3m-tileserver:
+    image: maptiler/tileserver-gl:v3.1.1
+    container_name: p3m-tileserver
+    profiles:
+      - tileserver
+    ports:
+      - "8090:8080"
+    volumes:
+      - ../tileserver:/data
+    command: -c /data/config.json
     networks:
       - p3m-backend-net
     restart: unless-stopped

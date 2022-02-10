@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 
 services:
   p3m-reverse-proxy:
@@ -105,6 +105,16 @@ services:
       - GF_SERVER_DOMAIN=localhost:3000
       - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana/
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
+    restart: unless-stopped
+
+  p3m-tileserver:
+    image: maptiler/tileserver-gl:v3.1.1
+    container_name: p3m-tileserver
+    volumes:
+      - ../tileserver:/data
+    command: -c /data/config.json --public_url "${DEPLOYMENT_URL}/tileserver"
+    networks:
+      - p3m-backend-net
     restart: unless-stopped
 
 networks:

@@ -13,4 +13,10 @@ public class CreateDeviceRequest
 {
 	@NotBlank
 	private String name;
+
+	@NotBlank
+	private Double latitude;
+
+	@NotBlank
+	private Double longitude;
 }

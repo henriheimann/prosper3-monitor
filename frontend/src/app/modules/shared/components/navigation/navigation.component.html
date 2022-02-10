@@ -1,5 +1,5 @@
 <nav class="navbar navbar-light bg-white shadow-sm navbar-expand justify-content-between pl-2 pr-2">
-  <div class="nav-item dropdown">
+  <div class="nav-item dropdown ml-0">
     <button class="btn btn-white dropdown-toggle p-1" type="button" data-toggle="dropdown" style="height: 58px">
       <img *ngIf="routeStartsWith('/climate')" srcset="assets/images/nav-climate-monitor.png 5x" alt="Klimamonitor" />
       <img *ngIf="routeStartsWith('/plants')" srcset="assets/images/nav-plant-monitor.png 5x" alt="Pflanzenmonitor" />
@@ -30,10 +30,10 @@
   <ul class="navbar-nav d-none d-sm-flex" *ngIf="routeStartsWith('/admin')">
     <ng-container *ngTemplateOutlet="navitems"> </ng-container>
   </ul>
-  <div class="nav-item" *ngIf="(isLoggedIn$ | async) === false">
+  <div class="nav-item mr-0" *ngIf="(isLoggedIn$ | async) === false">
     <button class="btn btn-white font-weight-bold p-2" type="button" (click)="onLoginClicked()">Login</button>
   </div>
-  <div class="nav-item dropdown" *ngIf="isLoggedIn$ | async">
+  <div class="nav-item dropdown mr-0" *ngIf="isLoggedIn$ | async">
     <button class="btn btn-white font-weight-bold p-2" type="button" data-toggle="dropdown">
       <i class="bi-person-circle pr-2"></i>{{ loggedInUsername$ | async }}
     </button>

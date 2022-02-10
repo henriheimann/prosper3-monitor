@@ -24,7 +24,7 @@
             {{ device.name }}
           </span>
           <small>
-            <p3m-last-contact [dateString]="device.lastContact"></p3m-last-contact>
+            <p3m-last-contact [dateString]="device.lastContact?.timestamp"></p3m-last-contact>
           </small>
         </td>
         <td class="align-middle d-none d-lg-table-cell">
@@ -34,7 +34,7 @@
         </td>
         <td class="align-middle d-none d-lg-table-cell">
           <small>
-            <p3m-last-contact [dateString]="device.lastContact"></p3m-last-contact>
+            <p3m-last-contact [dateString]="device.lastContact?.timestamp"></p3m-last-contact>
           </small>
         </td>
         <td class="align-middle d-none d-sm-table-cell">

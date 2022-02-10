@@ -26,8 +26,7 @@ public class DeviceEntity
 
 	private String ttnApplicationSessionKey;
 
-	public DeviceEntity(String name)
-	{
-		this.name = name;
-	}
+	private double latitude;
+
+	private double longitude;
 }

@@ -3,6 +3,7 @@ package de.p3monitor.user;
 import de.p3monitor.user.dtos.CreateUserRequest;
 import de.p3monitor.user.dtos.UpdateUserPasswordRequest;
 import de.p3monitor.user.dtos.UserResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import de.p3monitor.user.dtos.UpdateUserRequest;
@@ -13,14 +14,10 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
+@AllArgsConstructor
 public class UserController
 {
 	private final UserService userService;
-
-	public UserController(UserService userService)
-	{
-		this.userService = userService;
-	}
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("")

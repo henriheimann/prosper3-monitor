@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { UserModel } from '../../../shared/models/user.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DeviceModel } from '../../../shared/models/device.model';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { UserService } from '../../../shared/services/user.service';
 import { DeviceService } from '../../../shared/services/device.service';
 
 @Component({

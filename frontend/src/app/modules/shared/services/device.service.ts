@@ -42,7 +42,7 @@ export class DeviceService {
 
   performDevicesTtnSync(): Observable<void> {
     return this.httpClient
-      .post<void>(`${environment.backendUrl}/devices-ttn-sync`, null)
+      .post<void>(`${environment.backendUrl}/ttn-sync/devices`, null)
       .pipe(tap(() => this.getAll()));
   }
 }

@@ -30,6 +30,7 @@ if [ "${SKIP_FRONTEND_BUILD}" = "0" ]; then
     --build-arg frontend_production=true \
     --build-arg deployment_url="${DEPLOYMENT_URL}" \
     --build-arg backend_url="${DEPLOYMENT_URL}/api" \
+    --build-arg tileserver_style_url="${TILESERVER_STYLE_URL}" \
     --build-arg backend_oauth_client_id="${P3M_BACKEND_OAUTH_CLIENT_ID}" \
     --build-arg backend_oauth_client_secret="${P3M_BACKEND_OAUTH_CLIENT_SECRET}"
   docker save p3m-frontend > p3m-frontend.tar
@@ -39,7 +40,6 @@ if [ "${SKIP_FRONTEND_BUILD}" = "0" ]; then
 else
   echo "Skipping frontend build..."
 fi
-
 
 # build and upload backend if not skipped
 if [ "${SKIP_BACKEND_BUILD}" = "0" ]; then
@@ -56,6 +56,9 @@ fi
 
 # upload compose and configuration
 rsync -aP docker-compose.yml .env .env-secrets config scripts "${DEPLOYMENT_USER}@${DEPLOYMENT_IP}:~/p3m"
+
+# upload tileserver configuration
+rsync -aP ../tileserver "${DEPLOYMENT_USER}@${DEPLOYMENT_IP}:~/p3m"
 
 # load frontend
 if [ "${SKIP_FRONTEND_BUILD}" = "0" ]; then

@@ -1,0 +1,28 @@
+{
+  "options": {
+    "paths": {
+      "root": "/data",
+      "fonts": "fonts",
+      "styles": "styles",
+      "mbtiles": "mbtiles"
+    }
+  },
+  "styles": {
+    "my-style": {
+      "style": "basic.json",
+      "tilejson": {
+        "bounds": [
+          5.941466,
+          51.01422,
+          7.314306,
+          51.90781
+        ]
+      }
+    }
+  },
+  "data": {
+    "duesseldorf-regbz": {
+      "mbtiles": "2017-07-03_nordrhein-westfalen_duesseldorf-regbez.mbtiles"
+    }
+  }
+}

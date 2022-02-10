@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { UserModel } from '../../../shared/models/user.model';
 import { DeviceModel } from '../../../shared/models/device.model';
 import { DeviceService } from '../../../shared/services/device.service';
 import { Observable } from 'rxjs';

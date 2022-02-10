@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="46" height="89.772" viewBox="0 0 46 89.772">
+  <defs>
+    <filter id="sensor-plate" x="8" y="31.772" width="30" height="58" filterUnits="userSpaceOnUse">
+      <feOffset input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.349"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="sensor-case" x="0" y="0" width="46" height="67" filterUnits="userSpaceOnUse">
+      <feOffset input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-2"/>
+      <feFlood flood-opacity="0.149"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="plant-sensor-50percent" transform="translate(-249 -584.51)">
+    <g transform="matrix(1, 0, 0, 1, 249, 584.51)" filter="url(#sensor-plate)">
+      <path id="sensor-plate-2" data-name="sensor-plate" d="M272,665.282l-6-12v-28h12v28Z" transform="translate(-249 -584.51)" fill="#333"/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 249, 584.51)" filter="url(#sensor-case)">
+      <rect id="sensor-case-2" data-name="sensor-case" width="28" height="49" rx="4" transform="translate(9 9)" fill="#fff"/>
+    </g>
+    <g id="droplet" transform="translate(259.291 603.732)">
+      <path id="droplet3" d="M11.3,1.428C12.155.527,12.709,0,12.709,0a19.3,19.3,0,0,0,.662,1.853,28.713,28.713,0,0,0,5.706,8.21c2.338,2.6,4.341,4.831,4.341,7.785A10.709,10.709,0,0,1,2,17.848C2,11.9,8.39,4.492,11.3,1.428Zm.737,1.822q-1.719,1.86-3.264,3.871a34.314,34.314,0,0,0-3.5,5.479,12.348,12.348,0,0,0-1.489,5.247,8.924,8.924,0,0,0,17.848,0c0-2.144-1.421-3.85-3.893-6.6l-.054-.057a31.575,31.575,0,0,1-5.651-7.939Z" fill="#80b2a9" fill-rule="evenodd"/>
+      <path id="droplet2" d="M4.553,10.232A23.727,23.727,0,0,1,8.289,4.646L9.552,5.91a22.062,22.062,0,0,0-3.4,5.122Z" transform="translate(2.004 3.646)" fill="#80b2a9" fill-rule="evenodd"/>
+      <path id="droplet1" d="M3.44,28.026a28.425,28.425,0,0,0,7.254.648c3.98-.168,3.132-.96,6.627-1.235a10.515,10.515,0,0,1,5.921,1.235s-2.173,9.292-9.913,8.892S3.44,28.026,3.44,28.026Z" transform="translate(-0.522 -9.93)" fill="#80b2a9"/>
+    </g>
+  </g>
+</svg>

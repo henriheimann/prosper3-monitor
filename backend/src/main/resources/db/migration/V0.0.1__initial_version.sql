@@ -5,7 +5,9 @@ CREATE TABLE devices
     ttn_id VARCHAR(256),
     ttn_device_address VARCHAR(256),
     ttn_network_session_key VARCHAR(256),
-    ttn_application_session_key VARCHAR(256)
+    ttn_application_session_key VARCHAR(256),
+    latitude DOUBLE PRECISION NOT NULL DEFAULT 0.00,
+    longitude DOUBLE PRECISION NOT NULL DEFAULT 0.00
 );
 
 CREATE TYPE user_role_enum AS ENUM ('USER', 'ADMIN');

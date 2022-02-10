@@ -3,9 +3,10 @@ package de.p3monitor.device;
 import de.p3monitor.device.dtos.CreateDeviceRequest;
 import de.p3monitor.device.dtos.DeviceResponse;
 import de.p3monitor.device.dtos.UpdateDeviceRequest;
+import de.p3monitor.influxdb.dtos.DeviceSensorType;
+import de.p3monitor.influxdb.dtos.DeviceValuesResponse;
 import de.p3monitor.influxdb.InfluxDbService;
 import de.p3monitor.ttn.TtnService;
-import de.p3monitor.ttn.api.dtos.EndDevice;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,10 +15,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @AllArgsConstructor
@@ -28,9 +26,28 @@ public class DeviceService
 	private final TtnService ttnService;
 	private final InfluxDbService influxDbService;
 
-	private Mono<Tuple2<DeviceEntity, Optional<LocalDateTime>>> zipWithLastContact(DeviceEntity deviceEntity)
+	private DeviceResponse createDeviceResponse(Tuple2<DeviceEntity, Optional<DeviceValuesResponse>> tuple, boolean includeKeys)
 	{
-		Mono<Optional<LocalDateTime>> lastContact = Mono.empty();
+		DeviceResponse deviceResponse = new DeviceResponse();
+		deviceResponse.setId(tuple.getT1().getId());
+		deviceResponse.setName(tuple.getT1().getName());
+		deviceResponse.setTtnId(tuple.getT1().getTtnId());
+		if (includeKeys) {
+			deviceResponse.setTtnDeviceAddress(tuple.getT1().getTtnDeviceAddress());
+			deviceResponse.setTtnApplicationSessionKey(tuple.getT1().getTtnApplicationSessionKey());
+			deviceResponse.setTtnNetworkSessionKey(tuple.getT1().getTtnNetworkSessionKey());
+		}
+		if (tuple.getT2().isPresent()) {
+			deviceResponse.setLastContact(tuple.getT2().get());
+		}
+		deviceResponse.setLatitude(tuple.getT1().getLatitude());
+		deviceResponse.setLongitude(tuple.getT1().getLongitude());
+		return deviceResponse;
+	}
+
+	private Mono<Tuple2<DeviceEntity, Optional<DeviceValuesResponse>>> zipWithLastContact(DeviceEntity deviceEntity)
+	{
+		Mono<Optional<DeviceValuesResponse>> lastContact = Mono.empty();
 		if (deviceEntity.getTtnId() != null) {
 			lastContact = influxDbService.getLastContact(deviceEntity.getTtnId())
 					.map(Optional::of)
@@ -42,7 +59,12 @@ public class DeviceService
 	@Transactional
 	public Mono<DeviceResponse> createDevice(CreateDeviceRequest createDeviceRequest)
 	{
-		return deviceRepository.save(new DeviceEntity(createDeviceRequest.getName()))
+		DeviceEntity entity = new DeviceEntity();
+		entity.setName(createDeviceRequest.getName());
+		entity.setLatitude(createDeviceRequest.getLatitude());
+		entity.setLongitude(createDeviceRequest.getLongitude());
+
+		return deviceRepository.save(entity)
 				.zipWith(ttnService.createEndDevice()
 						.map(Optional::of)
 						.doOnError(e -> log.warn("Unable to create TTN end device", e))
@@ -59,7 +81,7 @@ public class DeviceService
 					return deviceRepository.save(deviceEntity);
 				})
 				.flatMap(this::zipWithLastContact)
-				.map(tuple -> new DeviceResponse(tuple.getT1(), tuple.getT2().orElse(null)));
+				.map(tuple -> createDeviceResponse(tuple, false));
 	}
 
 	@Transactional
@@ -67,15 +89,17 @@ public class DeviceService
 	{
 		return deviceRepository.findById(id)
 				.flatMap(this::zipWithLastContact)
-				.map(tuple -> new DeviceResponse(tuple.getT1(), tuple.getT2().orElse(null)));
+				.map(tuple -> createDeviceResponse(tuple, true));
 	}
 
 	@Transactional
-	public Flux<DeviceResponse> getDevices()
+	public Flux<DeviceResponse> getDevices(DeviceSensorType sensorType)
 	{
 		return deviceRepository.findAll()
 				.flatMap(this::zipWithLastContact)
-				.map(tuple -> new DeviceResponse(tuple.getT1(), tuple.getT2().orElse(null)));
+				.filter(tuple -> sensorType == null || (tuple.getT2().isPresent() &&
+						tuple.getT2().get().getSensorType() == sensorType))
+				.map(tuple -> createDeviceResponse(tuple, false));
 	}
 
 	@Transactional
@@ -87,7 +111,7 @@ public class DeviceService
 				})
 				.flatMap(deviceRepository::save)
 				.flatMap(this::zipWithLastContact)
-				.map(tuple -> new DeviceResponse(tuple.getT1(), tuple.getT2().orElse(null)));
+				.map(tuple -> createDeviceResponse(tuple, false));
 	}
 
 	@Transactional
@@ -97,75 +121,5 @@ public class DeviceService
 				.flatMap(deviceEntity -> ttnService.deleteEndDevice(deviceEntity.getTtnId()))
 				.then(deviceRepository.findById(id))
 				.flatMap(deviceRepository::delete);
-	}
-
-	@AllArgsConstructor
-	private static class SyncOperation
-	{
-		public enum Type
-		{
-			ADD_DEVICE_WITH_TTN_ID,
-			ERASE_DEVICES_TTN_ID
-		}
-
-		private final Type type;
-		private final EndDevice ttnDevice;
-		private final DeviceEntity deviceEntity;
-	}
-
-	@Transactional
-	public Flux<DeviceResponse> syncDevicesWithTtn()
-	{
-		return ttnService.getEndDevices()
-				.zipWith(deviceRepository.findAll().collectList())
-				.map(tuple -> {
-					var endDevices = tuple.getT1();
-					var deviceEntities = tuple.getT2();
-
-					var ttnIds =  endDevices.stream()
-							.map(endDevice -> endDevice.getIds().getDeviceId())
-							.collect(Collectors.toSet());
-
-					var deviceEntitiesByTtnId = deviceEntities.stream()
-							.collect(Collectors.toMap(DeviceEntity::getTtnId, deviceEntity -> deviceEntity));
-
-					return Stream.concat(
-							endDevices.stream()
-									.filter(endDevice -> !deviceEntitiesByTtnId.containsKey(endDevice.getIds().getDeviceId()))
-									.map(endDevice -> new SyncOperation(SyncOperation.Type.ADD_DEVICE_WITH_TTN_ID, endDevice, null)),
-							deviceEntities.stream()
-									.filter(deviceEntity -> !ttnIds.contains(deviceEntity.getTtnId()))
-									.map(deviceEntity -> new SyncOperation(SyncOperation.Type.ERASE_DEVICES_TTN_ID, null, deviceEntity))
-					).collect(Collectors.toList());
-				})
-				.flatMapMany(Flux::fromIterable)
-				.flatMap(syncOperation -> {
-					if (syncOperation.type == SyncOperation.Type.ADD_DEVICE_WITH_TTN_ID) {
-						return ttnService.getEndDevice(syncOperation.ttnDevice.getIds().getDeviceId())
-								.map(endDevice -> new SyncOperation(SyncOperation.Type.ADD_DEVICE_WITH_TTN_ID, endDevice, null));
-					} else {
-						return Mono.just(syncOperation);
-					}
-				})
-				.flatMap(syncOperation -> {
-					DeviceEntity deviceEntity;
-					if (syncOperation.type == SyncOperation.Type.ADD_DEVICE_WITH_TTN_ID) {
-						deviceEntity = new DeviceEntity();
-						deviceEntity.setName(syncOperation.ttnDevice.getIds().getDeviceId());
-						deviceEntity.setTtnId(syncOperation.ttnDevice.getIds().getDeviceId());
-						deviceEntity.setTtnDeviceAddress(syncOperation.ttnDevice.getSession().getDeviceAddress());
-						deviceEntity.setTtnApplicationSessionKey(syncOperation.ttnDevice.getSession().getKeys().getAppSessionKey().getKey());
-						deviceEntity.setTtnNetworkSessionKey(syncOperation.ttnDevice.getSession().getKeys().getNetworkSessionKey().getKey());
-					} else {
-						deviceEntity = syncOperation.deviceEntity;
-						deviceEntity.setTtnId(null);
-						deviceEntity.setTtnDeviceAddress(null);
-						deviceEntity.setTtnApplicationSessionKey(null);
-						deviceEntity.setTtnNetworkSessionKey(null);
-					}
-					return deviceRepository.save(deviceEntity);
-				})
-				.flatMap(this::zipWithLastContact)
-				.map(tuple -> new DeviceResponse(tuple.getT1(), tuple.getT2().orElse(null)));
 	}
 }

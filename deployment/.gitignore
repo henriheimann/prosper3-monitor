@@ -1,3 +1,5 @@
 volumes/
 .env-secrets
 */config/nginx/certs/
+tileserver/mbtiles/*.mbtiles
+tileserver/fonts/**

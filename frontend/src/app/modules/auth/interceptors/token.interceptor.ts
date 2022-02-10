@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { selectToken } from '../store/auth.selectors';
 import { Store } from '@ngrx/store';
 import { catchError } from 'rxjs/operators';
-import { logoutUser, requestUnauthorized } from '../store/auth.actions';
+import { requestUnauthorized } from '../store/auth.actions';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
