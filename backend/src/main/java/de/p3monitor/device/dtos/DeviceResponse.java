@@ -1,7 +1,6 @@
 package de.p3monitor.device.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import de.p3monitor.influxdb.dtos.DeviceValuesResponse;
 import lombok.Data;
 
 @Data
@@ -16,5 +15,5 @@ public class DeviceResponse
 	private String ttnApplicationSessionKey;
 	private double latitude;
 	private double longitude;
-	private DeviceValuesResponse lastContact;
+	private LastContactResponse lastContact;
 }

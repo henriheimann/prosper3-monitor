@@ -43,7 +43,7 @@ public class DeviceController
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
-	public Mono<DeviceResponse> updateDevice(@PathVariable long id, @RequestBody UpdateDeviceRequest updateDeviceRequest)
+	public Mono<DeviceResponse> updateDevice(@PathVariable long id, @Valid @RequestBody UpdateDeviceRequest updateDeviceRequest)
 	{
 		return deviceService.updateDevice(id, updateDeviceRequest);
 	}

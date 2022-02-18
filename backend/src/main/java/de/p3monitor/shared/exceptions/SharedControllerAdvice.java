@@ -93,8 +93,6 @@ public class SharedControllerAdvice
 	@ExceptionHandler({WebExchangeBindException.class})
 	public ResponseEntity<ErrorResponse> webExchangeBindExceptionHandler(WebExchangeBindException e, Locale locale)
 	{
-		log.info("WebExchangeBindException");
-
 		List<String> errorMessages = e.getAllErrors().stream()
 				.map(DefaultMessageSourceResolvable::getDefaultMessage)
 				.filter(Objects::nonNull)

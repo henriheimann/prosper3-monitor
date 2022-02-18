@@ -1,6 +1,7 @@
 package de.p3monitor.device;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -11,6 +12,7 @@ public class TtnSyncController
 {
 	private final TtnSyncService ttnSyncService;
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/devices")
 	public Mono<Void> performDevicesTtnSync()
 	{

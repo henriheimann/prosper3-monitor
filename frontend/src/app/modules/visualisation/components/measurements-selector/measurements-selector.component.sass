@@ -1,0 +1,36 @@
+::ng-deep
+  .custom-slider .ngx-slider .ngx-slider-bubble
+    font-size: 0.9rem
+    color: black
+
+  .custom-slider .ngx-slider .ngx-slider-bubble.ngx-slider-limit
+    color: black
+
+  .custom-slider .ngx-slider .ngx-slider-bar
+    background: #DEE2E6
+    height: 6px
+    border-radius: 3px
+
+  .custom-slider .ngx-slider .ngx-slider-pointer
+    width: 16px
+    height: 16px
+    top: -5px
+    background-color: #6C6C6C
+    z-index: 3
+    border-radius: 8px
+
+    &:focus
+      outline: 0 !important
+
+  .custom-slider .ngx-slider .ngx-slider-pointer::after
+    content: ''
+    width: 4px
+    height: 4px
+    position: absolute
+    top: 6px
+    left: 6px
+    border-radius: 2px
+    background: #fff
+
+  .custom-slider .ngx-slider .ngx-slider-active::after
+    background: #fff !important

@@ -6,10 +6,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FooterComponent } from './components/footer/footer.component';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
 import { LastContactComponent } from './components/last-contact/last-contact.component';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 @NgModule({
   declarations: [NavigationComponent, FooterComponent, ConfirmModalComponent, LastContactComponent],
-  exports: [NavigationComponent, ReactiveFormsModule, FooterComponent, LastContactComponent],
-  imports: [CommonModule, RouterModule, ReactiveFormsModule]
+  exports: [NavigationComponent, ReactiveFormsModule, FooterComponent, LastContactComponent, NgxSliderModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, NgxSliderModule]
 })
 export class SharedModule {}

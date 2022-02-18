@@ -3,13 +3,14 @@ package de.p3monitor.influxdb.dtos;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @Builder
 public class DeviceValuesResponse
 {
-	private final LocalDateTime timestamp;
+	private final ZonedDateTime timestamp;
+	private final String ttnDeviceId;
 	private final DeviceSensorType sensorType;
 	private final Double batteryVoltage;
 	private final Double moistureCounter;

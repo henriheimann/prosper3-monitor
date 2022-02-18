@@ -1,6 +1,6 @@
 <div class="position-relative" style="z-index: 3" *ngIf="(selectedDevice$ | async) as device">
   <div class="bg-white rounded shadow-sm border-0 position-absolute mr-2 mt-2" style="width: 300px; right: 0; top: 0">
-    <div class="modal-content">
+    <div class="modal-content border-0">
       <div class="modal-header">
         <div>
           <h5 class="modal-title">
@@ -14,55 +14,56 @@
           <span>&times;</span>
         </button>
       </div>
-      <div class="modal-body container border-bottom">
-        <table class="table table-sm table-borderless mb-0">
+      <div class="modal-body container border-bottom" *ngIf="useDeviceLastContact ? device?.lastContact : (measurements$ | async) as measurements">
+        <h6 class="pb-2">{{ 'Messwerte vom ' + formatDate(measurements.timestamp) + ':' }}</h6>
+        <table class="table table-sm table-borderless mb-0" *ngIf="measurements.sensorValues">
           <tbody>
-            <tr *ngIf="device?.lastContact?.moistureCounter">
+            <tr *ngIf="measurements.sensorValues.mst as moisture">
               <td class="font-weight-bold">
                 Bewässerung
               </td>
               <td class="text-right">
-                {{ device?.lastContact?.moistureCounter }}
+                {{ moisture * 100 | number: '1.2-2' }} %
               </td>
             </tr>
-            <tr *ngIf="device?.lastContact?.temperature">
+            <tr *ngIf="measurements.sensorValues.tmp as temperature">
               <td class="font-weight-bold">
                 Temperatur
               </td>
               <td class="text-right">
-                {{ device?.lastContact?.temperature }}
+                {{ temperature | number: '1.2-2' }} °C
               </td>
             </tr>
-            <tr *ngIf="device?.lastContact?.irTemperature">
+            <tr *ngIf="measurements.sensorValues.irt as irTemperature">
               <td class="font-weight-bold">
                 Infrarot Temperatur
               </td>
               <td class="text-right">
-                {{ device?.lastContact?.irTemperature }}
+                {{ irTemperature | number: '1.2-2' }} °C
               </td>
             </tr>
-            <tr *ngIf="device?.lastContact?.humidity">
+            <tr *ngIf="measurements.sensorValues.hum as humidity">
               <td class="font-weight-bold">
                 Luftfeuchtigkeit
               </td>
               <td class="text-right">
-                {{ device?.lastContact?.humidity }}
+                {{ humidity | number: '1.2-2' }} %RH
               </td>
             </tr>
-            <tr *ngIf="device?.lastContact?.brightnessCurrent">
+            <tr *ngIf="measurements.sensorValues.bgh as brightness">
               <td class="font-weight-bold">
                 Helligkeit
               </td>
               <td class="text-right">
-                {{ device?.lastContact?.brightnessCurrent }}
+                {{ brightness * 100 | number: '1.2-2' }} %
               </td>
             </tr>
-            <tr *ngIf="device?.lastContact?.batteryVoltage">
+            <tr *ngIf="measurements.sensorValues.bat as batteryVoltage">
               <td class="font-weight-bold">
                 Batteriespannung
               </td>
               <td class="text-right">
-                {{ device?.lastContact?.batteryVoltage }}
+                {{ batteryVoltage | number: '1.2-2' }} V
               </td>
             </tr>
           </tbody>
@@ -80,5 +81,4 @@
       </div>
     </div>
   </div>
-
 </div>

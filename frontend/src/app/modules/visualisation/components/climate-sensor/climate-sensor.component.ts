@@ -1,9 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { selectDevice } from '../../store/visualisation.actions';
 import { DeviceModel } from '../../../shared/models/device.model';
-import { selectSelectedDevice } from '../../store/visualisation.selectors';
+import {
+  selectAllMeasurementsAtSelectedIndexForSelectedDevice,
+  selectSelectedDevice,
+  selectSelectedMeasurementType
+} from '../../store/visualisation.selectors';
 import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
+import { Observable, zip } from 'rxjs';
+import {
+  getMaximumValueForMeasurementType,
+  getMinimumValueForMeasurementType,
+  MeasurementTypeModel
+} from '../../models/measurement-type.model';
+import { SensorValuesModel } from '../../../shared/models/sensor-values.model';
 
 @Component({
   selector: 'p3m-climate-sensor',
@@ -12,11 +23,17 @@ import { Store } from '@ngrx/store';
 })
 export class ClimateSensorComponent {
   device: DeviceModel | null = null;
+
   selected$ = this.store.select(selectSelectedDevice).pipe(
     map((selectedDevice) => {
       return selectedDevice && selectedDevice === this.device;
     })
   );
+
+  measurements$: Observable<{ timestamp: string; sensorValues: SensorValuesModel } | null> = this.store.select(
+    selectAllMeasurementsAtSelectedIndexForSelectedDevice
+  );
+  measurementsType$: Observable<MeasurementTypeModel> = this.store.select(selectSelectedMeasurementType);
 
   constructor(private store: Store) {}
 
@@ -28,5 +45,48 @@ export class ClimateSensorComponent {
         })
       );
     }
+  }
+
+  matchesIcon(type: string): Observable<boolean> {
+    return zip(this.measurements$, this.measurementsType$).pipe(
+      map(([measurements, measurementsType]) => {
+        if (measurements && measurementsType) {
+          let value: number | undefined;
+          switch (measurementsType) {
+            default:
+            case MeasurementTypeModel.TEMPERATURE:
+              value = measurements?.sensorValues?.tmp;
+              break;
+            case MeasurementTypeModel.BRIGHTNESS_CURRENT:
+              value = measurements?.sensorValues?.bgh;
+              break;
+            case MeasurementTypeModel.HUMIDITY:
+              value = measurements?.sensorValues?.hum;
+              break;
+          }
+
+          let min = getMinimumValueForMeasurementType(measurementsType);
+          let max = getMaximumValueForMeasurementType(measurementsType);
+          let diff = max - min;
+
+          if (value) {
+            switch (type) {
+              case '0-percent':
+                return value >= min && value < min + diff * 0.2;
+              case '25-percent':
+                return value >= min + diff * 0.2 && value <= min + diff * 0.4;
+              case '50-percent':
+                return value >= min + diff * 0.4 && value <= min + diff * 0.6;
+              case '75-percent':
+                return value >= min + diff * 0.6 && value <= min + diff * 0.8;
+              case '100-percent':
+                return value >= min + diff * 0.8;
+            }
+          }
+        }
+
+        return false;
+      })
+    );
   }
 }

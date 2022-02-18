@@ -64,6 +64,7 @@ public class WebSecurityConfig
 				.authorizeExchange()
 				.pathMatchers("/auth/login").permitAll()
 				.pathMatchers(HttpMethod.GET, "/devices").permitAll()
+				.pathMatchers(HttpMethod.POST, "/measurements").permitAll()
 				.pathMatchers(HttpMethod.OPTIONS).permitAll()
 				.anyExchange().authenticated()
 				.and()

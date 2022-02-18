@@ -2,5 +2,13 @@
   "singleQuote": true,
   "trailingComma": "none",
   "endOfLine": "auto",
-  "printWidth": 120
+  "printWidth": 120,
+  "overrides": [
+    {
+      "files": ["**/*.css", "**/*.scss", "**/*.sass", "**/*.html"],
+      "options": {
+        "singleQuote": false
+      }
+    }
+  ]
 }

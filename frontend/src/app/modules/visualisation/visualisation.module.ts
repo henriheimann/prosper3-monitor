@@ -15,6 +15,8 @@ import { ClimateSensorComponent } from './components/climate-sensor/climate-sens
 import { UnknownSensorComponent } from './components/unknown-sensor/unknown-sensor.component';
 import { SensorDetailComponent } from './components/sensor-detail/sensor-detail.component';
 import { StopDraggingModeComponent } from './components/stop-dragging-mode/stop-dragging-mode.component';
+import { MeasurementsSelectorComponent } from './components/measurements-selector/measurements-selector.component';
+import { MapColorLegendComponent } from './components/map-color-legend/map-color-legend.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { StopDraggingModeComponent } from './components/stop-dragging-mode/stop-
     ClimateSensorComponent,
     UnknownSensorComponent,
     SensorDetailComponent,
-    StopDraggingModeComponent
+    StopDraggingModeComponent,
+    MeasurementsSelectorComponent,
+    MapColorLegendComponent
   ],
   imports: [
     CommonModule,

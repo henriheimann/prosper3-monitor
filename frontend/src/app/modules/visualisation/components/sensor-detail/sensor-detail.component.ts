@@ -1,7 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectSelectedDevice } from '../../store/visualisation.selectors';
+import {
+  selectAllMeasurementsAtSelectedIndexForSelectedDevice,
+  selectSelectedDevice
+} from '../../store/visualisation.selectors';
 import { selectDevice, startDraggingSelectedDevice } from '../../store/visualisation.actions';
+import { Observable } from 'rxjs';
+import { DeviceModel } from '../../../shared/models/device.model';
+import { SensorValuesModel } from '../../../shared/models/sensor-values.model';
 
 @Component({
   selector: 'p3m-sensor-detail',
@@ -9,7 +15,13 @@ import { selectDevice, startDraggingSelectedDevice } from '../../store/visualisa
   styleUrls: ['./sensor-detail.component.sass']
 })
 export class SensorDetailComponent {
-  selectedDevice$ = this.store.select(selectSelectedDevice);
+  selectedDevice$: Observable<DeviceModel | null> = this.store.select(selectSelectedDevice);
+
+  measurements$: Observable<{ timestamp: string; sensorValues: SensorValuesModel } | null> = this.store.select(
+    selectAllMeasurementsAtSelectedIndexForSelectedDevice
+  );
+
+  @Input() useDeviceLastContact = false;
 
   constructor(private store: Store) {}
 
@@ -26,4 +38,14 @@ export class SensorDetailComponent {
   }
 
   onEditClicked(): void {}
+
+  formatDate(timestamp: string): string {
+    return new Date(timestamp).toLocaleString([], {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
 }

@@ -2,10 +2,11 @@ package de.p3monitor.device;
 
 import de.p3monitor.device.dtos.CreateDeviceRequest;
 import de.p3monitor.device.dtos.DeviceResponse;
+import de.p3monitor.device.dtos.LastContactResponse;
 import de.p3monitor.device.dtos.UpdateDeviceRequest;
 import de.p3monitor.influxdb.dtos.DeviceSensorType;
-import de.p3monitor.influxdb.dtos.DeviceValuesResponse;
 import de.p3monitor.influxdb.InfluxDbService;
+import de.p3monitor.device.dtos.SensorValuesResponse;
 import de.p3monitor.ttn.TtnService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ public class DeviceService
 	private final TtnService ttnService;
 	private final InfluxDbService influxDbService;
 
-	private DeviceResponse createDeviceResponse(Tuple2<DeviceEntity, Optional<DeviceValuesResponse>> tuple, boolean includeKeys)
+	private DeviceResponse createDeviceResponse(Tuple2<DeviceEntity, Optional<LastContactResponse>> tuple, boolean includeKeys)
 	{
 		DeviceResponse deviceResponse = new DeviceResponse();
 		deviceResponse.setId(tuple.getT1().getId());
@@ -45,15 +46,21 @@ public class DeviceService
 		return deviceResponse;
 	}
 
-	private Mono<Tuple2<DeviceEntity, Optional<DeviceValuesResponse>>> zipWithLastContact(DeviceEntity deviceEntity)
+	private Mono<Tuple2<DeviceEntity, Optional<LastContactResponse>>> zipWithLastContact(DeviceEntity deviceEntity)
 	{
-		Mono<Optional<DeviceValuesResponse>> lastContact = Mono.empty();
+		Mono<Optional<LastContactResponse>> lastContactOptional = Mono.empty();
 		if (deviceEntity.getTtnId() != null) {
-			lastContact = influxDbService.getLastContact(deviceEntity.getTtnId())
-					.map(Optional::of)
+			lastContactOptional = influxDbService.getLatestDeviceValues(deviceEntity.getTtnId())
+					.map(deviceValues -> {
+						LastContactResponse lastContact = new LastContactResponse();
+						lastContact.setTimestamp(deviceValues.getTimestamp());
+						lastContact.setSensorType(deviceValues.getSensorType());
+						lastContact.setSensorValues(MeasurementsService.deviceToSensorValues(deviceValues));
+						return Optional.of(lastContact);
+					})
 					.defaultIfEmpty(Optional.empty());
 		}
-		return Mono.zip(Mono.just(deviceEntity), lastContact);
+		return Mono.zip(Mono.just(deviceEntity), lastContactOptional);
 	}
 
 	@Transactional
@@ -106,9 +113,7 @@ public class DeviceService
 	public Mono<DeviceResponse> updateDevice(long id, UpdateDeviceRequest updateDeviceRequest)
 	{
 		return deviceRepository.findById(id)
-				.doOnNext(device -> {
-					device.setName(updateDeviceRequest.getName());
-				})
+				.doOnNext(device -> device.setName(updateDeviceRequest.getName()))
 				.flatMap(deviceRepository::save)
 				.flatMap(this::zipWithLastContact)
 				.map(tuple -> createDeviceResponse(tuple, false));
