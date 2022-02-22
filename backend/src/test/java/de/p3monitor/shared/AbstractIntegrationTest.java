@@ -1,9 +1,9 @@
 package de.p3monitor.shared;
 
 import com.jayway.jsonpath.JsonPath;
-import de.p3monitor.device.DeviceRepository;
+import de.p3monitor.devices.DeviceRepository;
 import de.p3monitor.shared.startup.StartupService;
-import de.p3monitor.user.UserRepository;
+import de.p3monitor.users.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

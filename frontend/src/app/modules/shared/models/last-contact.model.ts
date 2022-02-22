@@ -1,7 +1,7 @@
-import { SensorValuesModel } from './sensor-values.model';
+import { DeviceValuesModel } from './device-values.model';
 
 export interface LastContactModel {
   timestamp: string;
   sensorType: string;
-  sensorValues: SensorValuesModel;
+  deviceValues: DeviceValuesModel;
 }

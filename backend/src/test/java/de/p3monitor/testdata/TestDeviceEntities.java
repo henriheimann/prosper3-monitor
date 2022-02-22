@@ -1,7 +1,7 @@
 package de.p3monitor.testdata;
 
 import lombok.experimental.UtilityClass;
-import de.p3monitor.device.DeviceEntity;
+import de.p3monitor.devices.DeviceEntity;
 
 @UtilityClass
 public class TestDeviceEntities

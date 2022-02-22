@@ -1,6 +1,6 @@
 package de.p3monitor.shared.startup;
 
-import de.p3monitor.user.UserService;
+import de.p3monitor.users.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

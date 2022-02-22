@@ -14,7 +14,8 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TokenInterceptor } from './modules/auth/interceptors/token.interceptor';
 import { LegalModule } from './modules/legal/legal.module';
-import { VisualisationModule } from './modules/visualisation/visualisation.module';
+import { SensorMapsModule } from './modules/sensor-maps/sensor-maps.module';
+import { DashboardsModule } from './modules/dashboards/dashboards.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,7 +26,8 @@ import { VisualisationModule } from './modules/visualisation/visualisation.modul
     AdminModule,
     AuthModule,
     LegalModule,
-    VisualisationModule,
+    SensorMapsModule,
+    DashboardsModule,
     SharedModule,
     StoreModule.forRoot({}, {}),
     StoreDevtoolsModule.instrument({

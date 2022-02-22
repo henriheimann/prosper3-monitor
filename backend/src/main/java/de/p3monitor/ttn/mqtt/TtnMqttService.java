@@ -7,7 +7,7 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.stereotype.Service;
-import de.p3monitor.device.LiveMeasurementService;
+import de.p3monitor.devices.LiveMeasurementService;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;

@@ -145,7 +145,7 @@ void application_main()
 
 	// Immediately return if input voltage is too low
 	if (input_voltage < 2.0f) {
-		//return;
+		return;
 	}
 
 	// Save input voltage in global variable used by rfm95 callback

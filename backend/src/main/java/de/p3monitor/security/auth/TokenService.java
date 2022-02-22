@@ -1,12 +1,12 @@
 package de.p3monitor.security.auth;
 
-import de.p3monitor.user.UserService;
+import de.p3monitor.users.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import de.p3monitor.user.UserEntity;
+import de.p3monitor.users.UserEntity;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

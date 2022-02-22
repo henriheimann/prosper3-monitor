@@ -3,7 +3,7 @@ package de.p3monitor.shared.startup;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import de.p3monitor.user.UserRole;
+import de.p3monitor.users.UserRole;
 
 import java.util.List;
 

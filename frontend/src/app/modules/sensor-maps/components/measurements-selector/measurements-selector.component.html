@@ -1,0 +1,49 @@
+<div class="container-lg p-2">
+  <div class="row bg-white rounded shadow-sm border-0 m-0">
+    <div class="col-6 col-md-3 col-lg-2 p-2 d-flex align-items-center justify-content-center border-md-right">
+      <div class="dropup">
+        <button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">
+          <i class="bi bi-clock pr-1"></i>
+          <span>{{ selectedTimespan$ | async }}</span>
+        </button>
+        <div class="dropdown-menu">
+          <a
+            *ngFor="let timespan of measurementTimespan | keyvalue"
+            class="dropdown-item"
+            (click)="onTimespanClicked(timespan.value)"
+          >
+            {{ timespan.value }}
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 col-lg-2 p-2 d-flex align-items-center justify-content-center border-md-right">
+      <div class="dropup">
+        <button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">
+          <i *ngIf="(selectedType$ | async) == measurementType.TEMPERATURE" class="bi bi-thermometer-half pr-1"></i>
+          <i *ngIf="(selectedType$ | async) == measurementType.HUMIDITY" class="bi bi-droplet-half pr-1"></i>
+          <i
+            *ngIf="(selectedType$ | async) == measurementType.BRIGHTNESS_CURRENT"
+            class="bi bi-brightness-high pr-1"
+          ></i>
+          <span>{{ selectedType$ | async }}</span>
+        </button>
+        <div class="dropdown-menu">
+          <a *ngFor="let type of measurementType | keyvalue" class="dropdown-item" (click)="onTypeClicked(type.value)">
+            {{ type.value }}
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-8 p-2 p-md-3 d-flex align-items-center justify-content-center custom-slider">
+      <ngx-slider
+        *ngIf="measurements !== null && measurements.length > 0; else no_measurements"
+        [(value)]="sliderSelectedIndex"
+        [options]="sliderOptions"
+        (userChange)="onSliderChange()"
+      >
+      </ngx-slider>
+      <ng-template #no_measurements> Keine Messungen für den ausgewählten Zeitraum </ng-template>
+    </div>
+  </div>
+</div>

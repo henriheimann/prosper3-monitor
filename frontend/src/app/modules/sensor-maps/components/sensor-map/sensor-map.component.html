@@ -1,0 +1,13 @@
+<div class="d-flex flex-grow-1" [id]="mapId"></div>
+<template #sensorsContainer></template>
+<p3m-sensor-detail
+  *ngIf="(selectedDevice$ | async) != null && (draggingDevice$ | async) == null"
+  [useDeviceLastContact]="useDeviceLastContact"
+></p3m-sensor-detail>
+<p3m-stop-dragging-mode
+  *ngIf="draggingDevice$ | async as draggingDevice"
+  [draggingDevice]="draggingDevice"
+  [draggingDeviceMarker]="devicesToMarkersMap.get(draggingDevice)"
+  class="position-absolute w-100"
+  style="bottom: 0.5rem"
+></p3m-stop-dragging-mode>

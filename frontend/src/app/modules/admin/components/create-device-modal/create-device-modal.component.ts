@@ -10,7 +10,9 @@ import { DeviceService } from '../../../shared/services/device.service';
 })
 export class CreateDeviceModalComponent {
   createDeviceForm = new FormGroup({
-    name: new FormControl('', Validators.required)
+    name: new FormControl('', Validators.required),
+    latitude: new FormControl(0.0, Validators.required),
+    longitude: new FormControl(0.0, Validators.required)
   });
 
   constructor(private modalRef: BsModalRef, private deviceService: DeviceService) {}
@@ -24,7 +26,9 @@ export class CreateDeviceModalComponent {
 
     this.deviceService
       .createDevice({
-        name: this.createDeviceForm.value['name']
+        name: this.createDeviceForm.value['name'],
+        latitude: this.createDeviceForm.value['latitude'],
+        longitude: this.createDeviceForm.value['longitude']
       })
       .subscribe({
         next: () => {

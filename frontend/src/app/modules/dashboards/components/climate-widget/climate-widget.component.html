@@ -1,0 +1,15 @@
+<ul class="nav nav-tabs">
+  <li *ngFor="let timespan of measurementTimespanModel | keyvalue" class="nav-item">
+    <a
+      class="nav-link"
+      [class.active]="timespan.value === selectedMeasurementTimespan"
+      (click)="onTimespanSelected(timespan.value)"
+      >{{ timespan.value }}</a
+    >
+  </li>
+</ul>
+<div class="tab-content border-left border-right">
+  <div class="tab-pane show active">
+    <p3m-climate-widget-tab [timespan]="selectedMeasurementTimespan"></p3m-climate-widget-tab>
+  </div>
+</div>

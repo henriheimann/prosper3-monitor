@@ -1,0 +1,26 @@
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <a class="nav-link active" id="current-tab" data-toggle="tab" href="#current" role="tab">Aktuell</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" id="last-month-tab" data-toggle="tab" href="#last-month" role="tab">Letzter Monat</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" id="last-year-tab" data-toggle="tab" href="#last-year" role="tab">Letztes Jahr</a>
+  </li>
+</ul>
+<div class="tab-content border-left border-right p-2" id="myTabContent">
+  <div class="tab-pane fade show active" id="current" role="tabpanel">
+    <table class="table">
+      <tbody>
+        <tr>
+          <th scope="row">Ø Bewässerte Pflanzen</th>
+          <td class="text-right border-0">9/10</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tab-pane fade" id="last-month" role="tabpanel">Bewässerte Pflanzen 9/10</div>
+  <div class="tab-pane fade" id="last-year" role="tabpanel">Bewässerte Pflanzen 9/10</div>
+</div>
+<p3m-sensor-map [devicesWithValues]="null" style="height: 300px"></p3m-sensor-map>

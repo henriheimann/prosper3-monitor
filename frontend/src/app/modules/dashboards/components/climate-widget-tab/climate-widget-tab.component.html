@@ -1,0 +1,42 @@
+<table class="table mb-2">
+  <thead>
+    <tr>
+      <th scope="col" class="border-0">Ø Prosper III</th>
+      <th scope="col" class="border-0">Ø Bottrop</th>
+      <th scope="col" class="text-right border-0">Differenz</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngIf="averagedMeasuredTemperature != null && averagedWeatherTemperature != null">
+      <td>{{ averagedMeasuredTemperature | number: "1.2-2" }} °C</td>
+      <td>{{ averagedWeatherTemperature | number: "1.2-2" }} °C</td>
+      <td class="text-right">
+        <span> {{ averagedMeasuredTemperature - averagedWeatherTemperature | number: "1.2-2" }} °C </span>
+        <i
+          *ngIf="averagedMeasuredTemperature - averagedWeatherTemperature < 0"
+          class="bi bi-arrow-down-square-fill ml-2"
+        ></i>
+        <i
+          *ngIf="averagedMeasuredTemperature - averagedWeatherTemperature > 0"
+          class="bi-arrow-up-square-fill ml-2"
+        ></i>
+      </td>
+    </tr>
+    <tr *ngIf="averagedMeasuredHumidity != null && averagedWeatherHumidity != null">
+      <td>{{ averagedMeasuredHumidity | number: "1.2-2" }} %RH</td>
+      <td>{{ averagedWeatherHumidity | number: "1.2-2" }} %RH</td>
+      <td class="text-right">
+        <span> {{ averagedMeasuredHumidity - averagedWeatherHumidity | number: "1.2-2" }} %RH </span>
+        <i *ngIf="averagedMeasuredHumidity - averagedWeatherHumidity < 0" class="bi bi-arrow-down-square-fill ml-2"></i>
+        <i *ngIf="averagedMeasuredHumidity - averagedWeatherHumidity > 0" class="bi-arrow-up-square-fill ml-2"></i>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p3m-sensor-map
+  [devicesWithValues]="devicesWithValues$ | async"
+  [selectedMeasurementType]="measurementType.TEMPERATURE"
+  [showSensorValuesLayer]="true"
+  [allowSensorSelection]="false"
+  style="height: 300px"
+></p3m-sensor-map>

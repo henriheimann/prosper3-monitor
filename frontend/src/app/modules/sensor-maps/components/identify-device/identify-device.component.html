@@ -1,0 +1,14 @@
+<div
+  class="p-2 h-100 w-100 d-flex flex-column align-items-center justify-content-center"
+  style="background-color: #000000dd"
+>
+  <div class="bg-white rounded shadow-sm d-flex flex-column align-items-center justify-content-center">
+    <div class="m-2">Scanne den QR eines Sensors um ihn zu identifizieren...</div>
+    <div class="overflow-hidden" style="background-color: black">
+      <zxing-scanner [formats]="allowedFormats" (scanComplete)="onScanCompleted($event)"></zxing-scanner>
+    </div>
+    <button class="btn btn-white m-2" type="button" (click)="onStopScanningClicked()">
+      <span class="pl-2">Scannen beenden</span>
+    </button>
+  </div>
+</div>

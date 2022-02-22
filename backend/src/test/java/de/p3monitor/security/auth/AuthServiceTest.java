@@ -1,8 +1,8 @@
 package de.p3monitor.security.auth;
 
 import de.p3monitor.security.auth.dtos.LoginResponse;
-import de.p3monitor.user.UserEntity;
-import de.p3monitor.user.UserService;
+import de.p3monitor.users.UserEntity;
+import de.p3monitor.users.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;

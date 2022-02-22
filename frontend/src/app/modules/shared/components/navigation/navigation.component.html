@@ -4,8 +4,15 @@
       <img *ngIf="routeStartsWith('/climate')" srcset="assets/images/nav-climate-monitor.png 5x" alt="Klimamonitor" />
       <img *ngIf="routeStartsWith('/plants')" srcset="assets/images/nav-plant-monitor.png 5x" alt="Pflanzenmonitor" />
       <img *ngIf="routeStartsWith('/admin')" srcset="assets/images/nav-administration.png 5x" alt="Administration" />
+      <img
+        *ngIf="routeStartsWith('/imprint')"
+        srcset="assets/images/nav-imprint.png 5x"
+        alt="Impressum und Datenschutz"
+      />
     </button>
     <div class="dropdown-menu">
+      <a class="dropdown-item" [routerLink]="['']"> Startseite </a>
+      <hr />
       <a class="dropdown-item" [routerLink]="['/climate']">
         <img srcset="assets/images/nav-climate-monitor.png 5x" alt="Klimamonitor" />
       </a>

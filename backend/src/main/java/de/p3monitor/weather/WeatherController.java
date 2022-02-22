@@ -1,12 +1,15 @@
 package de.p3monitor.weather;
 
-import de.p3monitor.influxdb.dtos.WeatherValuesResponse;
+import de.p3monitor.influxdb.dtos.InfluxWeatherValues;
+import de.p3monitor.weather.requests.AveragedWeatherRequest;
+import de.p3monitor.weather.requests.WeatherRequest;
+import de.p3monitor.weather.responses.AveragedWeatherResponse;
+import de.p3monitor.weather.responses.WeatherValuesResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/weather")
@@ -15,9 +18,15 @@ public class WeatherController
 {
 	private final WeatherService weatherService;
 
-	@PostMapping("/{city}")
-	public Mono<WeatherValuesResponse> createDevice(@PathVariable String city)
+	@PostMapping("")
+	public Mono<WeatherValuesResponse> getWeather(@RequestBody @Valid WeatherRequest weatherRequest)
 	{
-		return weatherService.getWeather(city);
+		return weatherService.getWeather(weatherRequest);
+	}
+
+	@PostMapping("/averaged")
+	public Mono<AveragedWeatherResponse> getWeather(@RequestBody @Valid AveragedWeatherRequest averagedWeatherRequest)
+	{
+		return weatherService.getAveragedWeather(averagedWeatherRequest);
 	}
 }

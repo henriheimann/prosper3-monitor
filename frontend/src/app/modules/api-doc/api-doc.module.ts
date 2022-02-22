@@ -3,12 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { ApiDocRoutingModule } from './api-doc-routing.module';
 
-
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    ApiDocRoutingModule
-  ]
+  imports: [CommonModule, ApiDocRoutingModule]
 })
-export class ApiDocModule { }
+export class ApiDocModule {}

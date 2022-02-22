@@ -1,0 +1,142 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="60"
+  height="60"
+  viewBox="0 0 60 60"
+  (click)="onSelected()"
+  [ngStyle]="selectable ? { cursor: 'pointer' } : {}"
+>
+  <defs>
+    <filter id="sensor-case" x="6" y="6" width="48" height="48" filterUnits="userSpaceOnUse">
+      <feOffset input="SourceAlpha" />
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feFlood flood-opacity="0.149" />
+      <feComposite operator="in" in2="blur" />
+      <feComposite in="SourceGraphic" />
+    </filter>
+    <filter id="sensor-case-selected" x="0" y="0" width="60" height="60" filterUnits="userSpaceOnUse">
+      <feOffset input="SourceAlpha" />
+      <feGaussianBlur stdDeviation="3" result="blur-2" />
+      <feFlood flood-opacity="0.149" />
+      <feComposite operator="in" in2="blur-2" />
+      <feComposite in="SourceGraphic" />
+    </filter>
+  </defs>
+  <g id="climate-sensor" transform="translate(-54 -464)">
+    <g transform="matrix(1, 0, 0, 1, 54, 464)" filter="url(#sensor-case)" *ngIf="!(selected$ | async)">
+      <rect
+        id="sensor-case-2"
+        data-name="sensor-case"
+        width="30"
+        height="30"
+        rx="4"
+        transform="translate(15 15)"
+        fill="#fff"
+      />
+    </g>
+    <g
+      transform="matrix(1, 0, 0, 1, 54, 464)"
+      filter="url(#sensor-case-selected)"
+      *ngIf="(selected$ | async) && (matchesIcon('0-percent') | async)"
+    >
+      <g
+        id="sensor-case-selected-2"
+        data-name="sensor-case-selected"
+        transform="translate(15 15)"
+        fill="#fff"
+        stroke="#2752AC"
+        stroke-width="6"
+      >
+        <rect width="30" height="30" rx="4" stroke="none" />
+        <rect x="-3" y="-3" width="36" height="36" rx="7" fill="none" />
+      </g>
+    </g>
+    <g
+      transform="matrix(1, 0, 0, 1, 54, 464)"
+      filter="url(#sensor-case-selected)"
+      *ngIf="(selected$ | async) && (matchesIcon('25-percent') | async)"
+    >
+      <g
+        id="sensor-case-selected-2"
+        data-name="sensor-case-selected"
+        transform="translate(15 15)"
+        fill="#fff"
+        stroke="#3DB5CB"
+        stroke-width="6"
+      >
+        <rect width="30" height="30" rx="4" stroke="none" />
+        <rect x="-3" y="-3" width="36" height="36" rx="7" fill="none" />
+      </g>
+    </g>
+    <g
+      transform="matrix(1, 0, 0, 1, 54, 464)"
+      filter="url(#sensor-case-selected)"
+      *ngIf="(selected$ | async) && (matchesIcon('50-percent') | async)"
+    >
+      <g
+        id="sensor-case-selected-2"
+        data-name="sensor-case-selected"
+        transform="translate(15 15)"
+        fill="#fff"
+        stroke="#A2D5CB"
+        stroke-width="6"
+      >
+        <rect width="30" height="30" rx="4" stroke="none" />
+        <rect x="-3" y="-3" width="36" height="36" rx="7" fill="none" />
+      </g>
+    </g>
+    <g
+      transform="matrix(1, 0, 0, 1, 54, 464)"
+      filter="url(#sensor-case-selected)"
+      *ngIf="(selected$ | async) && (matchesIcon('75-percent') | async)"
+    >
+      <g
+        id="sensor-case-selected-2"
+        data-name="sensor-case-selected"
+        transform="translate(15 15)"
+        fill="#fff"
+        stroke="#F89E59"
+        stroke-width="6"
+      >
+        <rect width="30" height="30" rx="4" stroke="none" />
+        <rect x="-3" y="-3" width="36" height="36" rx="7" fill="none" />
+      </g>
+    </g>
+    <g
+      transform="matrix(1, 0, 0, 1, 54, 464)"
+      filter="url(#sensor-case-selected)"
+      *ngIf="(selected$ | async) && (matchesIcon('100-percent') | async)"
+    >
+      <g
+        id="sensor-case-selected-2"
+        data-name="sensor-case-selected"
+        transform="translate(15 15)"
+        fill="#fff"
+        stroke="#FF5333"
+        stroke-width="6"
+      >
+        <rect width="30" height="30" rx="4" stroke="none" />
+        <rect x="-3" y="-3" width="36" height="36" rx="7" fill="none" />
+      </g>
+    </g>
+    <g
+      transform="matrix(1, 0, 0, 1, 54, 464)"
+      filter="url(#sensor-case-selected)"
+      *ngIf="(selected$ | async) && (matchesIcon('no-data') | async)"
+    >
+      <g
+        id="sensor-case-selected-2"
+        data-name="sensor-case-selected"
+        transform="translate(15 15)"
+        fill="#fff"
+        stroke="#DDDDDD"
+        stroke-width="6"
+      >
+        <rect width="30" height="30" rx="4" stroke="none" />
+        <rect x="-3" y="-3" width="36" height="36" rx="7" fill="none" />
+      </g>
+    </g>
+    <rect id="sensor-window" width="12" height="4" transform="translate(84 492)" fill="#ccc" />
+  </g>
+</svg>

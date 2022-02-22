@@ -1,0 +1,13 @@
+<p3m-sensor-map
+  [devicesWithValues]="devicesWithValues$ | async"
+  [selectedMeasurementType]="selectedMeasurementType$ | async"
+  [showSensorValuesLayer]="true"
+></p3m-sensor-map>
+<p3m-measurements-selector
+  *ngIf="!(isDraggingDevice$ | async)"
+  class="position-absolute w-100"
+  style="bottom: 0"
+></p3m-measurements-selector>
+<p3m-map-color-legend class="position-absolute" style="left: 0; top: 0"></p3m-map-color-legend>
+<p3m-button-identify-device class="position-absolute" style="right: 38px; top: 0"></p3m-button-identify-device>
+<p3m-identify-device *ngIf="isIdentifyingDevice$ | async"></p3m-identify-device>

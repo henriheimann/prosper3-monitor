@@ -1,0 +1,61 @@
+<div class="bg-gradient pt-3 pb-3 pl-2 pr-2" style="min-height: 100%">
+  <div class="container" style="max-width: 720px">
+    <div class="row d-flex flex-row justify-content-center align-items-center">
+      <img class="mr-4" srcset="assets/images/prosper3.svg 1x" alt="Prosper III" />
+      <h5 class="text-light">Prosper III<br /><span class="font-weight-normal">Umweltmonitor</span></h5>
+    </div>
+    <div class="row mb-3 p-3 bg-white rounded-lg shadow-sm border-0">
+      Hier auf Prosper III versuchen das Quartiersmanagement und die HRW die Lebensqualität nachhaltig zu steigern. Dazu
+      haben wir einige Hochbeete aufgebaut und planen weitere Aktionen um das Mikroklima auf dem Roten Platz zu
+      verbessern. Um unseren Fortschritt zu überwachen und die Pflanzen gesund zu halten haben wir einige Sensoren
+      installiert.
+    </div>
+    <div class="row mt-3 mb-3 p-3 bg-white rounded-lg shadow-sm d-flex d-flex-column justify-content-end">
+      <div class="w-100 mb-3 d-flex flex-row align-items-center">
+        <img class="mr-2" srcset="assets/images/logo-climate.png 5x" alt="Klimamonitor" />
+        <span> Vergleich der Klimadaten von Prosper III und der Stadt Bottrop: </span>
+      </div>
+      <p3m-climate-widget class="w-100 mb-3"></p3m-climate-widget>
+      <button class="btn btn-light p-2" type="button" [routerLink]="['climate']">
+        <span class="pl-2">Mehr erfahren...</span>
+      </button>
+    </div>
+    <div class="row mt-3 mb-3 p-3 bg-white rounded-lg shadow-sm d-flex d-flex-column justify-content-end">
+      <div class="w-100 mb-3 d-flex flex-row align-items-center">
+        <img class="mr-2" srcset="assets/images/logo-plant.png 5x" alt="Klimamonitor" />
+        <span> Bewässerungsdaten der Hochbeete auf dem roten Platz: </span>
+      </div>
+      <p3m-plant-widget class="w-100 mb-3"></p3m-plant-widget>
+      <button class="btn btn-light p-2" type="button" [routerLink]="['plants']">
+        <span class="pl-2">Mehr erfahren...</span>
+      </button>
+    </div>
+    <div class="row mt-3 mb-3 p-3 bg-white rounded-lg shadow-sm d-flex d-flex-column justify-content-end">
+      <div class="w-100 mb-3 d-flex flex-row align-items-center">
+        <img class="mr-2" srcset="assets/images/logo-grafana.png 5x" alt="Klimamonitor" />
+        <span> Detaillierte Analysen zu den erhobenen Daten gibt es in Grafana. </span>
+      </div>
+      <button class="btn btn-light p-2" type="button" [routerLink]="['grafana']">
+        <span class="pl-2">Zu Grafana...</span>
+      </button>
+    </div>
+    <div class="row mt-3 mb-3 p-3 bg-white rounded-lg shadow-sm d-flex d-flex-column justify-content-end">
+      <div class="w-100 mb-3 d-flex flex-row align-items-center">
+        <img class="mr-2" srcset="assets/images/logo-api-doc.png 5x" alt="Klimamonitor" />
+        <span> Alle gesammelten Daten stehen auch über eine offene API zur Verfügung. </span>
+      </div>
+      <button class="btn btn-light p-2" type="button" [routerLink]="['api-doc']">
+        <span class="pl-2">Zur Dokumentation...</span>
+      </button>
+    </div>
+    <div class="row mt-3 mb-3 p-3 bg-white rounded-lg shadow-sm d-flex d-flex-column justify-content-end">
+      <div class="w-100 mb-3 d-flex flex-row align-items-center">
+        <img class="mr-2" srcset="assets/images/logo-admin.png 5x" alt="Klimamonitor" />
+        <span> Neue Sensoren und Nutzer können im Administrationsbereich erstellt und verwaltet werden. </span>
+      </div>
+      <button class="btn btn-light p-2" type="button" [routerLink]="['admin']">
+        <span class="pl-2">Zur Administration...</span>
+      </button>
+    </div>
+  </div>
+</div>

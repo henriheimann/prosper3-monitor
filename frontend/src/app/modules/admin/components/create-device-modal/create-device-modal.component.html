@@ -14,6 +14,14 @@
       <label for="ttnId">TTN ID</label>
       <input type="text" class="form-control" id="ttnId" disabled value="Wird bei Erstellung generiert..." />
     </div>
+    <div class="form-group">
+      <label for="ttnId">Latitude</label>
+      <input type="number" class="form-control" id="latitude" formControlName="latitude" />
+    </div>
+    <div class="form-group">
+      <label for="ttnId">Longitude</label>
+      <input type="number" class="form-control" id="longitude" formControlName="longitude" />
+    </div>
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-primary" [disabled]="createDeviceForm.invalid">Sensor erstellen</button>

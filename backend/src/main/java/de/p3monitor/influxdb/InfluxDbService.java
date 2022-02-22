@@ -3,8 +3,8 @@ package de.p3monitor.influxdb;
 import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.query.FluxRecord;
 import de.p3monitor.influxdb.dtos.DeviceSensorType;
-import de.p3monitor.influxdb.dtos.DeviceValuesResponse;
-import de.p3monitor.influxdb.dtos.WeatherValuesResponse;
+import de.p3monitor.influxdb.dtos.InfluxDeviceValues;
+import de.p3monitor.influxdb.dtos.InfluxWeatherValues;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,6 @@ import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -30,7 +29,7 @@ public class InfluxDbService
 {
 	private final InfluxDBClientReactive influxDBClient;
 
-	private DeviceValuesResponse buildDeviceValues(FluxRecord fluxRecord, String ttnDeviceId, boolean pivotedOnTtnId)
+	private InfluxDeviceValues buildDeviceValues(FluxRecord fluxRecord, ZonedDateTime timestamp, String ttnDeviceId, boolean pivotedOnTtnId)
 	{
 		String suffix = "";
 
@@ -38,73 +37,122 @@ public class InfluxDbService
 			suffix = "_v3/urban-environment-monitor@ttn/devices/" + ttnDeviceId + "/up";
 		}
 
-		var instant = (Instant) fluxRecord.getValueByKey("_time");
-		if (instant != null) {
-			var builder = DeviceValuesResponse.builder();
-			builder.timestamp(ZonedDateTime.ofInstant(instant, TimeZone.getDefault().toZoneId()));
-			builder.ttnDeviceId(ttnDeviceId);
+		var builder = InfluxDeviceValues.builder();
+		builder.timestamp(timestamp);
+		builder.ttnDeviceId(ttnDeviceId);
 
-			boolean anyMeasurement = false;
+		boolean anyMeasurement = false;
 
-			var sensorType = (Double) fluxRecord.getValueByKey("uplink_message_decoded_payload_sensor_type" + suffix);
-			if (sensorType != null) {
-				builder.sensorType(DeviceSensorType.fromId(sensorType.longValue()));
-			}
+		var sensorType = (Double) fluxRecord.getValueByKey("uplink_message_decoded_payload_sensor_type" + suffix);
+		if (sensorType != null) {
+			builder.sensorType(DeviceSensorType.fromId(sensorType.longValue()));
+		}
 
-			var batteryVoltage =
-					(Double) fluxRecord.getValueByKey("uplink_message_decoded_payload_battery_voltage" + suffix);
-			if (batteryVoltage != null) {
-				builder.batteryVoltage(batteryVoltage);
-				anyMeasurement = true;
-			}
+		var batteryVoltage =
+				(Double) fluxRecord.getValueByKey("uplink_message_decoded_payload_battery_voltage" + suffix);
+		if (batteryVoltage != null) {
+			builder.batteryVoltage(batteryVoltage);
+			anyMeasurement = true;
+		}
 
-			var moistureCounter =
-					(Double) fluxRecord.getValueByKey("uplink_message_decoded_payload_moisture_counter" + suffix);
-			if (moistureCounter != null) {
-				builder.moistureCounter(moistureCounter);
-				anyMeasurement = true;
-			}
+		var moistureCounter =
+				(Double) fluxRecord.getValueByKey("uplink_message_decoded_payload_moisture_counter" + suffix);
+		if (moistureCounter != null) {
+			builder.moistureCounter(moistureCounter);
+			anyMeasurement = true;
+		}
 
-			var temperature = (Double) fluxRecord.getValueByKey("uplink_message_decoded_payload_temperature" + suffix);
-			if (temperature != null) {
-				builder.temperature(temperature);
-				anyMeasurement = true;
-			}
+		var temperature = (Double) fluxRecord.getValueByKey("uplink_message_decoded_payload_temperature" + suffix);
+		if (temperature != null) {
+			builder.temperature(temperature);
+			anyMeasurement = true;
+		}
 
-			var humidity = (Double) fluxRecord.getValueByKey("uplink_message_decoded_payload_humidity" + suffix);
-			if (humidity != null) {
-				builder.humidity(humidity);
-				anyMeasurement = true;
-			}
+		var humidity = (Double) fluxRecord.getValueByKey("uplink_message_decoded_payload_humidity" + suffix);
+		if (humidity != null) {
+			builder.humidity(humidity);
+			anyMeasurement = true;
+		}
 
-			var brightnessCurrent = (Double) fluxRecord.getValueByKey(
-					"uplink_message_decoded_payload_brightness_current" + suffix);
-			if (brightnessCurrent != null) {
-				builder.brightnessCurrent(brightnessCurrent);
-				anyMeasurement = true;
-			}
+		var brightnessCurrent = (Double) fluxRecord.getValueByKey(
+				"uplink_message_decoded_payload_brightness_current" + suffix);
+		if (brightnessCurrent != null) {
+			builder.brightnessCurrent(brightnessCurrent);
+			anyMeasurement = true;
+		}
 
-			var irTemperature =
-					(Double) fluxRecord.getValueByKey("uplink_message_decoded_payload_ir_temperature" + suffix);
-			if (irTemperature != null) {
-				builder.irTemperature(irTemperature);
-				anyMeasurement = true;
-			}
+		var irTemperature =
+				(Double) fluxRecord.getValueByKey("uplink_message_decoded_payload_ir_temperature" + suffix);
+		if (irTemperature != null) {
+			builder.irTemperature(irTemperature);
+			anyMeasurement = true;
+		}
 
-			if (anyMeasurement) {
-				return builder.build();
-			} else {
-				return null;
-			}
+		if (anyMeasurement) {
+			return builder.build();
 		} else {
 			return null;
 		}
 	}
 
-	public Flux<Tuple2<ZonedDateTime, List<DeviceValuesResponse>>> getDevicesValues(List<String> ttnDeviceIds,
-	                                                                                ZonedDateTime start,
-	                                                                                ZonedDateTime stop,
-	                                                                                long aggregateSeconds)
+	private Mono<? extends InfluxDeviceValues> buildDeviceValuesMonoFromRecord(String ttnDeviceId,
+	                                                                           FluxRecord fluxRecord, Instant instant)
+	{
+		if (instant != null) {
+			var timestamp = ZonedDateTime.ofInstant(instant, TimeZone.getDefault().toZoneId());
+			InfluxDeviceValues deviceValues = this.buildDeviceValues(fluxRecord, timestamp, ttnDeviceId, false);
+			if (deviceValues != null) {
+				return Mono.just(deviceValues);
+			}
+		}
+		return Mono.empty();
+	}
+
+	private InfluxWeatherValues buildWeatherValues(FluxRecord fluxRecord, ZonedDateTime timestamp)
+	{
+		var builder = InfluxWeatherValues.builder();
+		builder.timestamp(timestamp);
+		builder.city((String) fluxRecord.getValueByKey("city"));
+
+		var cloudiness = (Double) fluxRecord.getValueByKey("cloudiness");
+		if (cloudiness != null) {
+			builder.cloudiness(cloudiness);
+		}
+
+		var humidity = (Double) fluxRecord.getValueByKey("humidity");
+		if (humidity != null) {
+			builder.humidity(humidity);
+		}
+
+		var temperature = (Double) fluxRecord.getValueByKey("temperature");
+		if (temperature != null) {
+			builder.temperature(temperature);
+		}
+
+		var rain = (Double) fluxRecord.getValueByKey("rain");
+		if (rain != null) {
+			builder.rain(rain);
+		}
+
+		return builder.build();
+	}
+
+	private Mono<? extends InfluxWeatherValues> buildWeatherValuesMonoFromRecord(FluxRecord fluxRecord, Instant instant)
+	{
+		if (instant != null) {
+			var timestamp = ZonedDateTime.ofInstant(instant, TimeZone.getDefault().toZoneId());
+			InfluxWeatherValues weatherValues = this.buildWeatherValues(fluxRecord, timestamp);
+			if (weatherValues != null) {
+				return Mono.just(weatherValues);
+			}
+		}
+		return Mono.empty();
+	}
+
+	public Flux<Tuple2<ZonedDateTime, List<InfluxDeviceValues>>> getDevicesValues(List<String> ttnDeviceIds,
+	                                                                              ZonedDateTime start,
+	                                                                              ZonedDateTime stop,
+	                                                                              long aggregateSeconds)
 	{
 		if (!stop.isAfter(start)) {
 			throw new IllegalArgumentException("Stop time must be after start time.");
@@ -133,10 +181,11 @@ public class InfluxDbService
 				.flatMap(fluxRecord -> {
 					var instant = (Instant) fluxRecord.getValueByKey("_time");
 					if (instant != null) {
+						var timestamp = ZonedDateTime.ofInstant(instant, TimeZone.getDefault().toZoneId());
 						return Mono.just(Tuples.of(
-								ZonedDateTime.ofInstant(instant, TimeZone.getDefault().toZoneId()),
+								timestamp,
 								ttnDeviceIds.stream()
-										.map(ttnDeviceId -> this.buildDeviceValues(fluxRecord, ttnDeviceId, true))
+										.map(ttnDeviceId -> this.buildDeviceValues(fluxRecord, timestamp, ttnDeviceId, true))
 										.filter(Objects::nonNull)
 										.collect(Collectors.toList())
 						));
@@ -146,7 +195,30 @@ public class InfluxDbService
 				});
 	}
 
-	public Mono<DeviceValuesResponse> getLatestDeviceValues(String ttnDeviceId)
+	public Mono<InfluxDeviceValues> getAveragedDevicesValues(String ttnDeviceId, ZonedDateTime start, ZonedDateTime stop)
+	{
+		if (!stop.isAfter(start)) {
+			throw new IllegalArgumentException("Stop time must be after start time.");
+		}
+
+		return Mono.from(influxDBClient.getQueryReactiveApi().query("""
+						from(bucket: "p3m-bucket")
+							|> range(start: %s, stop: %s)
+							|> filter(fn: (r) => r._measurement == "mqtt_consumer")
+							|> drop(columns: ["host"])
+						    |> filter(fn: (r) => r["topic"] == "v3/urban-environment-monitor@ttn/devices/%s/up")
+							|> mean()
+							|> group(columns: ["_measurement", "_start", "_stop"])
+							|> pivot(rowKey:["topic"], columnKey: ["_field"], valueColumn: "_value")
+						""".formatted(start.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+						stop.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME), ttnDeviceId)))
+				.flatMap(fluxRecord -> {
+					var instant = (Instant) fluxRecord.getValueByKey("_stop");
+					return buildDeviceValuesMonoFromRecord(ttnDeviceId, fluxRecord, instant);
+				});
+	}
+
+	public Mono<InfluxDeviceValues> getLatestDeviceValues(String ttnDeviceId)
 	{
 		return Mono.from(influxDBClient.getQueryReactiveApi().query("""
 						from(bucket: "p3m-bucket")
@@ -159,16 +231,34 @@ public class InfluxDbService
 						    |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
 						""".formatted(ttnDeviceId)))
 				.flatMap(fluxRecord -> {
-					DeviceValuesResponse deviceValues = this.buildDeviceValues(fluxRecord, ttnDeviceId, false);
-					if (deviceValues != null) {
-						return Mono.just(deviceValues);
-					} else {
-						return Mono.empty();
-					}
+					var instant = (Instant) fluxRecord.getValueByKey("_time");
+					return buildDeviceValuesMonoFromRecord(ttnDeviceId, fluxRecord, instant);
 				});
 	}
 
-	public Mono<WeatherValuesResponse> getLatestCityWeather(String city)
+	public Mono<InfluxWeatherValues> getAveragedCityWeather(String city, ZonedDateTime start, ZonedDateTime stop)
+	{
+		if (!stop.isAfter(start)) {
+			throw new IllegalArgumentException("Stop time must be after start time.");
+		}
+
+		return Mono.from(influxDBClient.getQueryReactiveApi().query("""
+						from(bucket: "p3m-bucket")
+							|> range(start: %s, stop: %s)
+							|> filter(fn: (r) => r._measurement == "weather")
+							|> filter(fn: (r) => r["city"] == "%s" and (r._field == "temperature" or r._field == "humidity" or r._field == "cloudiness" or r._field == "rain"))
+						    |> mean()
+							|> group(columns: ["_measurement", "_start", "_stop"])
+							|> pivot(rowKey:["city"], columnKey: ["_field"], valueColumn: "_value")
+						""".formatted(start.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+								stop.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME), city)))
+				.flatMap(fluxRecord -> {
+					var instant = (Instant) fluxRecord.getValueByKey("_stop");
+					return buildWeatherValuesMonoFromRecord(fluxRecord, instant);
+				});
+	}
+
+	public Mono<InfluxWeatherValues> getLatestCityWeather(String city)
 	{
 		return Mono.from(influxDBClient.getQueryReactiveApi().query("""
 						from(bucket: "p3m-bucket")
@@ -181,35 +271,7 @@ public class InfluxDbService
 						""".formatted(city)))
 				.flatMap(fluxRecord -> {
 					var instant = (Instant) fluxRecord.getValueByKey("_time");
-					if (instant != null) {
-						var builder = WeatherValuesResponse.builder();
-						builder.timestamp(LocalDateTime.ofInstant(instant, TimeZone.getDefault().toZoneId()));
-						builder.city((String) fluxRecord.getValueByKey("city"));
-
-						var cloudiness = (Long) fluxRecord.getValueByKey("cloudiness");
-						if (cloudiness != null) {
-							builder.cloudiness(cloudiness);
-						}
-
-						var humidity = (Long) fluxRecord.getValueByKey("humidity");
-						if (humidity != null) {
-							builder.humidity(humidity);
-						}
-
-						var temperature = (Double) fluxRecord.getValueByKey("temperature");
-						if (temperature != null) {
-							builder.temperature(temperature);
-						}
-
-						var rain = (Double) fluxRecord.getValueByKey("rain");
-						if (rain != null) {
-							builder.rain(rain);
-						}
-
-						return Mono.just(builder.build());
-					} else {
-						return Mono.empty();
-					}
+					return buildWeatherValuesMonoFromRecord(fluxRecord, instant);
 				});
 	}
 }

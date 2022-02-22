@@ -1,0 +1,3 @@
+<p3m-sensor-map [devicesWithValues]="devicesWithValues$ | async" [useDeviceLastContact]="true"></p3m-sensor-map>
+<p3m-button-identify-device class="position-absolute" style="right: 38px; top: 0"></p3m-button-identify-device>
+<p3m-identify-device *ngIf="isIdentifyingDevice$ | async"></p3m-identify-device>

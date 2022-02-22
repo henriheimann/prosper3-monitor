@@ -1,0 +1,19 @@
+package de.p3monitor.devices.requests;
+
+import de.p3monitor.influxdb.dtos.DeviceSensorType;
+import lombok.Data;
+
+import javax.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
+
+@Data
+public class AveragedMeasurementsRequest
+{
+	private DeviceSensorType deviceSensorType;
+
+	@NotNull
+	private ZonedDateTime start;
+
+	@NotNull
+	private ZonedDateTime stop;
+}
