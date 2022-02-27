@@ -77,6 +77,7 @@ public class TtnService
 		macSettings.setRx1Delay(1);
 		macSettings.setRx1DataRateOffset(0);
 		macSettings.setResetsFCnt(false);
+		macSettings.setUseAdr(false);
 		endDevice.setMacSettings(macSettings);
 
 		return endDevice;

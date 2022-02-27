@@ -55,7 +55,7 @@ public class CreateEndDeviceRequest
 				"lorawan_version", "ids.dev_eui", "ids.device_id", "session.keys.f_nwk_s_int_key.key",
 				"session.dev_addr", "supports_class_c", "supports_class_b", "mac_settings.rx2_data_rate_index",
 				"mac_settings.rx2_frequency", "mac_settings.rx1_delay", "mac_settings.rx1_data_rate_offset",
-				"mac_settings.resets_f_cnt");
+				"mac_settings.resets_f_cnt", "mac_settings.use_adr");
 
 		return new CreateEndDeviceRequest(endDevice, fieldMask);
 	}

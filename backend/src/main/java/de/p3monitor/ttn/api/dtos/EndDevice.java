@@ -73,6 +73,7 @@ public class EndDevice
 		private int rx1Delay;
 		private int rx1DataRateOffset;
 		private boolean resetsFCnt;
+		private boolean useAdr;
 	}
 
 	private Identifiers ids;
