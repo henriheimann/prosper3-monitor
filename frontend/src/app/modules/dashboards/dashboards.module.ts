@@ -9,6 +9,7 @@ import { PageSensorDashboardComponent } from './components/page-sensor-dashboard
 import { ClimateWidgetComponent } from './components/climate-widget/climate-widget.component';
 import { PlantWidgetComponent } from './components/plant-widget/plant-widget.component';
 import { ClimateWidgetTabComponent } from './components/climate-widget-tab/climate-widget-tab.component';
+import { PlantWidgetTabComponent } from './components/plant-widget-tab/plant-widget-tab.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { ClimateWidgetTabComponent } from './components/climate-widget-tab/clima
     PageSensorDashboardComponent,
     ClimateWidgetComponent,
     PlantWidgetComponent,
-    ClimateWidgetTabComponent
+    ClimateWidgetTabComponent,
+    PlantWidgetTabComponent
   ],
   imports: [CommonModule, SharedModule, SensorMapsModule, DashboardsRoutingModule]
 })

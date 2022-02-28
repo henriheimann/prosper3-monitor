@@ -56,7 +56,9 @@ export class ClimateWidgetTabComponent {
     this.averagedWeatherTemperature = null;
     this.averagedMeasuredHumidity = null;
     this.averagedWeatherHumidity = null;
-    this.averagedMeasurements$ = this.measurementsService.getAveragedMeasurements(timespan).pipe(share());
+    this.averagedMeasurements$ = this.measurementsService
+      .getAveragedMeasurements(timespan, 'CLIMATE_SENSOR')
+      .pipe(share());
     this.averagedWeather$ = this.weatherService.getAveragedWeather('Bottrop', timespan).pipe(share());
     this.devicesWithValues$ = combineLatest([this.devices$, this.averagedMeasurements$]).pipe(
       map(([devices, measurements]) => {

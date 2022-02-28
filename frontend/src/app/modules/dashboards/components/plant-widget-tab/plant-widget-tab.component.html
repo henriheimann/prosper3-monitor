@@ -1,0 +1,28 @@
+<div class="pt-2">
+  <table class="table mb-2">
+    <tbody class="pt-4">
+      <tr *ngIf="averagedPlantWaterPercentage != null">
+        <td class="border-top-0">Durchschnittliche Bewässerung</td>
+        <td class="border-top-0 text-right">
+          <span> {{ averagedPlantWaterPercentage * 100 | number: "1.2-2" }} % </span>
+          <i *ngIf="averagedPlantWaterPercentage < 0.33" class="bi bi-emoji-angry color-red"></i>
+          <i
+            *ngIf="averagedPlantWaterPercentage >= 0.33 && averagedPlantWaterPercentage < 0.66"
+            class="bi bi-emoji-neutral color-orange"
+          ></i>
+          <i
+            *ngIf="averagedPlantWaterPercentage >= 0.66 && averagedPlantWaterPercentage < 1.0"
+            class="bi bi-emoji-smile color-lightcyan"
+          ></i>
+          <i *ngIf="averagedPlantWaterPercentage >= 1.0" class="bi bi-emoji-sunglasses color-cyan"></i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<p3m-sensor-map
+  [devicesWithValues]="devicesWithValues$ | async"
+  [showSensorValuesLayer]="false"
+  [interactive]="false"
+  style="height: 300px"
+></p3m-sensor-map>

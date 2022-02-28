@@ -16,6 +16,7 @@ import { TokenInterceptor } from './modules/auth/interceptors/token.interceptor'
 import { LegalModule } from './modules/legal/legal.module';
 import { SensorMapsModule } from './modules/sensor-maps/sensor-maps.module';
 import { DashboardsModule } from './modules/dashboards/dashboards.module';
+import { ApiDocModule } from './modules/api-doc/api-doc.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,6 +25,7 @@ import { DashboardsModule } from './modules/dashboards/dashboards.module';
     HttpClientModule,
     AppRoutingModule,
     AdminModule,
+    ApiDocModule,
     AuthModule,
     LegalModule,
     SensorMapsModule,

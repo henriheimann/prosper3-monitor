@@ -14,11 +14,11 @@
         <span> {{ averagedMeasuredTemperature - averagedWeatherTemperature | number: "1.2-2" }} °C </span>
         <i
           *ngIf="averagedMeasuredTemperature - averagedWeatherTemperature < 0"
-          class="bi bi-arrow-down-square-fill ml-2"
+          class="bi bi-arrow-down-square-fill color-darkblue ml-2"
         ></i>
         <i
           *ngIf="averagedMeasuredTemperature - averagedWeatherTemperature > 0"
-          class="bi-arrow-up-square-fill ml-2"
+          class="bi-arrow-up-square-fill color-red ml-2"
         ></i>
       </td>
     </tr>
@@ -27,8 +27,14 @@
       <td>{{ averagedWeatherHumidity | number: "1.2-2" }} %RH</td>
       <td class="text-right">
         <span> {{ averagedMeasuredHumidity - averagedWeatherHumidity | number: "1.2-2" }} %RH </span>
-        <i *ngIf="averagedMeasuredHumidity - averagedWeatherHumidity < 0" class="bi bi-arrow-down-square-fill ml-2"></i>
-        <i *ngIf="averagedMeasuredHumidity - averagedWeatherHumidity > 0" class="bi-arrow-up-square-fill ml-2"></i>
+        <i
+          *ngIf="averagedMeasuredHumidity - averagedWeatherHumidity < 0"
+          class="bi bi-arrow-down-square-fill color-darkblue ml-2"
+        ></i>
+        <i
+          *ngIf="averagedMeasuredHumidity - averagedWeatherHumidity > 0"
+          class="bi-arrow-up-square-fill color-red ml-2"
+        ></i>
       </td>
     </tr>
   </tbody>
@@ -37,6 +43,6 @@
   [devicesWithValues]="devicesWithValues$ | async"
   [selectedMeasurementType]="measurementType.TEMPERATURE"
   [showSensorValuesLayer]="true"
-  [allowSensorSelection]="false"
+  [interactive]="false"
   style="height: 300px"
 ></p3m-sensor-map>

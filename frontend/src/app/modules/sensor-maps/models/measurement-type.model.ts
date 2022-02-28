@@ -8,7 +8,7 @@ export function getMinimumValueForMeasurementType(type: MeasurementTypeModel): n
   switch (type) {
     default:
     case MeasurementTypeModel.TEMPERATURE:
-      return -20;
+      return -10;
     case MeasurementTypeModel.HUMIDITY:
       return 0;
     case MeasurementTypeModel.BRIGHTNESS_CURRENT:
@@ -20,7 +20,7 @@ export function getMaximumValueForMeasurementType(type: MeasurementTypeModel): n
   switch (type) {
     default:
     case MeasurementTypeModel.TEMPERATURE:
-      return 80;
+      return 50;
     case MeasurementTypeModel.HUMIDITY:
       return 100;
     case MeasurementTypeModel.BRIGHTNESS_CURRENT:

@@ -40,7 +40,7 @@ public class MeasurementsService
 
 	private static double clampPercentage(double percentage)
 	{
-		return Math.min(100, Math.max(0, percentage));
+		return Math.min(1, Math.max(0, percentage));
 	}
 
 	private static Double transformMoistureCounterToPercentage(Double moistureCounter)

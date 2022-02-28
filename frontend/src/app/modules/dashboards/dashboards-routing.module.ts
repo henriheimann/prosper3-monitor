@@ -12,7 +12,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'device/:id',
+    path: 'devices/:id',
     component: PageSensorDashboardComponent
   }
 ];

@@ -27,7 +27,7 @@ export class SensorMapComponent implements AfterViewInit, OnDestroy {
   sensorRefs: ComponentRef<any>[] = [];
 
   @Input() showSensorValuesLayer = false;
-  @Input() allowSensorSelection = true;
+  @Input() interactive = true;
   @Input() useDeviceLastContact = false;
   @Input() selectedMeasurementType: MeasurementTypeModel | null = null;
 
@@ -55,10 +55,14 @@ export class SensorMapComponent implements AfterViewInit, OnDestroy {
       zoom: 17,
       center: [6.932781, 51.532235],
       style: environment.tileserverStyleUrl,
-      attributionControl: false
+      attributionControl: false,
+      interactive: this.interactive
     });
 
-    this.map.addControl(new mapboxgl.NavigationControl());
+    if (this.interactive) {
+      this.map.addControl(new mapboxgl.NavigationControl());
+    }
+
     this.map.addControl(
       new mapboxgl.AttributionControl({
         compact: true
@@ -219,7 +223,7 @@ export class SensorMapComponent implements AfterViewInit, OnDestroy {
           componentRef = this.sensorsContainer.createComponent(UnknownSensorComponent);
         }
         componentRef.instance.deviceWithValues = deviceWithValues;
-        componentRef.instance.selectable = this.allowSensorSelection;
+        componentRef.instance.selectable = this.interactive;
 
         const marker = new mapboxgl.Marker(componentRef.location.nativeElement, {
           anchor,

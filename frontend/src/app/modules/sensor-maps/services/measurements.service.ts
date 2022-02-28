@@ -26,9 +26,12 @@ export class MeasurementsService {
     });
   }
 
-  getAveragedMeasurements(measurementTimespan: MeasurementTimespanModel): Observable<AveragedMeasurementsModel> {
+  getAveragedMeasurements(
+    measurementTimespan: MeasurementTimespanModel,
+    sensorType: string
+  ): Observable<AveragedMeasurementsModel> {
     return this.httpClient.post<AveragedMeasurementsModel>(`${environment.backendUrl}/measurements/averaged`, {
-      deviceSensorType: 'CLIMATE_SENSOR',
+      deviceSensorType: sensorType,
       start: getStartForMeasurementTimespan(measurementTimespan),
       stop: getStopForMeasurementTimespan(measurementTimespan)
     });

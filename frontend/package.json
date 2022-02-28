@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "config": "node scripts/gen-prod-environment.js",
-    "build": "ng build",
+    "build": "ng build --configuration production --outputHashing=all --aot",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",

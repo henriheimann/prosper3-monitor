@@ -5,13 +5,20 @@
       <img *ngIf="routeStartsWith('/plants')" srcset="assets/images/nav-plant-monitor.png 5x" alt="Pflanzenmonitor" />
       <img *ngIf="routeStartsWith('/admin')" srcset="assets/images/nav-administration.png 5x" alt="Administration" />
       <img
+        *ngIf="routeStartsWith('/api-doc')"
+        srcset="assets/images/nav-api-documentation.png 5x"
+        alt="API Dokumentation"
+      />
+      <img
         *ngIf="routeStartsWith('/imprint')"
         srcset="assets/images/nav-imprint.png 5x"
         alt="Impressum und Datenschutz"
       />
     </button>
     <div class="dropdown-menu">
-      <a class="dropdown-item" [routerLink]="['']"> Startseite </a>
+      <a class="dropdown-item" [routerLink]="['']">
+        <img srcset="assets/images/nav-homepage.png 5x" alt="Startseite" />
+      </a>
       <hr />
       <a class="dropdown-item" [routerLink]="['/climate']">
         <img srcset="assets/images/nav-climate-monitor.png 5x" alt="Klimamonitor" />
@@ -23,7 +30,7 @@
       <a class="dropdown-item" href="/grafana">
         <img srcset="assets/images/nav-grafana.png 5x" alt="Grafana" />
       </a>
-      <a class="dropdown-item" href="#">
+      <a class="dropdown-item" [routerLink]="['api-doc']">
         <img srcset="assets/images/nav-api-documentation.png 5x" alt="API-Dokumentation" />
       </a>
       <ng-container *ngIf="isUserAdmin$ | async">

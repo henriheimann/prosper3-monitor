@@ -8,7 +8,6 @@ import { MeasurementTimespanModel } from '../../../sensor-maps/models/measuremen
 })
 export class ClimateWidgetComponent {
   measurementTimespanModel = MeasurementTimespanModel;
-
   selectedMeasurementTimespan = MeasurementTimespanModel.LAST_DAY;
 
   onTimespanSelected(value: MeasurementTimespanModel) {

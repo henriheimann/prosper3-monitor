@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { DeviceService } from '../../../shared/services/device.service';
+import { Component } from '@angular/core';
+import { MeasurementTimespanModel } from '../../../sensor-maps/models/measurement-timespan.model';
 
 @Component({
   selector: 'p3m-plant-widget',
@@ -8,15 +7,10 @@ import { DeviceService } from '../../../shared/services/device.service';
   styleUrls: ['./plant-widget.component.sass']
 })
 export class PlantWidgetComponent {
-  devices$ = this.deviceService.getAll().pipe(
-    map((devices) => {
-      if (devices != null) {
-        return devices.filter((device) => device.lastContact?.sensorType == 'PLANT_SENSOR');
-      } else {
-        return devices;
-      }
-    })
-  );
+  measurementTimespanModel = MeasurementTimespanModel;
+  selectedMeasurementTimespan = MeasurementTimespanModel.LAST_DAY;
 
-  constructor(private deviceService: DeviceService) {}
+  onTimespanSelected(value: MeasurementTimespanModel) {
+    this.selectedMeasurementTimespan = value;
+  }
 }
