@@ -13,7 +13,10 @@ const routes: Routes = [
   },
   {
     path: 'devices/:id',
-    component: PageSensorDashboardComponent
+    component: PageSensorDashboardComponent,
+    data: {
+      hideNavigation: true
+    }
   }
 ];
 

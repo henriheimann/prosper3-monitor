@@ -93,6 +93,9 @@ export class SensorMapComponent implements AfterViewInit, OnDestroy {
     if (!this.map) {
       return;
     }
+
+    this.map.resize();
+
     this.mapLoaded = true;
     this.createSensorDataLayer();
     this.updateSensorDataLayer();

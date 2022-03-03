@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { DeviceModel } from '../../../shared/models/device.model';
 import { Store } from '@ngrx/store';
 import { selectDevice } from '../../store/visualisation.actions';
-import { selectSelectedDeviceValuesForIndex, selectSelectedDevice } from '../../store/visualisation.selectors';
+import { selectSelectedDevice } from '../../store/visualisation.selectors';
 import { map } from 'rxjs/operators';
 import { DeviceWithValuesModel } from '../../models/device-with-values.model';
 
@@ -50,7 +49,7 @@ export class PlantSensorComponent {
   }
 
   onSelected(): void {
-    if (this.deviceWithValues != null) {
+    if (this.selectable && this.deviceWithValues != null) {
       this.store.dispatch(
         selectDevice({
           device: this.deviceWithValues.device
