@@ -62,12 +62,14 @@ void Error_Handler(void);
 #define VIN_SENSE_GPIO_Port GPIOA
 #define RFM95_DIO5_Pin GPIO_PIN_2
 #define RFM95_DIO5_GPIO_Port GPIOA
+#define RFM95_DIO5_EXTI_IRQn EXTI2_IRQn
 #define RFM95_NRST_Pin GPIO_PIN_3
 #define RFM95_NRST_GPIO_Port GPIOA
 #define RFM95_NSS_Pin GPIO_PIN_4
 #define RFM95_NSS_GPIO_Port GPIOA
 #define RFM95_DIO0_Pin GPIO_PIN_0
 #define RFM95_DIO0_GPIO_Port GPIOB
+#define RFM95_DIO0_EXTI_IRQn EXTI0_IRQn
 #define PHOTO_SENSE_Pin GPIO_PIN_1
 #define PHOTO_SENSE_GPIO_Port GPIOB
 #define PHOTO_ENABLE_Pin GPIO_PIN_11
@@ -89,5 +91,3 @@ void Error_Handler(void);
 #endif
 
 #endif /* __MAIN_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

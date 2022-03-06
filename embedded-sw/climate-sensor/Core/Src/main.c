@@ -21,6 +21,8 @@
 #include "main.h"
 #include "adc.h"
 #include "i2c.h"
+#include "iwdg.h"
+#include "lptim.h"
 #include "rtc.h"
 #include "spi.h"
 #include "gpio.h"
@@ -97,9 +99,23 @@ int main(void)
   MX_ADC1_Init();
   MX_RTC_Init();
   MX_SPI1_Init();
+  MX_IWDG_Init();
+  MX_LPTIM1_Init();
   /* USER CODE BEGIN 2 */
 
+  HAL_IWDG_Refresh(&hiwdg);
+  HAL_LPTIM_Counter_Start_IT(&hlptim1, 0xffff);
+
+  HAL_GPIO_WritePin(I2C_ENABLE_GPIO_Port, I2C_ENABLE_Pin, GPIO_PIN_RESET);
+  HAL_Delay(10);
+
   application_main();
+
+  HAL_GPIO_WritePin(I2C_ENABLE_GPIO_Port, I2C_ENABLE_Pin, GPIO_PIN_SET);
+  HAL_LPTIM_Counter_Stop_IT(&hlptim1);
+  HAL_NVIC_DisableIRQ(EXTI0_IRQn);
+  HAL_NVIC_DisableIRQ(EXTI1_IRQn);
+  HAL_NVIC_DisableIRQ(EXTI2_IRQn);
 
   HAL_PWREx_EnableGPIOPullDown(PWR_GPIO_A, PWR_GPIO_BIT_12); // PHOTO_SWITCH
   HAL_PWREx_EnableGPIOPullDown(PWR_GPIO_A, PWR_GPIO_BIT_7); // MOSI
@@ -145,7 +161,6 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
   /** Configure the main internal regulator output voltage
   */
@@ -176,14 +191,6 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC|RCC_PERIPHCLK_I2C1
-                              |RCC_PERIPHCLK_ADC;
-  PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
-  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
   }
@@ -225,4 +232,3 @@ void assert_failed(uint8_t *file, uint32_t line)
 }
 #endif /* USE_FULL_ASSERT */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MeasurementTypeModel } from '../../../sensor-maps/models/measurement-type.model';
 import { map, share } from 'rxjs/operators';
 import { MeasurementTimespanModel } from '../../../sensor-maps/models/measurement-timespan.model';

@@ -1,9 +1,13 @@
 import { Component } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { DeviceWithValuesModel } from '../../../sensor-maps/models/device-with-values.model';
 import { DeviceService } from '../../../shared/services/device.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AveragedWeatherModel } from '../../../sensor-maps/models/averaged-weather.model';
+import { MeasurementsService } from '../../../sensor-maps/services/measurements.service';
+import { MeasurementTimespanModel } from '../../../sensor-maps/models/measurement-timespan.model';
+import { WeatherService } from '../../../sensor-maps/services/weather.service';
 
 @Component({
   selector: 'p3m-page-sensor-dashboard',
@@ -88,7 +92,20 @@ export class PageSensorDashboardComponent {
     })
   );
 
-  constructor(private deviceService: DeviceService, private route: ActivatedRoute, private router: Router) {
+  averagedMeasurements$ = this.measurementsService.getAveragedMeasurements(
+    MeasurementTimespanModel.LAST_DAY,
+    'CLIMATE_SENSOR'
+  );
+
+  averagedWeather$ = this.weatherService.getCurrentWeather('Bottrop');
+
+  constructor(
+    private deviceService: DeviceService,
+    private measurementsService: MeasurementsService,
+    private weatherService: WeatherService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
     this.accessedDevice$.subscribe((device) => {
       if (device !== null) {
         if (device?.lastContact?.sensorType == undefined) {
