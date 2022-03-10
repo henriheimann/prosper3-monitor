@@ -30,6 +30,7 @@ public class DeviceService
 	{
 		DeviceResponse deviceResponse = new DeviceResponse();
 		deviceResponse.setId(tuple.getT1().getId());
+		deviceResponse.setQrCodeId(tuple.getT1().getQrCodeId());
 		deviceResponse.setName(tuple.getT1().getName());
 		deviceResponse.setTtnId(tuple.getT1().getTtnId());
 		if (includeKeys) {
@@ -69,6 +70,7 @@ public class DeviceService
 		entity.setName(createDeviceRequest.getName());
 		entity.setLatitude(createDeviceRequest.getLatitude());
 		entity.setLongitude(createDeviceRequest.getLongitude());
+		entity.setQrCodeId(createDeviceRequest.getQrCodeId());
 
 		return deviceRepository.save(entity)
 				.zipWith(ttnService.createEndDevice()
@@ -121,6 +123,9 @@ public class DeviceService
 					}
 					if (updateDeviceRequest.getLongitude() != null) {
 						device.setLongitude(updateDeviceRequest.getLongitude());
+					}
+					if (updateDeviceRequest.getQrCodeId() != null) {
+						device.setQrCodeId(updateDeviceRequest.getQrCodeId());
 					}
 				})
 				.flatMap(deviceRepository::save)

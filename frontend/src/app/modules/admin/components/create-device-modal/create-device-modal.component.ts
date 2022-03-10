@@ -12,7 +12,8 @@ export class CreateDeviceModalComponent {
   createDeviceForm = new FormGroup({
     name: new FormControl('', Validators.required),
     latitude: new FormControl(0.0, Validators.required),
-    longitude: new FormControl(0.0, Validators.required)
+    longitude: new FormControl(0.0, Validators.required),
+    qrCodeId: new FormControl(null)
   });
 
   constructor(private modalRef: BsModalRef, private deviceService: DeviceService) {}
@@ -28,7 +29,8 @@ export class CreateDeviceModalComponent {
       .createDevice({
         name: this.createDeviceForm.value['name'],
         latitude: this.createDeviceForm.value['latitude'],
-        longitude: this.createDeviceForm.value['longitude']
+        longitude: this.createDeviceForm.value['longitude'],
+        qrCodeId: this.createDeviceForm.value['qrCodeId']
       })
       .subscribe({
         next: () => {

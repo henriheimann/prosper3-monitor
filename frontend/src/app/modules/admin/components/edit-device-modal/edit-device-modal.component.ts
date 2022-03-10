@@ -15,7 +15,8 @@ export class EditDeviceModalComponent implements OnInit {
   editDeviceForm = new FormGroup({
     name: new FormControl('', Validators.required),
     latitude: new FormControl(0.0, Validators.required),
-    longitude: new FormControl(0.0, Validators.required)
+    longitude: new FormControl(0.0, Validators.required),
+    qrCodeId: new FormControl(null)
   });
 
   constructor(private modalRef: BsModalRef, private deviceService: DeviceService) {}
@@ -28,6 +29,9 @@ export class EditDeviceModalComponent implements OnInit {
       onlySelf: true
     });
     this.editDeviceForm.controls['longitude'].setValue(this.device?.longitude, {
+      onlySelf: true
+    });
+    this.editDeviceForm.controls['qrCodeId'].setValue(this.device?.qrCodeId, {
       onlySelf: true
     });
   }
@@ -43,7 +47,8 @@ export class EditDeviceModalComponent implements OnInit {
       .editDevice(this.device!.id, {
         name: this.editDeviceForm.value['name'],
         latitude: this.editDeviceForm.value['latitude'],
-        longitude: this.editDeviceForm.value['longitude']
+        longitude: this.editDeviceForm.value['longitude'],
+        qrCodeId: this.editDeviceForm.value['qrCodeId']
       })
       .subscribe({
         next: () => {

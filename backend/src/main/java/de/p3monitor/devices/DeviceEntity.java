@@ -16,6 +16,8 @@ public class DeviceEntity
 	@Id
 	private Long id;
 
+	private Long qrCodeId;
+
 	private String name;
 
 	private String ttnId;

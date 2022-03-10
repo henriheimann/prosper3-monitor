@@ -34,7 +34,7 @@ public class InfluxDbService
 		String suffix = "";
 
 		if (pivotedOnTtnId) {
-			suffix = "_v3/urban-environment-monitor@ttn/devices/" + ttnDeviceId + "/up";
+			suffix = "_v3/p3monitor@ttn/devices/" + ttnDeviceId + "/up";
 		}
 
 		var builder = InfluxDeviceValues.builder();
@@ -163,7 +163,7 @@ public class InfluxDbService
 		}
 
 		String filterString = ttnDeviceIds.stream()
-				.map(ttnDeviceId -> "\"v3/urban-environment-monitor@ttn/devices/" + ttnDeviceId + "/up\"")
+				.map(ttnDeviceId -> "\"v3/p3monitor@ttn/devices/" + ttnDeviceId + "/up\"")
 				.collect(Collectors.joining(","));
 
 		return Flux.from(influxDBClient.getQueryReactiveApi().query("""
@@ -206,7 +206,7 @@ public class InfluxDbService
 							|> range(start: %s, stop: %s)
 							|> filter(fn: (r) => r._measurement == "mqtt_consumer")
 							|> drop(columns: ["host"])
-						    |> filter(fn: (r) => r["topic"] == "v3/urban-environment-monitor@ttn/devices/%s/up")
+						    |> filter(fn: (r) => r["topic"] == "v3/p3monitor@ttn/devices/%s/up")
 							|> mean()
 							|> group(columns: ["_measurement", "_start", "_stop"])
 							|> pivot(rowKey:["topic"], columnKey: ["_field"], valueColumn: "_value")
@@ -225,7 +225,7 @@ public class InfluxDbService
 							|> range(start: 0, stop: now())
 						    |> filter(fn: (r) => r._measurement == "mqtt_consumer")
 						    |> drop(columns: ["host"])
-						    |> filter(fn: (r) => r["topic"] == "v3/urban-environment-monitor@ttn/devices/%s/up")
+						    |> filter(fn: (r) => r["topic"] == "v3/p3monitor@ttn/devices/%s/up")
 						    |> sort(columns:["_time"])
 						    |> last()
 						    |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")

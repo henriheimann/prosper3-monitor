@@ -1,6 +1,7 @@
 CREATE TABLE devices
 (
     id SERIAL PRIMARY KEY,
+    qr_code_id INTEGER UNIQUE,
     name VARCHAR(256) NOT NULL,
     ttn_id VARCHAR(256),
     ttn_device_address VARCHAR(256),

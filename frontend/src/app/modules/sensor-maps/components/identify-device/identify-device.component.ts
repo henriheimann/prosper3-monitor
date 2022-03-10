@@ -27,9 +27,9 @@ export class IdentifyDeviceComponent implements OnInit {
     if (result) {
       const resultText = result.getText();
       if (resultText.startsWith(`${environment.deploymentUrl}/devices/`)) {
-        const deviceId = parseInt(resultText.substr(`${environment.deploymentUrl}/devices/`.length));
+        const qrCodeId = parseInt(resultText.substr(`${environment.deploymentUrl}/devices/`.length));
         this.devices$.subscribe((devices) => {
-          const matchingDevice = devices?.find((device) => device.id === deviceId);
+          const matchingDevice = devices?.find((device) => device.qrCodeId === qrCodeId);
           if (matchingDevice) {
             this.store.dispatch(
               deviceIdentified({

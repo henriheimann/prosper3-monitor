@@ -12,7 +12,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'devices/:id',
+    path: 'devices/:qrCodeId',
     component: PageSensorDashboardComponent,
     data: {
       hideNavigation: true

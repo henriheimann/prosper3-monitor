@@ -2,6 +2,7 @@ import { LastContactModel } from './last-contact.model';
 
 export interface DeviceModel {
   id: number;
+  qrCodeId?: number;
   name: string;
   latitude: number;
   longitude: number;

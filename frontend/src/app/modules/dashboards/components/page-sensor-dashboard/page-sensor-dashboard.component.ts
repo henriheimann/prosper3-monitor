@@ -4,7 +4,6 @@ import { Observable, of } from 'rxjs';
 import { DeviceWithValuesModel } from '../../../sensor-maps/models/device-with-values.model';
 import { DeviceService } from '../../../shared/services/device.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AveragedWeatherModel } from '../../../sensor-maps/models/averaged-weather.model';
 import { MeasurementsService } from '../../../sensor-maps/services/measurements.service';
 import { MeasurementTimespanModel } from '../../../sensor-maps/models/measurement-timespan.model';
 import { WeatherService } from '../../../sensor-maps/services/weather.service';
@@ -22,7 +21,7 @@ export class PageSensorDashboardComponent {
       if (devices == null) {
         return null;
       } else {
-        return devices.find((device) => device.id === parseInt(this.route.snapshot.params['id']));
+        return devices.find((device) => device.qrCodeId === parseInt(this.route.snapshot.params['qrCodeId']));
       }
     })
   );

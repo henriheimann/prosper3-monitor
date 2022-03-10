@@ -16,4 +16,6 @@ public class CreateDeviceRequest
 
 	@NotNull
 	private Double longitude;
+
+	private Long qrCodeId;
 }

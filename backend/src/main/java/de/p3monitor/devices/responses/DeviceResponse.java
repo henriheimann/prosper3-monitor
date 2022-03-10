@@ -8,6 +8,7 @@ import lombok.Data;
 public class DeviceResponse
 {
 	private long id;
+	private Long qrCodeId;
 	private String name;
 	private String ttnId;
 	private String ttnDeviceAddress;

@@ -8,4 +8,5 @@ public class UpdateDeviceRequest
 	private String name;
 	private Double latitude;
 	private Double longitude;
+	private Long qrCodeId;
 }
