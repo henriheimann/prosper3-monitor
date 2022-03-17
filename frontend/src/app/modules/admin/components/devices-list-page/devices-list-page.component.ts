@@ -6,6 +6,7 @@ import { ShowKeysModalComponent } from '../show-keys-modal/show-keys-modal.compo
 import { EditDeviceModalComponent } from '../edit-device-modal/edit-device-modal.component';
 import { CreateDeviceModalComponent } from '../create-device-modal/create-device-modal.component';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'p3m-devices-list-page',
@@ -13,7 +14,15 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
   styleUrls: ['./devices-list-page.component.sass']
 })
 export class DevicesListPageComponent {
-  devices$ = this.deviceService.getAll();
+  devices$ = this.deviceService.getAll().pipe(
+    map((devices) => {
+      if (devices) {
+        return devices.sort((a, b) => a.name.localeCompare(b.name));
+      } else {
+        return devices;
+      }
+    })
+  );
 
   constructor(private deviceService: DeviceService, private modalService: BsModalService) {}
 

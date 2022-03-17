@@ -76,15 +76,15 @@ export class ClimateSensorComponent {
           if (value != undefined) {
             switch (type) {
               case '0-percent':
-                return value >= min && value < min + diff * 0.2;
+                return value >= min && value < min + diff * 0.125;
               case '25-percent':
-                return value >= min + diff * 0.2 && value <= min + diff * 0.4;
+                return value >= min + diff * 0.125 && value <= min + diff * 0.375;
               case '50-percent':
-                return value >= min + diff * 0.4 && value <= min + diff * 0.6;
+                return value >= min + diff * 0.375 && value <= min + diff * 0.625;
               case '75-percent':
-                return value >= min + diff * 0.6 && value <= min + diff * 0.8;
+                return value >= min + diff * 0.625 && value <= min + diff * 0.875;
               case '100-percent':
-                return value >= min + diff * 0.8;
+                return value >= min + diff * 0.875;
               case 'no-data':
                 return false;
             }

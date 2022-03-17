@@ -35,10 +35,14 @@ export const reducer = createReducer(
   initialState,
 
   on(VisualisationsActions.selectDevice, (state, action) => {
-    return {
-      ...state,
-      selectedDevice: action.device
-    };
+    if (state.inDraggingMode) {
+      return state;
+    } else {
+      return {
+        ...state,
+        selectedDevice: action.device
+      };
+    }
   }),
 
   on(VisualisationsActions.selectMeasurements, (state, action) => {

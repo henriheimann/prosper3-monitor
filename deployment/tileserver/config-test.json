@@ -1,0 +1,28 @@
+{
+  "options": {
+    "paths": {
+      "root": "/data",
+      "fonts": "fonts",
+      "styles": "styles",
+      "mbtiles": "mbtiles"
+    }
+  },
+  "styles": {
+    "my-style": {
+      "style": "basic.json",
+      "tilejson": {
+        "bounds": [
+          8.44806,
+          47.32023,
+          8.62537,
+          47.43468
+        ]
+      }
+    }
+  },
+  "data": {
+    "zurich_switzerland": {
+      "mbtiles": "zurich_switzerland.mbtiles"
+    }
+  }
+}

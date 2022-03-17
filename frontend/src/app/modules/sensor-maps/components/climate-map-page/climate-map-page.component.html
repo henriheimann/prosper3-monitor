@@ -1,3 +1,7 @@
+<p3m-sensor-detail
+  *ngIf="(selectedDevice$ | async) != null && (draggingDevice$ | async) == null"
+  [useDeviceLastContact]="false"
+></p3m-sensor-detail>
 <p3m-sensor-map
   [devicesWithValues]="devicesWithValues$ | async"
   [selectedMeasurementType]="selectedMeasurementType$ | async"

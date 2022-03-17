@@ -2,4 +2,5 @@ volumes/
 .env-secrets
 */config/nginx/certs/
 tileserver/mbtiles/*.mbtiles
+!tileserver/mbtiles/zurich_switzerland.mbtiles
 tileserver/fonts/**

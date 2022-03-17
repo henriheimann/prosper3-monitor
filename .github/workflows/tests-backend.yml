@@ -1,4 +1,4 @@
-name: software/backend
+name: tests-backend
 
 on:
   push:
@@ -21,8 +21,7 @@ jobs:
 
       - name: Start Development Environment
         working-directory: ./deployment/p3m-local-dev
-        run: |
-          docker-compose up -d
+        run: docker-compose up -d
 
       - name: Execute Maven Tests
         working-directory: ./backend

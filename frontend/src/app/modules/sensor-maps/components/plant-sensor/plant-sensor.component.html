@@ -5,7 +5,7 @@
   height="96.007"
   viewBox="0 0 58 96.007"
   (click)="onSelected()"
-  style="cursor: pointer"
+  [ngStyle]="selectable ? { cursor: 'pointer' } : {}"
 >
   <defs>
     <filter id="sensor-plate" x="13.823" y="38.007" width="30" height="58" filterUnits="userSpaceOnUse">

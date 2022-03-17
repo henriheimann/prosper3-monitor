@@ -38,7 +38,6 @@ export class PageSensorDashboardComponent {
 
   numberOfPlantsRequiringIrrigation$ = this.plantSensorDevices$.pipe(
     map((devices) => {
-      console.log(devices);
       return devices?.filter((device) => {
         if (device?.lastContact?.deviceValues?.mst == undefined) {
           return false;

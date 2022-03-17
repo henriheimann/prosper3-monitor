@@ -1,0 +1,30 @@
+name: tests-e2e
+
+on:
+  push:
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'deployment/**'
+      - 'e2e/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Save Secrets to .env-secrets
+        run: echo $E2E_P3M_LOCAL_PRODUCTION_SECRETS >> deployment/p3m-local-production/.env-secrets
+
+      - name: Start Development Environment
+        working-directory: ./deployment/p3m-local-production
+        run: ./deploy-local-e2e.sh
+
+      - name: Execute End to End Tests
+        uses: cypress-io/github-action@v2.2.7
+        with:
+          working-directory: e2e

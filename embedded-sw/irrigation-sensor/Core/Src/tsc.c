@@ -42,10 +42,10 @@ void MX_TSC_Init(void)
   htsc.Instance = TSC;
   htsc.Init.CTPulseHighLength = TSC_CTPH_2CYCLES;
   htsc.Init.CTPulseLowLength = TSC_CTPL_2CYCLES;
-  htsc.Init.SpreadSpectrum = DISABLE;
-  htsc.Init.SpreadSpectrumDeviation = 1;
+  htsc.Init.SpreadSpectrum = ENABLE;
+  htsc.Init.SpreadSpectrumDeviation = 32;
   htsc.Init.SpreadSpectrumPrescaler = TSC_SS_PRESC_DIV1;
-  htsc.Init.PulseGeneratorPrescaler = TSC_PG_PRESC_DIV64;
+  htsc.Init.PulseGeneratorPrescaler = TSC_PG_PRESC_DIV4;
   htsc.Init.MaxCountValue = TSC_MCV_8191;
   htsc.Init.IODefaultMode = TSC_IODEF_OUT_PP_LOW;
   htsc.Init.SynchroPinPolarity = TSC_SYNC_POLARITY_FALLING;

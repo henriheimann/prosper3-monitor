@@ -30,9 +30,7 @@ if [ "${SKIP_FRONTEND_BUILD}" = "0" ]; then
     --build-arg frontend_production=true \
     --build-arg deployment_url="${DEPLOYMENT_URL}" \
     --build-arg backend_url="${DEPLOYMENT_URL}/api" \
-    --build-arg tileserver_style_url="${TILESERVER_STYLE_URL}" \
-    --build-arg backend_oauth_client_id="${P3M_BACKEND_OAUTH_CLIENT_ID}" \
-    --build-arg backend_oauth_client_secret="${P3M_BACKEND_OAUTH_CLIENT_SECRET}"
+    --build-arg tileserver_style_url="${TILESERVER_STYLE_URL}"
   docker save p3m-frontend > p3m-frontend.tar
   scp p3m-frontend.tar "${DEPLOYMENT_USER}@${DEPLOYMENT_IP}:~/p3m"
   rm p3m-frontend.tar

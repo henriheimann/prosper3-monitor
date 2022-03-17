@@ -7,7 +7,7 @@ import { DeviceModel } from '../../../shared/models/device.model';
 import { ClimateSensorComponent } from '../climate-sensor/climate-sensor.component';
 import { UnknownSensorComponent } from '../unknown-sensor/unknown-sensor.component';
 import { Store } from '@ngrx/store';
-import { selectDraggingDevice, selectSelectedDevice } from '../../store/visualisation.selectors';
+import { selectDraggingDevice } from '../../store/visualisation.selectors';
 import { Observable } from 'rxjs';
 import { DeviceWithValuesModel } from '../../models/device-with-values.model';
 import {
@@ -28,11 +28,10 @@ export class SensorMapComponent implements AfterViewInit, OnDestroy {
 
   @Input() showSensorValuesLayer = false;
   @Input() interactive = true;
-  @Input() useDeviceLastContact = false;
   @Input() selectedMeasurementType: MeasurementTypeModel | null = null;
 
-  selectedDevice$: Observable<DeviceModel | null> = this.store.select(selectSelectedDevice);
   draggingDevice$: Observable<DeviceModel | null> = this.store.select(selectDraggingDevice);
+  draggingDevice: DeviceModel | null = null;
 
   mapId = Math.random().toString(36).substring(2);
   map: mapboxgl.Map | undefined;
@@ -80,6 +79,7 @@ export class SensorMapComponent implements AfterViewInit, OnDestroy {
   }
 
   onDraggingDeviceChanged(draggingDevice: DeviceModel | null): void {
+    this.draggingDevice = draggingDevice;
     this.devicesToMarkersMap.forEach((marker) => marker.setDraggable(false));
     if (draggingDevice != null) {
       const marker = this.devicesToMarkersMap.get(draggingDevice);
@@ -127,15 +127,15 @@ export class SensorMapComponent implements AfterViewInit, OnDestroy {
         'circle-radius': {
           type: 'exponential',
           stops: [
-            [2, 30],
-            [6, 300]
+            [2, 20],
+            [6, 100]
           ]
         },
         'circle-opacity': {
           type: 'exponential',
           stops: [
             [-99, 0.0],
-            [-10, 0.9]
+            [-10, 0.6]
           ]
         },
         'circle-blur': 1,
@@ -231,7 +231,7 @@ export class SensorMapComponent implements AfterViewInit, OnDestroy {
         const marker = new mapboxgl.Marker(componentRef.location.nativeElement, {
           anchor,
           offset,
-          draggable: false
+          draggable: this.draggingDevice === deviceWithValues.device
         })
           .setLngLat([deviceWithValues.device.longitude, deviceWithValues.device.latitude])
           .addTo(this.map);

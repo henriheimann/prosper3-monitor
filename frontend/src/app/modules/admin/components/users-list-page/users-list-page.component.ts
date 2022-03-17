@@ -5,6 +5,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { EditUserModalComponent } from '../edit-user-modal/edit-user-modal.component';
 import { CreateUserModalComponent } from '../create-user-modal/create-user-modal.component';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'p3m-users-list-page',
@@ -12,7 +13,15 @@ import { CreateUserModalComponent } from '../create-user-modal/create-user-modal
   styleUrls: ['./users-list-page.component.sass']
 })
 export class UsersListPageComponent {
-  users$ = this.userService.getAll();
+  users$ = this.userService.getAll().pipe(
+    map((users) => {
+      if (users) {
+        return users.sort((a, b) => a.username.localeCompare(b.username));
+      } else {
+        return users;
+      }
+    })
+  );
 
   constructor(private userService: UserService, private modalService: BsModalService) {}
 

@@ -6,8 +6,7 @@ const envConfigFile = `export const environment = {
   production: true,
   backendUrl: '${process.env.P3M_BACKEND_URL}',
   deploymentUrl: '${process.env.P3M_DEPLOYMENT_URL}',
-  tileserverStyleUrl: '${process.env.P3M_TILESERVER_STYLE_URL}',
-  oauthClientLogin: '${process.env.P3M_BACKEND_OAUTH_CLIENT_ID}:${process.env.P3M_BACKEND_OAUTH_CLIENT_SECRET}'
+  tileserverStyleUrl: '${process.env.P3M_TILESERVER_STYLE_URL}'
 };
 `;
 
