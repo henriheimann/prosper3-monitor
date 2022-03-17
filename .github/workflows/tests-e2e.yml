@@ -8,6 +8,10 @@ on:
       - 'deployment/**'
       - 'e2e/**'
 
+env:
+  BUILDPLATFORM: linux/amd64
+  TARGETPLATFORM: linux/amd64
+
 jobs:
   build:
     runs-on: ubuntu-latest
