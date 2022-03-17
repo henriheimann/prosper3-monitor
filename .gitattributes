@@ -1,0 +1,7 @@
+embedded-sw/climate-sensor/Drivers/STM32L4xx_HAL_Driver/**/* linguist-generated=true
+embedded-sw/climate-sensor/Drivers/CMSIS/**/* linguist-generated=true
+embedded-sw/climate-sensor/Core/Startup/*.s linguist-generated=true
+
+embedded-sw/irrigation-sensor/Drivers/STM32L4xx_HAL_Driver/**/* linguist-generated=true
+embedded-sw/irrigation-sensor/Drivers/CMSIS/**/* linguist-generated=true
+embedded-sw/irrigation-sensor/Core/Startup/*.s linguist-generated=true
