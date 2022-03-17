@@ -5,6 +5,7 @@ import com.influxdb.query.FluxRecord;
 import de.p3monitor.influxdb.dtos.DeviceSensorType;
 import de.p3monitor.influxdb.dtos.InfluxDeviceValues;
 import de.p3monitor.influxdb.dtos.InfluxWeatherValues;
+import de.p3monitor.ttn.mqtt.config.TtnMqttClientProperties;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,13 +29,14 @@ import java.util.stream.Collectors;
 public class InfluxDbService
 {
 	private final InfluxDBClientReactive influxDBClient;
+	private final TtnMqttClientProperties ttnProperties;
 
 	private InfluxDeviceValues buildDeviceValues(FluxRecord fluxRecord, ZonedDateTime timestamp, String ttnDeviceId, boolean pivotedOnTtnId)
 	{
 		String suffix = "";
 
 		if (pivotedOnTtnId) {
-			suffix = "_v3/p3monitor@ttn/devices/" + ttnDeviceId + "/up";
+			suffix = "_v3/" + ttnProperties.getUsername() + "/devices/" + ttnDeviceId + "/up";
 		}
 
 		var builder = InfluxDeviceValues.builder();
@@ -163,7 +165,7 @@ public class InfluxDbService
 		}
 
 		String filterString = ttnDeviceIds.stream()
-				.map(ttnDeviceId -> "\"v3/p3monitor@ttn/devices/" + ttnDeviceId + "/up\"")
+				.map(ttnDeviceId -> "\"v3/" + ttnProperties.getUsername() + "/devices/" + ttnDeviceId + "/up\"")
 				.collect(Collectors.joining(","));
 
 		return Flux.from(influxDBClient.getQueryReactiveApi().query("""
@@ -206,12 +208,12 @@ public class InfluxDbService
 							|> range(start: %s, stop: %s)
 							|> filter(fn: (r) => r._measurement == "mqtt_consumer")
 							|> drop(columns: ["host"])
-						    |> filter(fn: (r) => r["topic"] == "v3/p3monitor@ttn/devices/%s/up")
+						    |> filter(fn: (r) => r["topic"] == "v3/%s/devices/%s/up")
 							|> mean()
 							|> group(columns: ["_measurement", "_start", "_stop"])
 							|> pivot(rowKey:["topic"], columnKey: ["_field"], valueColumn: "_value")
 						""".formatted(start.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
-						stop.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME), ttnDeviceId)))
+						stop.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME), ttnProperties.getUsername(), ttnDeviceId)))
 				.flatMap(fluxRecord -> {
 					var instant = (Instant) fluxRecord.getValueByKey("_stop");
 					return buildDeviceValuesMonoFromRecord(ttnDeviceId, fluxRecord, instant);
@@ -225,11 +227,11 @@ public class InfluxDbService
 							|> range(start: 0, stop: now())
 						    |> filter(fn: (r) => r._measurement == "mqtt_consumer")
 						    |> drop(columns: ["host"])
-						    |> filter(fn: (r) => r["topic"] == "v3/p3monitor@ttn/devices/%s/up")
+						    |> filter(fn: (r) => r["topic"] == "v3/%s/devices/%s/up")
 						    |> sort(columns:["_time"])
 						    |> last()
 						    |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
-						""".formatted(ttnDeviceId)))
+						""".formatted(ttnProperties.getUsername(), ttnDeviceId)))
 				.flatMap(fluxRecord -> {
 					var instant = (Instant) fluxRecord.getValueByKey("_time");
 					return buildDeviceValuesMonoFromRecord(ttnDeviceId, fluxRecord, instant);

@@ -18,10 +18,10 @@ jobs:
           submodules: recursive
 
       - name: Save Secrets to .env-secrets
-        run: echo $E2E_P3M_LOCAL_PRODUCTION_SECRETS >> deployment/p3m-local-production/.env-secrets
+        run: echo $E2E_P3M_LOCAL_PRODUCTION_SECRETS >> deployment/p3m-local-e2e/.env-secrets
 
       - name: Start Development Environment
-        working-directory: ./deployment/p3m-local-production
+        working-directory: ./deployment/p3m-local-e2e
         run: ./deploy-local-e2e.sh
 
       - name: Execute End to End Tests
