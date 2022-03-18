@@ -16,7 +16,7 @@ import java.util.Collections;
 public class InfluxDbConfig
 {
 	@Bean
-	public InfluxDBClientReactive influxDBClientReactive(InfluxDbProperties properties)
+	public InfluxDBClientOptions influxDBClientOptions(InfluxDbProperties properties)
 	{
 		okhttp3.OkHttpClient.Builder okHttpBuilder = (new okhttp3.OkHttpClient.Builder())
 				.protocols(Collections.singletonList(Protocol.HTTP_1_1))
@@ -35,8 +35,14 @@ public class InfluxDbConfig
 		} else if (StringUtils.hasLength(properties.getUsername()) && StringUtils.hasLength(properties.getPassword())) {
 			influxBuilder.authenticate(properties.getUsername(), properties.getPassword().toCharArray());
 		}
-		
-		return InfluxDBClientReactiveFactory.create(influxBuilder.build())
+
+		return influxBuilder.build();
+	}
+
+	@Bean
+	public InfluxDBClientReactive influxDBClientReactive(InfluxDbProperties properties)
+	{
+		return InfluxDBClientReactiveFactory.create(influxDBClientOptions(properties))
 				.setLogLevel(properties.getLogLevel());
 	}
 }

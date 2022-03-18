@@ -1,4 +1,4 @@
-package de.p3monitor.mock.ttn.mqtt;
+package de.p3monitor.testhelper.mocks.ttn.mqtt;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -8,10 +8,16 @@ import lombok.Getter;
 public class UplinkMessage
 {
 	@Builder.Default
-	private String deviceId = "device-id";              // eui-70b3d57ed0049fa1
+	private String deviceId = "device-id";
 
 	@Builder.Default
-	private String applicationId = "application-id";    // urban-environment-monitor
+	private String applicationId = "ttn-test-app-id";
+
+	@Builder.Default
+	private String mqttUsername = "ttn-mqtt-username";
+
+	@Builder.Default
+	private int sensorType = 0;
 
 	@Builder.Default
 	private double temperature = 20.0;
@@ -27,4 +33,7 @@ public class UplinkMessage
 
 	@Builder.Default
 	private double batteryVoltage = 3.2;
+
+	@Builder.Default
+	private long moistureCounter = 5000;
 }

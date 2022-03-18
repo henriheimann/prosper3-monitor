@@ -1,6 +1,6 @@
 package de.p3monitor.users;
 
-import de.p3monitor.shared.AbstractIntegrationTest;
+import de.p3monitor.testhelper.AbstractIntegrationTest;
 import org.junit.jupiter.api.Test;
 
 class UserControllerIntegrationTest extends AbstractIntegrationTest

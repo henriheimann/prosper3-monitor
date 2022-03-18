@@ -1,7 +1,7 @@
 package de.p3monitor.security.auth;
 
 import com.jayway.jsonpath.JsonPath;
-import de.p3monitor.shared.AbstractIntegrationTest;
+import de.p3monitor.testhelper.AbstractIntegrationTest;
 import org.junit.jupiter.api.Test;
 
 class AuthControllerIntegrationTest extends AbstractIntegrationTest

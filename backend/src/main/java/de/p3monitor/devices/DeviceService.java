@@ -74,18 +74,14 @@ public class DeviceService
 
 		return deviceRepository.save(entity)
 				.zipWith(ttnService.createEndDevice()
-						.map(Optional::of)
-						.doOnError(e -> log.warn("Unable to create TTN end device", e))
-						.onErrorReturn(Optional.empty()))
+						.doOnError(e -> log.warn("Unable to create TTN end device", e)))
 				.flatMap(tuple -> {
 					var deviceEntity = tuple.getT1();
-					var endDeviceOptional = tuple.getT2();
-					endDeviceOptional.ifPresent(endDevice -> {
-						deviceEntity.setTtnId(endDevice.getIds().getDeviceId());
-						deviceEntity.setTtnDeviceAddress(endDevice.getSession().getDeviceAddress());
-						deviceEntity.setTtnApplicationSessionKey(endDevice.getSession().getKeys().getAppSessionKey().getKey());
-						deviceEntity.setTtnNetworkSessionKey(endDevice.getSession().getKeys().getNetworkSessionKey().getKey());
-					});
+					var endDevice = tuple.getT2();
+					deviceEntity.setTtnId(endDevice.getIds().getDeviceId());
+					deviceEntity.setTtnDeviceAddress(endDevice.getSession().getDeviceAddress());
+					deviceEntity.setTtnApplicationSessionKey(endDevice.getSession().getKeys().getAppSessionKey().getKey());
+					deviceEntity.setTtnNetworkSessionKey(endDevice.getSession().getKeys().getNetworkSessionKey().getKey());
 					return deviceRepository.save(deviceEntity);
 				})
 				.flatMap(this::zipWithLastContact)

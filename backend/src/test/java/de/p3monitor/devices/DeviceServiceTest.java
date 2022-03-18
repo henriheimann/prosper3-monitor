@@ -1,12 +1,27 @@
 package de.p3monitor.devices;
 
+import de.p3monitor.devices.requests.CreateDeviceRequest;
+import de.p3monitor.devices.responses.DeviceResponse;
+import de.p3monitor.influxdb.InfluxDbService;
+import de.p3monitor.testhelper.data.TestEndDevices;
+import de.p3monitor.ttn.TtnService;
+import de.p3monitor.ttn.api.dtos.EndDevice;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+
+import java.time.LocalDateTime;
+
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @SuppressWarnings("ReactiveStreamsUnusedPublisher")
 class DeviceServiceTest
 {
-	/*private DeviceRepository deviceRepositoryMock;
+	private DeviceRepository deviceRepositoryMock;
 	private TtnService ttnServiceMock;
+	private InfluxDbService influxDbServiceMock;
 
 	private DeviceService deviceService;
 
@@ -15,8 +30,9 @@ class DeviceServiceTest
 	{
 		deviceRepositoryMock = mock(DeviceRepository.class);
 		ttnServiceMock = mock(TtnService.class);
+		influxDbServiceMock = mock(InfluxDbService.class);
 
-		deviceService = new DeviceService(deviceRepositoryMock, ttnServiceMock);
+		deviceService = new DeviceService(deviceRepositoryMock, ttnServiceMock, influxDbServiceMock);
 	}
 
 	@Test
@@ -28,19 +44,21 @@ class DeviceServiceTest
 			return Mono.just(deviceEntity);
 		});
 
-		EndDevice endDevice = TestEndDevices.create("dev-id", "dev-eui",
-				LocalDateTime.of(2021, 1, 1, 12, 43), LocalDateTime.of(2021, 2, 5, 19, 22));
+		EndDevice endDevice = TestEndDevices.create("dev-id", "dev-eui", "dev-address", "app-session-key",
+				"app-network-key", LocalDateTime.of(2021, 1, 1, 12, 43), LocalDateTime.of(2021, 2, 5, 19, 22));
 		when(ttnServiceMock.createEndDevice()).thenReturn(Mono.just(endDevice));
 
-		Mono<DeviceResponse> response = deviceService.createDevice(new CreateDeviceRequest("name"));
+		when(influxDbServiceMock.getLatestDeviceValues("dev-id")).thenReturn(Mono.empty());
+
+		Mono<DeviceResponse> response = deviceService.createDevice(new CreateDeviceRequest("name", 10.0, 20.0, 7L));
 
 		StepVerifier.create(response)
-				.expectNext(new DeviceResponse(1L, "name", new TtnSyncResponse(TtnSyncState.VALID,
-						new TtnDeviceResponse(LocalDateTime.of(2021, 1, 1, 12, 43)))))
+				.expectNext(new DeviceResponse(1L, 7L, "name", "dev-id", null, null, null, 10.0, 20.0, null))
 				.expectComplete()
 				.verify();
 
-		verify(deviceRepositoryMock, atLeastOnce()).save(new DeviceEntity(1L, "name", "dev-id"));
+		verify(deviceRepositoryMock, atLeastOnce()).save(new DeviceEntity(1L, 7L, "name", "dev-id", "dev-address",
+				"app-network-key", "app-session-key", 10.0, 20.0));
 	}
 
 	@Test
@@ -55,96 +73,10 @@ class DeviceServiceTest
 		Exception exception = new RuntimeException("Any error");
 		when(ttnServiceMock.createEndDevice()).thenReturn(Mono.error(exception));
 
-		Mono<DeviceResponse> response = deviceService.createDevice(new CreateDeviceRequest("name"));
+		Mono<DeviceResponse> response = deviceService.createDevice(new CreateDeviceRequest("name", 10.0, 20.0, 7L));
 
 		StepVerifier.create(response)
-				.expectNext(new DeviceResponse(1L, "name", new TtnSyncResponse(TtnSyncState.NO_ASSOCIATION, null)))
-				.expectComplete()
+				.expectError(RuntimeException.class)
 				.verify();
 	}
-
-	@Test
-	public void getDevice_returnsDeviceResponseWithValidTtnSync_forGoodTtnResponse()
-	{
-		DeviceEntity deviceEntity = TestDeviceEntities.create(1L, "name", "ttn-id");
-		when(deviceRepositoryMock.findById(1L)).thenReturn(Mono.just(deviceEntity));
-
-		EndDevice endDevice = TestEndDevices.create("dev-id", "dev-eui",
-				LocalDateTime.of(2021, 1, 1, 12, 43), LocalDateTime.of(2021, 2, 5, 19, 22));
-		when(ttnServiceMock.getEndDevice("ttn-id")).thenReturn(Mono.just(endDevice));
-
-		Mono<DeviceResponse> response = deviceService.getDevice(1L);
-
-		StepVerifier.create(response)
-				.expectNext(new DeviceResponse(1L, "name", new TtnSyncResponse(TtnSyncState.VALID,
-						new TtnDeviceResponse(LocalDateTime.of(2021, 1, 1, 12, 43)))))
-				.expectComplete()
-				.verify();
-	}
-
-	@Test
-	public void getDevice_returnsDeviceResponseWithNoAssociation_forNullTtnId()
-	{
-		DeviceEntity deviceEntity = TestDeviceEntities.create(1L, "name", null);
-		when(deviceRepositoryMock.findById(1L)).thenReturn(Mono.just(deviceEntity));
-
-		Mono<DeviceResponse> response = deviceService.getDevice(1L);
-
-		StepVerifier.create(response)
-				.expectNext(new DeviceResponse(1L, "name", new TtnSyncResponse(TtnSyncState.NO_ASSOCIATION, null)))
-				.expectComplete()
-				.verify();
-	}
-
-	@Test
-	public void getDevice_returnsDeviceResponseWithNoMatch_forNotFoundTtnResponse()
-	{
-		DeviceEntity deviceEntity = TestDeviceEntities.create(1L, "name", "ttn-id");
-		when(deviceRepositoryMock.findById(1L)).thenReturn(Mono.just(deviceEntity));
-
-		TtnApiNotFoundException exception = new TtnApiNotFoundException(
-				TestWebClientResponseException.createWithStatus(404));
-		when(ttnServiceMock.getEndDevice("ttn-id")).thenReturn(Mono.error(exception));
-
-		Mono<DeviceResponse> response = deviceService.getDevice(1L);
-
-		StepVerifier.create(response)
-				.expectNext(new DeviceResponse(1L, "name", new TtnSyncResponse(TtnSyncState.NO_MATCH, null)))
-				.expectComplete()
-				.verify();
-	}
-
-	@Test
-	public void getDevice_returnsDeviceResponseWithTtnRequestError_forBadTtnResponses()
-	{
-		DeviceEntity deviceEntity = TestDeviceEntities.create(1L, "name", "ttn-id");
-		when(deviceRepositoryMock.findById(1L)).thenReturn(Mono.just(deviceEntity));
-
-		WebClientResponseException exception = TestWebClientResponseException.createWithStatus(400);
-		when(ttnServiceMock.getEndDevice("ttn-id")).thenReturn(Mono.error(exception));
-
-		Mono<DeviceResponse> response = deviceService.getDevice(1L);
-
-		StepVerifier.create(response)
-				.expectNext(new DeviceResponse(1L, "name", new TtnSyncResponse(TtnSyncState.TTN_REQUEST_ERROR, null)))
-				.expectComplete()
-				.verify();
-	}
-
-	@Test
-	public void getDevice_returnsDeviceResponseWithTtnRequestError_forAnyExceptionDuringTtnAccess()
-	{
-		DeviceEntity deviceEntity = TestDeviceEntities.create(1L, "name", "ttn-id");
-		when(deviceRepositoryMock.findById(1L)).thenReturn(Mono.just(deviceEntity));
-
-		Exception exception = new RuntimeException("Any error");
-		when(ttnServiceMock.getEndDevice("ttn-id")).thenReturn(Mono.error(exception));
-
-		Mono<DeviceResponse> response = deviceService.getDevice(1L);
-
-		StepVerifier.create(response)
-				.expectNext(new DeviceResponse(1L, "name", new TtnSyncResponse(TtnSyncState.TTN_REQUEST_ERROR, null)))
-				.expectComplete()
-				.verify();
-	}*/
 }

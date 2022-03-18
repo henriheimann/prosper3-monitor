@@ -1,7 +1,10 @@
-package de.p3monitor.shared;
+package de.p3monitor.testhelper;
 
 import com.jayway.jsonpath.JsonPath;
 import de.p3monitor.devices.DeviceRepository;
+import de.p3monitor.testhelper.influxdb.InfluxDbTestHelper;
+import de.p3monitor.testhelper.mocks.ttn.api.MockTtnApiTestHelper;
+import de.p3monitor.shared.logging.LoggingWebFilter;
 import de.p3monitor.shared.startup.StartupService;
 import de.p3monitor.users.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import de.p3monitor.security.auth.TokenRepository;
-import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,19 +37,30 @@ public abstract class AbstractIntegrationTest
 	@Autowired
 	protected StartupService startupService;
 
+	@Autowired
+	protected MockTtnApiTestHelper mockTtnApiTestHelper;
+
+	@Autowired
+	protected InfluxDbTestHelper influxDbTestHelper;
+
 	private final Map<String, String> tokenCache = new HashMap<>();
 
 	@BeforeEach
 	void setUp(ApplicationContext context)
 	{
-		client = WebTestClient.bindToApplicationContext(context).build();
+		client = WebTestClient.bindToApplicationContext(context)
+				.webFilter(new LoggingWebFilter())
+				.build();
 
-		tokenRepository.deleteAll()
-				.then(Mono.zip(userRepository.deleteAll(), deviceRepository.deleteAll()))
-				.then(startupService.setupStartupUsers())
-				.block();
+		tokenRepository.deleteAll().block();
+		userRepository.deleteAll().block();
+		deviceRepository.deleteAll().block();
+		startupService.setupStartupUsers().block();
 
 		tokenCache.clear();
+
+		mockTtnApiTestHelper.resetMocks();
+		influxDbTestHelper.cleanupDatabase();
 	}
 
 	protected WebTestClient.ResponseSpec get(String uri, String token)

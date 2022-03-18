@@ -2,6 +2,7 @@ package de.p3monitor.influxdb;
 
 import com.influxdb.client.reactive.InfluxDBClientReactive;
 import com.influxdb.query.FluxRecord;
+import de.p3monitor.influxdb.config.InfluxDbProperties;
 import de.p3monitor.influxdb.dtos.DeviceSensorType;
 import de.p3monitor.influxdb.dtos.InfluxDeviceValues;
 import de.p3monitor.influxdb.dtos.InfluxWeatherValues;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class InfluxDbService
 {
+	private final InfluxDbProperties influxDbProperties;
 	private final InfluxDBClientReactive influxDBClient;
 	private final TtnMqttClientProperties ttnProperties;
 
@@ -169,14 +171,15 @@ public class InfluxDbService
 				.collect(Collectors.joining(","));
 
 		return Flux.from(influxDBClient.getQueryReactiveApi().query("""
-						from(bucket: "p3m-bucket")
+						from(bucket: "%s")
 						    |> range(start: %s, stop: %s)
 						    |> filter(fn: (r) => r._measurement == "mqtt_consumer")
 						    |> drop(columns: ["host"])
 							|> filter(fn: (r) => contains(value: r["topic"], set: [%s]))
 						    |> aggregateWindow(every: %ds, fn: mean, createEmpty: true)
 							|> pivot(rowKey:["_time"], columnKey: ["_field", "topic"], valueColumn: "_value")
-						""".formatted(start.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+						""".formatted(influxDbProperties.getBucket(),
+						start.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
 						stop.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
 						filterString,
 						aggregateSeconds)))
@@ -204,7 +207,7 @@ public class InfluxDbService
 		}
 
 		return Mono.from(influxDBClient.getQueryReactiveApi().query("""
-						from(bucket: "p3m-bucket")
+						from(bucket: "%s")
 							|> range(start: %s, stop: %s)
 							|> filter(fn: (r) => r._measurement == "mqtt_consumer")
 							|> drop(columns: ["host"])
@@ -212,8 +215,10 @@ public class InfluxDbService
 							|> mean()
 							|> group(columns: ["_measurement", "_start", "_stop"])
 							|> pivot(rowKey:["topic"], columnKey: ["_field"], valueColumn: "_value")
-						""".formatted(start.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
-						stop.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME), ttnProperties.getUsername(), ttnDeviceId)))
+						""".formatted(influxDbProperties.getBucket(),
+						start.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+						stop.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+						ttnProperties.getUsername(), ttnDeviceId)))
 				.flatMap(fluxRecord -> {
 					var instant = (Instant) fluxRecord.getValueByKey("_stop");
 					return buildDeviceValuesMonoFromRecord(ttnDeviceId, fluxRecord, instant);
@@ -223,7 +228,7 @@ public class InfluxDbService
 	public Mono<InfluxDeviceValues> getLatestDeviceValues(String ttnDeviceId)
 	{
 		return Mono.from(influxDBClient.getQueryReactiveApi().query("""
-						from(bucket: "p3m-bucket")
+						from(bucket: "%s")
 							|> range(start: 0, stop: now())
 						    |> filter(fn: (r) => r._measurement == "mqtt_consumer")
 						    |> drop(columns: ["host"])
@@ -231,7 +236,7 @@ public class InfluxDbService
 						    |> sort(columns:["_time"])
 						    |> last()
 						    |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
-						""".formatted(ttnProperties.getUsername(), ttnDeviceId)))
+						""".formatted(influxDbProperties.getBucket(), ttnProperties.getUsername(), ttnDeviceId)))
 				.flatMap(fluxRecord -> {
 					var instant = (Instant) fluxRecord.getValueByKey("_time");
 					return buildDeviceValuesMonoFromRecord(ttnDeviceId, fluxRecord, instant);
@@ -245,15 +250,16 @@ public class InfluxDbService
 		}
 
 		return Mono.from(influxDBClient.getQueryReactiveApi().query("""
-						from(bucket: "p3m-bucket")
+						from(bucket: "%s")
 							|> range(start: %s, stop: %s)
 							|> filter(fn: (r) => r._measurement == "weather")
 							|> filter(fn: (r) => r["city"] == "%s" and (r._field == "temperature" or r._field == "humidity" or r._field == "cloudiness" or r._field == "rain"))
 						    |> mean()
 							|> group(columns: ["_measurement", "_start", "_stop"])
 							|> pivot(rowKey:["city"], columnKey: ["_field"], valueColumn: "_value")
-						""".formatted(start.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
-								stop.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME), city)))
+						""".formatted(influxDbProperties.getBucket(),
+						start.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+						stop.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME), city)))
 				.flatMap(fluxRecord -> {
 					var instant = (Instant) fluxRecord.getValueByKey("_stop");
 					return buildWeatherValuesMonoFromRecord(fluxRecord, instant);
@@ -263,14 +269,14 @@ public class InfluxDbService
 	public Mono<InfluxWeatherValues> getLatestCityWeather(String city)
 	{
 		return Mono.from(influxDBClient.getQueryReactiveApi().query("""
-						from(bucket: "p3m-bucket")
+						from(bucket: "%s")
 							|> range(start: 0, stop: now())
 						    |> filter(fn: (r) => r._measurement == "weather")
 						    |> filter(fn: (r) => r["city"] == "%s")
 						    |> sort(columns:["_time"])
 						    |> last()
 						    |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
-						""".formatted(city)))
+						""".formatted(influxDbProperties.getBucket(), city)))
 				.flatMap(fluxRecord -> {
 					var instant = (Instant) fluxRecord.getValueByKey("_time");
 					return buildWeatherValuesMonoFromRecord(fluxRecord, instant);

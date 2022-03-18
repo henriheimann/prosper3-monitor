@@ -26,6 +26,7 @@ services:
     volumes:
       - ./volumes/influxdb/data:/var/lib/influxdb2
       - ./volumes/influxdb/config:/etc/influxdb2
+      - ./config/influxdb/init.sh:/docker-entrypoint-initdb.d/init.sh
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
       DOCKER_INFLUXDB_INIT_USERNAME: user
@@ -42,11 +43,23 @@ services:
     container_name: p3m-telegraf
     depends_on:
       - p3m-influxdb
-      - p3m-test-mosquitto
     volumes:
       - ./config/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
       - ./config/telegraf/secrets:/etc/telegraf/telegraf.d
     command: telegraf --config /etc/telegraf/telegraf.conf --config-directory /etc/telegraf/telegraf.d/
+    networks:
+      - p3m-backend-net
+    restart: unless-stopped
+
+  p3m-test-telegraf:
+    image: telegraf:1.20
+    container_name: p3m-test-telegraf
+    depends_on:
+      - p3m-influxdb
+      - p3m-test-mosquitto
+    volumes:
+      - ./config/test-telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+    command: telegraf --config /etc/telegraf/telegraf.conf
     networks:
       - p3m-backend-net
     restart: unless-stopped

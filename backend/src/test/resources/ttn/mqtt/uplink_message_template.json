@@ -21,6 +21,15 @@
     "f_port": 1,
     "f_cnt": 3,
     "frm_payload": "{{payload_base64}}",
+    "decoded_payload": {
+      "sensor_type": {{sensor_type}},
+      "battery_voltage": {{battery_voltage}},
+      "moisture_counter": {{moisture_counter}},
+      "temperature": {{temperature}},
+      "humidity": {{humidity}},
+      "ir_temperature": {{ir_temperature}},
+      "brightness_current": {{brightness_current}}
+    },
     "rx_metadata": [
       {
         "gateway_ids": {

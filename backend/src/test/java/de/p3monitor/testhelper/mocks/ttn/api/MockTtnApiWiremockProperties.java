@@ -1,4 +1,4 @@
-package de.p3monitor.mock.ttn.api;
+package de.p3monitor.testhelper.mocks.ttn.api;
 
 import lombok.Getter;
 import lombok.Setter;

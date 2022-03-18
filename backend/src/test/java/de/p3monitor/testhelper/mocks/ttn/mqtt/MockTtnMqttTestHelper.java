@@ -1,4 +1,4 @@
-package de.p3monitor.mock.ttn.mqtt;
+package de.p3monitor.testhelper.mocks.ttn.mqtt;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -24,18 +24,7 @@ public class MockTtnMqttTestHelper
 
 	public void publishUplinkMessage(UplinkMessage uplinkMessage) throws Exception
 	{
-		byte[] payload = new byte[11];
-		payload[0] = (byte)(((short)(uplinkMessage.getTemperature() * 100.0) & 0x00ff));
-		payload[1] = (byte)(((short)(uplinkMessage.getTemperature() * 100.0) & 0xff00) >> 8);
-		payload[2] = (byte)(((short)(uplinkMessage.getHumidity() * 100.0) & 0x00ff));
-		payload[3] = (byte)(((short)(uplinkMessage.getHumidity() * 100.0) & 0xff00) >> 8);
-		payload[4] = (byte)(((short)(uplinkMessage.getIrTemperature() * 100.0) & 0x00ff));
-		payload[5] = (byte)(((short)(uplinkMessage.getIrTemperature() * 100.0) & 0xff00) >> 8);
-		payload[6] = (byte)(((int)uplinkMessage.getBrightnessCurrent() & 0x000000ff));
-		payload[7] = (byte)(((int)uplinkMessage.getBrightnessCurrent() & 0x0000ff00) >> 8);
-		payload[8] = (byte)(((int)uplinkMessage.getBrightnessCurrent() & 0x00ff0000) >> 16);
-		payload[9] = (byte)(((int)uplinkMessage.getBrightnessCurrent() & 0xff000000) >> 24);
-		payload[10] = (byte)(uplinkMessage.getBatteryVoltage() * 10.0);
+		byte[] payload = new byte[12];
 
 		String uplinkMessageTemplate = FileCopyUtils.copyToString(this.uplinkMessageTemplate.getInputStream(),
 				Charset.defaultCharset());
@@ -43,10 +32,17 @@ public class MockTtnMqttTestHelper
 		String uplinkJson = uplinkMessageTemplate
 				.replace("{{device_id}}", uplinkMessage.getDeviceId())
 				.replace("{{application_id}}", uplinkMessage.getApplicationId())
-				.replace("{{payload_base64}}", Base64.getEncoder().encodeToString(payload));
+				.replace("{{payload_base64}}", Base64.getEncoder().encodeToString(payload))
+				.replace("{{sensor_type}}", String.valueOf(uplinkMessage.getSensorType()))
+				.replace("{{battery_voltage}}", String.valueOf(uplinkMessage.getBatteryVoltage()))
+				.replace("{{moisture_counter}}", String.valueOf(uplinkMessage.getMoistureCounter()))
+				.replace("{{temperature}}", String.valueOf(uplinkMessage.getTemperature()))
+				.replace("{{humidity}}", String.valueOf(uplinkMessage.getHumidity()))
+				.replace("{{ir_temperature}}", String.valueOf(uplinkMessage.getIrTemperature()))
+				.replace("{{brightness_current}}", String.valueOf(uplinkMessage.getBrightnessCurrent()));
 
 		MqttMessage message = new MqttMessage(uplinkJson.getBytes());
-		mockTtnMqttClient.publish("v3/" + uplinkMessage.getApplicationId() + "/devices/" +
+		mockTtnMqttClient.publish("v3/" + uplinkMessage.getMqttUsername() + "/devices/" +
 				uplinkMessage.getDeviceId() + "/up", message);
 	}
 }

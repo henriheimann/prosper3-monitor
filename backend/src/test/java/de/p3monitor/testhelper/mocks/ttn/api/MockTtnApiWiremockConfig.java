@@ -1,4 +1,4 @@
-package de.p3monitor.mock.ttn.api;
+package de.p3monitor.testhelper.mocks.ttn.api;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import org.springframework.beans.factory.annotation.Qualifier;
