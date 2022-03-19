@@ -4,8 +4,8 @@
 set -e
 
 # source .env file
-source <(grep -v -e '^#\|^[[:space:]]*$' .env | sed -e 's/\r$//' -e 's/^/export /' -e 's/=/="/' -e 's/$/"/')
-source <(grep -v -e '^#\|^[[:space:]]*$' .env-secrets | sed -e 's/\r$//' -e 's/^/export /' -e 's/=/="/' -e 's/$/"/')
+export $(grep -v '^#' .env | xargs)
+export $(grep -v '^#' .env-secrets | xargs)
 
 # build frontend image
 cd ../../frontend/

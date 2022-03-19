@@ -3,6 +3,10 @@
 # exit when any command fails
 set -e
 
+# source .env files
+export $(grep -v '^#' .env | xargs)
+export $(grep -v '^#' .env-secrets | xargs)
+
 # default variable values
 SKIP_FRONTEND_BUILD=1
 SKIP_BACKEND_BUILD=1
@@ -15,10 +19,6 @@ while getopts fb option; do
   *) ;;
   esac
 done
-
-# source .env files
-source <(grep -v -e '^#\|^[[:space:]]*$' .env | sed -e 's/\r$//' -e 's/^/export /' -e 's/=/="/' -e 's/$/"/')
-source <(grep -v -e '^#\|^[[:space:]]*$' .env-secrets | sed -e 's/\r$//' -e 's/^/export /' -e 's/=/="/' -e 's/$/"/')
 
 # make sure directory exists on deployment server
 ssh "${DEPLOYMENT_USER}@${DEPLOYMENT_IP}" 'mkdir -p ~/p3m'
