@@ -31,7 +31,7 @@ if [ "${SKIP_FRONTEND_BUILD}" = "0" ]; then
     --build-arg deployment_url="${DEPLOYMENT_URL}" \
     --build-arg backend_url="${DEPLOYMENT_URL}/api" \
     --build-arg tileserver_style_url="${TILESERVER_STYLE_URL}"
-  docker save p3m-frontend > p3m-frontend.tar
+  docker save p3m-frontend -o p3m-frontend.tar
   scp p3m-frontend.tar "${DEPLOYMENT_USER}@${DEPLOYMENT_IP}:~/p3m"
   rm p3m-frontend.tar
   cd ../deployment/p3m-production/
@@ -44,7 +44,7 @@ if [ "${SKIP_BACKEND_BUILD}" = "0" ]; then
   cd ../../backend/
   mvn clean package -DskipTests
   docker buildx build --platform=linux/amd64 -t p3m-backend .
-  docker save p3m-backend > p3m-backend.tar
+  docker save p3m-backend -o p3m-backend.tar
   scp p3m-backend.tar "${DEPLOYMENT_USER}@${DEPLOYMENT_IP}:~/p3m"
   rm p3m-backend.tar
   cd ../deployment/p3m-production/
@@ -60,12 +60,12 @@ rsync -aP ../tileserver "${DEPLOYMENT_USER}@${DEPLOYMENT_IP}:~/p3m"
 
 # load frontend
 if [ "${SKIP_FRONTEND_BUILD}" = "0" ]; then
-  ssh "${DEPLOYMENT_USER}@${DEPLOYMENT_IP}" 'cd ~/p3m && docker load < p3m-frontend.tar && rm p3m-frontend.tar'
+  ssh "${DEPLOYMENT_USER}@${DEPLOYMENT_IP}" 'cd ~/p3m && docker load -i p3m-frontend.tar && rm p3m-frontend.tar'
 fi
 
 # load backend
 if [ "${SKIP_BACKEND_BUILD}" = "0" ]; then
-  ssh "${DEPLOYMENT_USER}@${DEPLOYMENT_IP}" 'cd ~/p3m && docker load < p3m-backend.tar && rm p3m-backend.tar'
+  ssh "${DEPLOYMENT_USER}@${DEPLOYMENT_IP}" 'cd ~/p3m && docker load -i p3m-backend.tar && rm p3m-backend.tar'
 fi
 
 # run compose
