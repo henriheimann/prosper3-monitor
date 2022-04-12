@@ -1,7 +1,7 @@
 <div class="bg-gradient p-3" style="min-height: 100%">
   <div class="container" style="max-width: 720px">
     <div class="row mb-3">
-      <div class="bg-white shadow-sm rounded-speech-bubble-left p-3">
+      <div class="bg-white shadow-sm rounded-speech-bubble-left p-3 w-100">
         <div class="w-100" *ngIf="isPlantSensor() | async; then plantSensorBlock; else climateSensorBlock"></div>
       </div>
       <div class="speech-bubble-triangle-left"></div>
@@ -13,7 +13,7 @@
       installiert.
     </div>
     <div class="row mb-3">
-      <div class="bg-white shadow-sm rounded-speech-bubble-right p-3">
+      <div class="bg-white shadow-sm rounded-speech-bubble-right p-3 w-100">
         <div class="w-100" *ngIf="isPlantSensor() | async; then plantSensorBlock2; else climateSensorBlock2"></div>
       </div>
       <div class="speech-bubble-triangle-right ml-auto"></div>
@@ -30,8 +30,14 @@
 <ng-template #plantSensorBlock>
   <h2>Hallo!</h2>
   <span>Ich bin ein Bewässerungssensor und überwache die Pflanze in diesem Hochbeet. </span>
-  <span *ngIf="numberOfPlantsRequiringIrrigation$ | async as number">
-    Aktuell müssen auf dem roten Platz {{ number }} Beet{{ number === 1 ? "" : "e" }} bewässert werden.
+  <span *ngIf="numberOfPlantsRequiringIrrigation !== undefined">
+    <span>
+      Aktuell müssen auf dem roten Platz
+      {{ numberOfPlantsRequiringIrrigation === 0 ? "keine" : numberOfPlantsRequiringIrrigation }} Beet{{
+        numberOfPlantsRequiringIrrigation === 1 ? "" : "e"
+      }}
+      bewässert werden.
+    </span>
   </span>
   <p3m-sensor-map
     [devicesWithValues]="plantSensorDeviceWithValues$ | async"
@@ -49,11 +55,12 @@
 
 <ng-template #climateSensorBlock>
   <h2>Hallo!</h2>
-  <span>
-    Ich bin ein Klimasensor und überwache die Temperatur, Luftfeuchtigkeit und Helligkeit in meiner Nähe. Die Temperatur
-    auf dem roten Platz betrug in den letzten 24 Stunden im Schnitt
-    {{ getAverageTemperature() | async }} °C. Das ist {{ getTemperatureDifference() }} °C
-    {{ (isTemperatureBigger() | async) ? "wärmer" : "kälter" }} als im Rest des Stadtgebiets. Stadtgebiets.
+  <span> Ich bin ein Klimasensor und überwache die Temperatur, Luftfeuchtigkeit und Helligkeit in meiner Nähe.</span>
+  <span *ngIf="averagedMeasuredTemperature != undefined && averagedWeatherTemperature != undefined">
+    Die Temperatur auf dem roten Platz betrug in den letzten 24 Stunden im Schnitt
+    {{ averagedMeasuredTemperature | number: "1.2-2" }} °C. Das ist
+    {{ averagedMeasuredTemperature - averagedWeatherTemperature | number: "1.2-2" }} °C
+    {{ averagedMeasuredTemperature > averagedWeatherTemperature ? "wärmer" : "kälter" }} als im Rest des Stadtgebiets.
   </span>
   <p3m-sensor-map
     [devicesWithValues]="climateSensorDevicesWithValues$ | async"
@@ -70,10 +77,11 @@
 </ng-template>
 
 <ng-template #plantSensorBlock2>
-  <span>
+  <span *ngIf="averagedMeasuredTemperature != undefined && averagedWeatherTemperature != undefined">
     Die Temperatur auf dem roten Platz betrug in den letzten 24 Stunden im Schnitt
-    {{ getAverageTemperature() | async }} °C. Das ist {{ getTemperatureDifference() }} °C
-    {{ (isTemperatureBigger() | async) ? "wärmer" : "kälter" }} als im Rest des Stadtgebiets.
+    {{ averagedMeasuredTemperature | number: "1.2-2" }} °C. Das ist
+    {{ averagedMeasuredTemperature - averagedWeatherTemperature | number: "1.2-2" }} °C
+    {{ averagedMeasuredTemperature > averagedWeatherTemperature ? "wärmer" : "kälter" }} als im Rest des Stadtgebiets.
   </span>
   <p3m-sensor-map
     [devicesWithValues]="climateSensorDevicesWithValues$ | async"
@@ -90,8 +98,14 @@
 </ng-template>
 
 <ng-template #climateSensorBlock2>
-  <span *ngIf="numberOfPlantsRequiringIrrigation$ | async as number">
-    Aktuell müssen auf dem roten Platz {{ number }} Beet{{ number === 1 ? "" : "e" }} bewässert werden.
+  <span *ngIf="numberOfPlantsRequiringIrrigation !== undefined">
+    <span>
+      Aktuell müssen auf dem roten Platz
+      {{ numberOfPlantsRequiringIrrigation === 0 ? "keine" : numberOfPlantsRequiringIrrigation }} Beet{{
+        numberOfPlantsRequiringIrrigation === 1 ? "" : "e"
+      }}
+      bewässert werden.
+    </span>
   </span>
   <p3m-sensor-map
     [devicesWithValues]="plantSensorDeviceWithValues$ | async"

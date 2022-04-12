@@ -118,24 +118,24 @@ public class InfluxDbService
 		builder.timestamp(timestamp);
 		builder.city((String) fluxRecord.getValueByKey("city"));
 
-		var cloudiness = (Double) fluxRecord.getValueByKey("cloudiness");
+		var cloudiness = (Number) fluxRecord.getValueByKey("cloudiness");
 		if (cloudiness != null) {
-			builder.cloudiness(cloudiness);
+			builder.cloudiness(cloudiness.doubleValue());
 		}
 
-		var humidity = (Double) fluxRecord.getValueByKey("humidity");
+		var humidity = (Number) fluxRecord.getValueByKey("humidity");
 		if (humidity != null) {
-			builder.humidity(humidity);
+			builder.humidity(humidity.doubleValue());
 		}
 
-		var temperature = (Double) fluxRecord.getValueByKey("temperature");
+		var temperature = (Number) fluxRecord.getValueByKey("temperature");
 		if (temperature != null) {
-			builder.temperature(temperature);
+			builder.temperature(temperature.doubleValue());
 		}
 
-		var rain = (Double) fluxRecord.getValueByKey("rain");
+		var rain = (Number) fluxRecord.getValueByKey("rain");
 		if (rain != null) {
-			builder.rain(rain);
+			builder.rain(rain.doubleValue());
 		}
 
 		return builder.build();

@@ -48,6 +48,8 @@ export class PageSensorDashboardComponent {
     })
   );
 
+  numberOfPlantsRequiringIrrigation: number | undefined = undefined;
+
   climateSensorDevices$ = this.allDevices$.pipe(
     map((devices) => {
       if (devices != null) {
@@ -90,12 +92,15 @@ export class PageSensorDashboardComponent {
     })
   );
 
+  averagedMeasuredTemperature: number | null = null;
+  averagedWeatherTemperature: number | null = null;
+
   averagedMeasurements$ = this.measurementsService.getAveragedMeasurements(
     MeasurementTimespanModel.LAST_DAY,
     'CLIMATE_SENSOR'
   );
 
-  averagedWeather$ = this.weatherService.getCurrentWeather('Bottrop');
+  averagedWeather$ = this.weatherService.getAveragedWeather('Bottrop', MeasurementTimespanModel.LAST_DAY);
 
   constructor(
     private deviceService: DeviceService,
@@ -111,40 +116,25 @@ export class PageSensorDashboardComponent {
         }
       }
     });
+    this.numberOfPlantsRequiringIrrigation$.subscribe((number) => {
+      this.numberOfPlantsRequiringIrrigation = number;
+    });
+    this.averagedMeasurements$.subscribe((averagedMeasurements) => {
+      if (averagedMeasurements?.deviceValues?.tmp != null) {
+        this.averagedMeasuredTemperature = averagedMeasurements.deviceValues.tmp;
+      }
+    });
+    this.averagedWeather$.subscribe((averagedWeather) => {
+      if (averagedWeather?.weatherValues?.tmp != null) {
+        this.averagedWeatherTemperature = averagedWeather.weatherValues.tmp;
+      }
+    });
   }
 
   isPlantSensor(): Observable<boolean> {
     return this.accessedDevice$.pipe(
       map((device) => {
         return device?.lastContact?.sensorType == 'PLANT_SENSOR';
-      })
-    );
-  }
-
-  getAverageTemperature(): Observable<number | undefined> {
-    return this.averagedMeasurements$.pipe(map((averagedMeasurements) => averagedMeasurements?.deviceValues?.tmp));
-  }
-
-  getTemperatureDifference(): Observable<number | undefined> {
-    return zip(this.averagedMeasurements$, this.averagedWeather$).pipe(
-      map(([measurements, weather]) => {
-        if (measurements.deviceValues.tmp && weather.tmp) {
-          return measurements.deviceValues.tmp - weather.tmp;
-        } else {
-          return undefined;
-        }
-      })
-    );
-  }
-
-  isTemperatureBigger(): Observable<boolean | undefined> {
-    return zip(this.averagedMeasurements$, this.averagedWeather$).pipe(
-      map(([measurements, weather]) => {
-        if (measurements.deviceValues.tmp && weather.tmp) {
-          return measurements.deviceValues.tmp > weather.tmp;
-        } else {
-          return false;
-        }
       })
     );
   }

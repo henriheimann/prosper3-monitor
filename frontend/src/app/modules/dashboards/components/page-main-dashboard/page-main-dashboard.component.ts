@@ -9,6 +9,4 @@ export class PageMainDashboardComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
-
-  onAdministrationClicked(): void {}
 }
