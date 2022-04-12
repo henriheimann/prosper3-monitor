@@ -21,7 +21,7 @@
     <div class="row mb-3 pt-3 pb-3 text-white">
       <span>
         Alle Erhobenen Daten stellen wir auch über eine offene Schnittstelle zur Verfügung. Die Dokumentation und
-        weitere technische Details dazu sind <a [routerLink]="['api-doc']" class="text-white">hier</a> abrufbar.
+        weitere technische Details dazu sind <a [routerLink]="['api-doc']" class="text-white"><u>hier</u></a> abrufbar.
       </span>
     </div>
   </div>
@@ -51,7 +51,9 @@
   <h2>Hallo!</h2>
   <span>
     Ich bin ein Klimasensor und überwache die Temperatur, Luftfeuchtigkeit und Helligkeit in meiner Nähe. Die Temperatur
-    auf dem roten Platz beträgt im Moment 22°C. Das ist 2°C wärmer als im Rest des Stadtgebiets.
+    auf dem roten Platz betrug in den letzten 24 Stunden im Schnitt
+    {{ getAverageTemperature() | async }} °C. Das ist {{ getTemperatureDifference() }} °C
+    {{ (isTemperatureBigger() | async) ? "wärmer" : "kälter" }} als im Rest des Stadtgebiets. Stadtgebiets.
   </span>
   <p3m-sensor-map
     [devicesWithValues]="climateSensorDevicesWithValues$ | async"
@@ -61,7 +63,7 @@
     style="height: 300px"
   ></p3m-sensor-map>
   <div class="d-flex justify-content-end">
-    <button class="btn btn-light p-2 mt-3" type="button" [routerLink]="['plants']">
+    <button class="btn btn-light p-2 mt-3" type="button" [routerLink]="['climate']">
       <span class="pl-2">Mehr erfahren...</span>
     </button>
   </div>
@@ -69,7 +71,9 @@
 
 <ng-template #plantSensorBlock2>
   <span>
-    Die Temperatur auf dem roten Platz beträgt im Moment 22°C. Das ist 2°C wärmer als im Rest des Stadtgebiets.
+    Die Temperatur auf dem roten Platz betrug in den letzten 24 Stunden im Schnitt
+    {{ getAverageTemperature() | async }} °C. Das ist {{ getTemperatureDifference() }} °C
+    {{ (isTemperatureBigger() | async) ? "wärmer" : "kälter" }} als im Rest des Stadtgebiets.
   </span>
   <p3m-sensor-map
     [devicesWithValues]="climateSensorDevicesWithValues$ | async"
@@ -79,7 +83,7 @@
     style="height: 300px"
   ></p3m-sensor-map>
   <div class="d-flex justify-content-end">
-    <button class="btn btn-light p-2 mt-3" type="button" [routerLink]="['plants']">
+    <button class="btn btn-light p-2 mt-3" type="button" [routerLink]="['climate']">
       <span class="pl-2">Mehr erfahren...</span>
     </button>
   </div>

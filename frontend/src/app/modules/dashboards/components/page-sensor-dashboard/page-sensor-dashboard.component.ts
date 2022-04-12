@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { Observable, of, zip } from 'rxjs';
 import { DeviceWithValuesModel } from '../../../sensor-maps/models/device-with-values.model';
 import { DeviceService } from '../../../shared/services/device.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -117,6 +117,34 @@ export class PageSensorDashboardComponent {
     return this.accessedDevice$.pipe(
       map((device) => {
         return device?.lastContact?.sensorType == 'PLANT_SENSOR';
+      })
+    );
+  }
+
+  getAverageTemperature(): Observable<number | undefined> {
+    return this.averagedMeasurements$.pipe(map((averagedMeasurements) => averagedMeasurements?.deviceValues?.tmp));
+  }
+
+  getTemperatureDifference(): Observable<number | undefined> {
+    return zip(this.averagedMeasurements$, this.averagedWeather$).pipe(
+      map(([measurements, weather]) => {
+        if (measurements.deviceValues.tmp && weather.tmp) {
+          return measurements.deviceValues.tmp - weather.tmp;
+        } else {
+          return undefined;
+        }
+      })
+    );
+  }
+
+  isTemperatureBigger(): Observable<boolean | undefined> {
+    return zip(this.averagedMeasurements$, this.averagedWeather$).pipe(
+      map(([measurements, weather]) => {
+        if (measurements.deviceValues.tmp && weather.tmp) {
+          return measurements.deviceValues.tmp > weather.tmp;
+        } else {
+          return false;
+        }
       })
     );
   }
