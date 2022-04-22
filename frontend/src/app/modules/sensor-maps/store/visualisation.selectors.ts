@@ -67,3 +67,8 @@ export const selectIsIdentifyingDevice = createSelector(
   selectVisualisationState,
   (state: VisualisationState) => state.inIdentifyingMode
 );
+
+export const selectAreMeasurementsLoading = createSelector(
+  selectVisualisationState,
+  (state: VisualisationState) => state.measurementsLoading
+);

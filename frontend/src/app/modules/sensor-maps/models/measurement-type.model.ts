@@ -24,7 +24,7 @@ export function getMaximumValueForMeasurementType(type: MeasurementTypeModel): n
     case MeasurementTypeModel.HUMIDITY:
       return 100;
     case MeasurementTypeModel.BRIGHTNESS_CURRENT:
-      return 100;
+      return 1;
   }
 }
 

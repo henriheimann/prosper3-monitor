@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -18,6 +18,8 @@ import { SensorMapsModule } from './modules/sensor-maps/sensor-maps.module';
 import { DashboardsModule } from './modules/dashboards/dashboards.module';
 import { ApiDocModule } from './modules/api-doc/api-doc.module';
 import { GrafanaModule } from './modules/grafana/grafana.module';
+import localeDe from '@angular/common/locales/de';
+import { DatePipe, registerLocaleData } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent],
@@ -46,8 +48,17 @@ import { GrafanaModule } from './modules/grafana/grafana.module';
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true
-    }
+    },
+    {
+      provide: LOCALE_ID,
+      useValue: "de-DE"
+    },
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+  constructor() {
+    registerLocaleData(localeDe);
+  }
+}

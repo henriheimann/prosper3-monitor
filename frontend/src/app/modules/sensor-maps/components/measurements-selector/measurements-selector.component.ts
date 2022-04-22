@@ -3,6 +3,7 @@ import { Options } from '@angular-slider/ngx-slider';
 import { MeasurementTypeModel } from '../../models/measurement-type.model';
 import { Store } from '@ngrx/store';
 import {
+  selectAreMeasurementsLoading,
   selectSelectedMeasurements,
   selectSelectedMeasurementType,
   selectSelectedTimespan
@@ -11,6 +12,7 @@ import { MeasurementTimespanModel } from '../../models/measurement-timespan.mode
 import { MeasurementsModel } from '../../models/measurements.model';
 import { Observable } from 'rxjs';
 import { selectMeasurements, selectMeasurementsIndex } from '../../store/visualisation.actions';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'p3m-measurements-selector',
@@ -29,6 +31,8 @@ export class MeasurementsSelectorComponent implements OnInit {
   measurements$: Observable<MeasurementsModel[] | null> = this.store.select(selectSelectedMeasurements);
   measurements: MeasurementsModel[] | null = null;
 
+  areMeasurementsLoading$ = this.store.select(selectAreMeasurementsLoading);
+
   sliderSelectedIndex = 0;
   sliderOptions: Options = {
     stepsArray: [
@@ -38,20 +42,14 @@ export class MeasurementsSelectorComponent implements OnInit {
     ],
     translate: (value: number): string => {
       if (this.measurements && this.measurements[value].timestamp) {
-        return new Date(this.measurements[value].timestamp).toLocaleString([], {
-          year: 'numeric',
-          month: 'numeric',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        });
+        return this.datePipe.transform(new Date(this.measurements[value].timestamp), 'short') || '';
       } else {
         return '';
       }
     }
   };
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private datePipe: DatePipe) {}
 
   onSliderChange(): void {
     this.store.dispatch(

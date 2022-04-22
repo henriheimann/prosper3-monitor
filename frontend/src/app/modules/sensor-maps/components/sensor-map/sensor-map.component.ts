@@ -28,7 +28,6 @@ export class SensorMapComponent implements AfterViewInit, OnDestroy {
 
   @Input() showSensorValuesLayer = false;
   @Input() interactive = true;
-  @Input() selectedMeasurementType: MeasurementTypeModel | null = null;
 
   draggingDevice$: Observable<DeviceModel | null> = this.store.select(selectDraggingDevice);
   draggingDevice: DeviceModel | null = null;
@@ -41,7 +40,13 @@ export class SensorMapComponent implements AfterViewInit, OnDestroy {
 
   constructor(private store: Store) {}
 
+  _selectedMeasurementType: MeasurementTypeModel | null = null;
   _devicesWithValues: DeviceWithValuesModel[] | null = null;
+
+  @Input() set selectedMeasurementType(value: MeasurementTypeModel | null) {
+    this._selectedMeasurementType = value;
+    this.onDeviceWithValuesChanged();
+  }
 
   @Input() set devicesWithValues(value: DeviceWithValuesModel[] | null) {
     this._devicesWithValues = value;
@@ -154,7 +159,7 @@ export class SensorMapComponent implements AfterViewInit, OnDestroy {
   }
 
   updateSensorDataLayer(): void {
-    if (this._devicesWithValues && this.selectedMeasurementType) {
+    if (this._devicesWithValues && this._selectedMeasurementType) {
       const featureCollection: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
         type: 'FeatureCollection',
         features: []
@@ -166,14 +171,14 @@ export class SensorMapComponent implements AfterViewInit, OnDestroy {
           continue;
         }
 
-        const value = extractValueOfType(deviceValues, this.selectedMeasurementType);
+        const value = extractValueOfType(deviceValues, this._selectedMeasurementType);
 
         if (value == null) {
           continue;
         }
 
-        const min = getMinimumValueForMeasurementType(this.selectedMeasurementType);
-        const max = getMaximumValueForMeasurementType(this.selectedMeasurementType);
+        const min = getMinimumValueForMeasurementType(this._selectedMeasurementType);
+        const max = getMaximumValueForMeasurementType(this._selectedMeasurementType);
 
         let valuePercentage = 0.0;
         if (value < min) {

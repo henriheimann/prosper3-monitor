@@ -51,7 +51,7 @@ public class MeasurementsService
 	{
 		if (moistureCounter != null) {
 			double m = 1.0 / (moistureCounterMax - moistureCounterMin);
-			double b = - moistureCounterMin / (moistureCounterMax - moistureCounterMin);
+			double b = -moistureCounterMin / (moistureCounterMax - moistureCounterMin);
 			double y = m * moistureCounter + b;
 			return 1 - clampPercentage(y);
 		} else {
@@ -122,10 +122,11 @@ public class MeasurementsService
 	public Mono<AveragedMeasurementsResponse> averagedMeasurements(AveragedMeasurementsRequest averagedMeasurementsRequest)
 	{
 		return deviceRepository.findAll()
-				.flatMap(deviceEntity -> influxDbService.getAveragedDevicesValues(deviceEntity.getTtnId(),
-						averagedMeasurementsRequest.getStart(), averagedMeasurementsRequest.getStop()))
+				.flatMap(deviceEntity -> Mono.zip(Mono.just(deviceEntity),
+						influxDbService.getAveragedDevicesValues(deviceEntity.getTtnId(),
+						averagedMeasurementsRequest.getStart(), averagedMeasurementsRequest.getStop())))
 				.collectList()
-				.map(deviceValues -> {
+				.map(deviceEntityAndValues -> {
 					double totalBattery = 0.0;
 					int batteryCount = 0;
 					double totalMoisture = 0.0;
@@ -139,7 +140,10 @@ public class MeasurementsService
 					double totalBrightness = 0.0;
 					int brightnessCount = 0;
 
-					for (InfluxDeviceValues deviceValue : deviceValues) {
+					for (Tuple2<DeviceEntity, InfluxDeviceValues> deviceEntityAndValue : deviceEntityAndValues) {
+						DeviceEntity deviceEntity = deviceEntityAndValue.getT1();
+						InfluxDeviceValues deviceValue = deviceEntityAndValue.getT2();
+
 						if (averagedMeasurementsRequest.getDeviceSensorType() == null ||
 								deviceValue.getSensorType() == averagedMeasurementsRequest.getDeviceSensorType()) {
 							if (deviceValue.getBatteryVoltage() != null) {
@@ -147,8 +151,8 @@ public class MeasurementsService
 								batteryCount++;
 							}
 							if (deviceValue.getMoistureCounter() != null) {
-								totalMoisture += transformMoistureCounterToPercentage(deviceValue.getMoistureCounter()
-										, 0, 0);
+								totalMoisture += transformMoistureCounterToPercentage(deviceValue.getMoistureCounter(),
+										deviceEntity.getMoistureCounterMin(), deviceEntity.getMoistureCounterMax());
 								moistureCount++;
 							}
 							if (deviceValue.getTemperature() != null) {
@@ -164,7 +168,9 @@ public class MeasurementsService
 								irTemperatureCount++;
 							}
 							if (deviceValue.getBrightnessCurrent() != null) {
-								totalBrightness += transformBrightnessCurrentToPercentage(deviceValue.getBrightnessCurrent(), 0, 0);
+								totalBrightness += transformBrightnessCurrentToPercentage(
+										deviceValue.getBrightnessCurrent(), deviceEntity.getBrightnessMin(),
+										deviceEntity.getBrightnessMax());
 								brightnessCount++;
 							}
 						}

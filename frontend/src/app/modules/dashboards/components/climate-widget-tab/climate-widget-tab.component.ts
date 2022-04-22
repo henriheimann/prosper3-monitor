@@ -21,7 +21,8 @@ export class ClimateWidgetTabComponent {
   devices$ = this.deviceService.getAll().pipe(
     map((devices) => {
       if (devices != null) {
-        return devices.filter((device) => device.lastContact?.sensorType == 'CLIMATE_SENSOR');
+        return devices.filter((device) => device.lastContact?.sensorType == 'CLIMATE_SENSOR' &&
+          (new Date().getTime() - new Date(device.lastContact.timestamp).getTime() < 60 * 60 * 1000));
       } else {
         return devices;
       }

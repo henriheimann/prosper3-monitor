@@ -26,6 +26,9 @@ export class MapColorLegendComponent implements OnInit {
       this.unit = getUnitForMeasurementType(measurementType);
       this.maximumValue = getMaximumValueForMeasurementType(measurementType);
       this.minimumValue = getMinimumValueForMeasurementType(measurementType);
+      if (this.unit === '%') {
+        this.maximumValue *= 100;
+      }
     });
   }
 }
