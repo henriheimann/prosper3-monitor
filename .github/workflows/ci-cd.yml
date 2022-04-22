@@ -50,6 +50,10 @@ jobs:
         working-directory: ./deployment/p3m-local-e2e
         run: ./deploy-local-e2e.sh
 
+      - name: Sleep for 10 seconds
+        run: sleep 10s
+        shell: bash
+
       - name: Execute End to End Tests
         uses: cypress-io/github-action@v2
         with:

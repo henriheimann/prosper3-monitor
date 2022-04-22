@@ -26,15 +26,18 @@ public class MeasurementsService
 	private final InfluxDbService influxDbService;
 	private final DeviceRepository deviceRepository;
 
-	public static DeviceValuesResponse influxDeviceValuesToResponse(InfluxDeviceValues deviceValues)
+	public static DeviceValuesResponse influxDeviceValuesToResponse(InfluxDeviceValues deviceValues,
+	                                                                DeviceEntity deviceEntity)
 	{
 		return new DeviceValuesResponse(
 				deviceValues.getBatteryVoltage(),
-				transformMoistureCounterToPercentage(deviceValues.getMoistureCounter()),
+				transformMoistureCounterToPercentage(deviceValues.getMoistureCounter(),
+						deviceEntity.getMoistureCounterMin(), deviceEntity.getMoistureCounterMax()),
 				deviceValues.getTemperature(),
 				deviceValues.getHumidity(),
 				deviceValues.getIrTemperature(),
-				transformBrightnessCurrentToPercentage(deviceValues.getBrightnessCurrent())
+				transformBrightnessCurrentToPercentage(deviceValues.getBrightnessCurrent(),
+						deviceEntity.getBrightnessMin(), deviceEntity.getBrightnessMax())
 		);
 	}
 
@@ -43,19 +46,28 @@ public class MeasurementsService
 		return Math.min(1, Math.max(0, percentage));
 	}
 
-	private static Double transformMoistureCounterToPercentage(Double moistureCounter)
+	private static Double transformMoistureCounterToPercentage(Double moistureCounter, double moistureCounterMin,
+	                                                           double moistureCounterMax)
 	{
 		if (moistureCounter != null) {
-			return 1 - clampPercentage((moistureCounter - 5200) / 100);
+			double m = 1.0 / (moistureCounterMax - moistureCounterMin);
+			double b = - moistureCounterMin / (moistureCounterMax - moistureCounterMin);
+			double y = m * moistureCounter + b;
+			return 1 - clampPercentage(y);
 		} else {
 			return null;
 		}
 	}
 
-	private static Double transformBrightnessCurrentToPercentage(Double brightnessCurrent)
+	private static Double transformBrightnessCurrentToPercentage(Double brightnessCurrent, double brightnessMin,
+	                                                             double brightnessMax)
 	{
 		if (brightnessCurrent != null) {
-			return clampPercentage(Math.log(brightnessCurrent / 1000 + 1));
+			double clampedMin = Math.max(0.1, brightnessMin);
+			double a = 1.0 / Math.log(brightnessMax / clampedMin);
+			double b = 1.0 / clampedMin;
+			double y = a * Math.log(b * brightnessCurrent);
+			return clampPercentage(y);
 		} else {
 			return null;
 		}
@@ -77,23 +89,24 @@ public class MeasurementsService
 						measurementsRequest.getAggregateWindowSeconds())
 				);
 
-		Flux<Map<String, Long>> deviceTtnIdToIdMapRepeatedFlux = deviceEntitiesMono
+		Flux<Map<String, DeviceEntity>> deviceTtnIdToDeviceMapRepeatedFlux = deviceEntitiesMono
 				.map(deviceEntities -> deviceEntities.stream()
-						.collect(Collectors.toMap(DeviceEntity::getTtnId, DeviceEntity::getId)))
+						.collect(Collectors.toMap(DeviceEntity::getTtnId, deviceEntity -> deviceEntity)))
 				.repeat();
 
-		return Flux.zip(timestampAndDeviceValuesFlux, deviceTtnIdToIdMapRepeatedFlux)
+		return Flux.zip(timestampAndDeviceValuesFlux, deviceTtnIdToDeviceMapRepeatedFlux)
 				.map(timestampAndDeviceValueResponses -> {
 					ZonedDateTime timestamp = timestampAndDeviceValueResponses.getT1().getT1();
 					List<InfluxDeviceValues> influxDeviceValues = timestampAndDeviceValueResponses.getT1().getT2();
-					Map<String, Long> deviceTtnIdToIdMap = timestampAndDeviceValueResponses.getT2();
+					Map<String, DeviceEntity> deviceTtnIdToDeviceMap = timestampAndDeviceValueResponses.getT2();
 
 					Map<Long, DeviceValuesResponse> deviceValues = new HashMap<>();
 					for (InfluxDeviceValues influxDeviceValue : influxDeviceValues) {
 						if (measurementsRequest.getDeviceSensorType() == null ||
 								influxDeviceValue.getSensorType() == measurementsRequest.getDeviceSensorType()) {
-							deviceValues.put(deviceTtnIdToIdMap.get(influxDeviceValue.getTtnDeviceId()),
-									influxDeviceValuesToResponse(influxDeviceValue)
+							DeviceEntity deviceEntity = deviceTtnIdToDeviceMap.get(influxDeviceValue.getTtnDeviceId());
+							deviceValues.put(deviceEntity.getId(),
+									influxDeviceValuesToResponse(influxDeviceValue, deviceEntity)
 							);
 						}
 					}
@@ -109,7 +122,8 @@ public class MeasurementsService
 	public Mono<AveragedMeasurementsResponse> averagedMeasurements(AveragedMeasurementsRequest averagedMeasurementsRequest)
 	{
 		return deviceRepository.findAll()
-				.flatMap(deviceEntity -> influxDbService.getAveragedDevicesValues(deviceEntity.getTtnId(), averagedMeasurementsRequest.getStart(), averagedMeasurementsRequest.getStop()))
+				.flatMap(deviceEntity -> influxDbService.getAveragedDevicesValues(deviceEntity.getTtnId(),
+						averagedMeasurementsRequest.getStart(), averagedMeasurementsRequest.getStop()))
 				.collectList()
 				.map(deviceValues -> {
 					double totalBattery = 0.0;
@@ -133,7 +147,8 @@ public class MeasurementsService
 								batteryCount++;
 							}
 							if (deviceValue.getMoistureCounter() != null) {
-								totalMoisture += transformMoistureCounterToPercentage(deviceValue.getMoistureCounter());
+								totalMoisture += transformMoistureCounterToPercentage(deviceValue.getMoistureCounter()
+										, 0, 0);
 								moistureCount++;
 							}
 							if (deviceValue.getTemperature() != null) {
@@ -149,7 +164,7 @@ public class MeasurementsService
 								irTemperatureCount++;
 							}
 							if (deviceValue.getBrightnessCurrent() != null) {
-								totalBrightness += transformBrightnessCurrentToPercentage(deviceValue.getBrightnessCurrent());
+								totalBrightness += transformBrightnessCurrentToPercentage(deviceValue.getBrightnessCurrent(), 0, 0);
 								brightnessCount++;
 							}
 						}

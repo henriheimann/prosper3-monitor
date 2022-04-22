@@ -3,5 +3,6 @@ export const environment = {
   backendUrl: 'undefined',
   deploymentUrl: 'undefined',
   tileserverStyleUrl: 'undefined',
-  oauthClientLogin: 'undefined:undefined'
+  oauthClientLogin: 'undefined:undefined',
+  grafanaUrl: 'undefined'
 };

@@ -31,4 +31,12 @@ public class DeviceEntity
 	private double latitude;
 
 	private double longitude;
+
+	private Double brightnessMin;
+
+	private Double brightnessMax;
+
+	private Double moistureCounterMin;
+
+	private Double moistureCounterMax;
 }

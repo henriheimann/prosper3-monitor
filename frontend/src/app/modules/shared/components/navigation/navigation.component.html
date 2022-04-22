@@ -10,6 +10,11 @@
         alt="API Dokumentation"
       />
       <img
+        *ngIf="routeStartsWith('/grafana')"
+        srcset="assets/images/nav-grafana.png 5x"
+        alt="Grafana"
+      />
+      <img
         *ngIf="routeStartsWith('/imprint')"
         srcset="assets/images/nav-imprint.png 5x"
         alt="Impressum und Datenschutz"
@@ -27,10 +32,10 @@
         <img srcset="assets/images/nav-plant-monitor.png 5x" alt="Pflanzenmonitor" />
       </a>
       <hr />
-      <a class="dropdown-item" href="/grafana">
+      <a class="dropdown-item" [routerLink]="['/grafana']">
         <img srcset="assets/images/nav-grafana.png 5x" alt="Grafana" />
       </a>
-      <a class="dropdown-item" [routerLink]="['api-doc']">
+      <a class="dropdown-item" [routerLink]="['/api-doc']">
         <img srcset="assets/images/nav-api-documentation.png 5x" alt="API-Dokumentation" />
       </a>
       <ng-container *ngIf="isUserAdmin$ | async">

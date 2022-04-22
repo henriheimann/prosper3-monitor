@@ -72,6 +72,7 @@ services:
     volumes:
       - ./volumes/grafana/data:/var/lib/grafana
       - ./config/grafana/provisioning:/etc/grafana/provisioning
+      - ./config/grafana/grafana.ini:/etc/grafana/grafana.ini
     networks:
       - p3m-backend-net
     restart: unless-stopped

@@ -20,5 +20,9 @@ public class DeviceResponse
 	private String ttnApplicationSessionKey;
 	private double latitude;
 	private double longitude;
+	private double brightnessMin;
+	private double brightnessMax;
+	private double moistureCounterMin;
+	private double moistureCounterMax;
 	private LastContactResponse lastContact;
 }

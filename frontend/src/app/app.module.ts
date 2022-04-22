@@ -17,6 +17,7 @@ import { LegalModule } from './modules/legal/legal.module';
 import { SensorMapsModule } from './modules/sensor-maps/sensor-maps.module';
 import { DashboardsModule } from './modules/dashboards/dashboards.module';
 import { ApiDocModule } from './modules/api-doc/api-doc.module';
+import { GrafanaModule } from './modules/grafana/grafana.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,6 +27,7 @@ import { ApiDocModule } from './modules/api-doc/api-doc.module';
     AppRoutingModule,
     AdminModule,
     ApiDocModule,
+    GrafanaModule,
     AuthModule,
     LegalModule,
     SensorMapsModule,

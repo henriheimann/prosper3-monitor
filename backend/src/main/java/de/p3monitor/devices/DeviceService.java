@@ -43,6 +43,10 @@ public class DeviceService
 		}
 		deviceResponse.setLatitude(tuple.getT1().getLatitude());
 		deviceResponse.setLongitude(tuple.getT1().getLongitude());
+		deviceResponse.setBrightnessMin(tuple.getT1().getBrightnessMin());
+		deviceResponse.setBrightnessMax(tuple.getT1().getBrightnessMax());
+		deviceResponse.setMoistureCounterMin(tuple.getT1().getMoistureCounterMin());
+		deviceResponse.setMoistureCounterMax(tuple.getT1().getMoistureCounterMax());
 		return deviceResponse;
 	}
 
@@ -55,7 +59,7 @@ public class DeviceService
 						LastContactResponse lastContact = new LastContactResponse();
 						lastContact.setTimestamp(deviceValues.getTimestamp());
 						lastContact.setSensorType(deviceValues.getSensorType());
-						lastContact.setDeviceValues(MeasurementsService.influxDeviceValuesToResponse(deviceValues));
+						lastContact.setDeviceValues(MeasurementsService.influxDeviceValuesToResponse(deviceValues, deviceEntity));
 						return Optional.of(lastContact);
 					})
 					.defaultIfEmpty(Optional.empty());
@@ -70,7 +74,22 @@ public class DeviceService
 		entity.setName(createDeviceRequest.getName());
 		entity.setLatitude(createDeviceRequest.getLatitude());
 		entity.setLongitude(createDeviceRequest.getLongitude());
-		entity.setQrCodeId(createDeviceRequest.getQrCodeId());
+
+		if (createDeviceRequest.getQrCodeId() != null) {
+			entity.setQrCodeId(createDeviceRequest.getQrCodeId());
+		}
+		if (createDeviceRequest.getBrightnessMin() != null) {
+			entity.setBrightnessMin(createDeviceRequest.getBrightnessMin());
+		}
+		if (createDeviceRequest.getBrightnessMax() != null) {
+			entity.setBrightnessMax(createDeviceRequest.getBrightnessMax());
+		}
+		if (createDeviceRequest.getMoistureCounterMin() != null) {
+			entity.setMoistureCounterMin(createDeviceRequest.getMoistureCounterMin());
+		}
+		if (createDeviceRequest.getMoistureCounterMax() != null) {
+			entity.setMoistureCounterMax(createDeviceRequest.getMoistureCounterMax());
+		}
 
 		return deviceRepository.save(entity)
 				.zipWith(ttnService.createEndDevice()
@@ -122,6 +141,18 @@ public class DeviceService
 					}
 					if (updateDeviceRequest.getQrCodeId() != null) {
 						device.setQrCodeId(updateDeviceRequest.getQrCodeId());
+					}
+					if (updateDeviceRequest.getBrightnessMin() != null) {
+						device.setBrightnessMin(updateDeviceRequest.getBrightnessMin());
+					}
+					if (updateDeviceRequest.getBrightnessMax() != null) {
+						device.setBrightnessMax(updateDeviceRequest.getBrightnessMax());
+					}
+					if (updateDeviceRequest.getMoistureCounterMin() != null) {
+						device.setMoistureCounterMin(updateDeviceRequest.getMoistureCounterMin());
+					}
+					if (updateDeviceRequest.getMoistureCounterMax() != null) {
+						device.setMoistureCounterMax(updateDeviceRequest.getMoistureCounterMax());
 					}
 				})
 				.flatMap(deviceRepository::save)

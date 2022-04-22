@@ -16,7 +16,11 @@ export class EditDeviceModalComponent implements OnInit {
     name: new FormControl('', Validators.required),
     latitude: new FormControl(0.0, Validators.required),
     longitude: new FormControl(0.0, Validators.required),
-    qrCodeId: new FormControl(null)
+    qrCodeId: new FormControl(null),
+    brightnessMin: new FormControl(null),
+    brightnessMax: new FormControl(null),
+    moistureCounterMin: new FormControl(null),
+    moistureCounterMax: new FormControl(null)
   });
 
   constructor(private modalRef: BsModalRef, private deviceService: DeviceService) {}
@@ -34,6 +38,18 @@ export class EditDeviceModalComponent implements OnInit {
     this.editDeviceForm.controls['qrCodeId'].setValue(this.device?.qrCodeId, {
       onlySelf: true
     });
+    this.editDeviceForm.controls['brightnessMin'].setValue(this.device?.brightnessMin, {
+      onlySelf: true
+    });
+    this.editDeviceForm.controls['brightnessMax'].setValue(this.device?.brightnessMax, {
+      onlySelf: true
+    });
+    this.editDeviceForm.controls['moistureCounterMin'].setValue(this.device?.moistureCounterMin, {
+      onlySelf: true
+    });
+    this.editDeviceForm.controls['moistureCounterMax'].setValue(this.device?.moistureCounterMax, {
+      onlySelf: true
+    });
   }
 
   onCloseClicked(): void {
@@ -48,7 +64,11 @@ export class EditDeviceModalComponent implements OnInit {
         name: this.editDeviceForm.value['name'],
         latitude: this.editDeviceForm.value['latitude'],
         longitude: this.editDeviceForm.value['longitude'],
-        qrCodeId: this.editDeviceForm.value['qrCodeId']
+        qrCodeId: this.editDeviceForm.value['qrCodeId'],
+        brightnessMin: this.editDeviceForm.value['brightnessMin'],
+        brightnessMax: this.editDeviceForm.value['brightnessMax'],
+        moistureCounterMin: this.editDeviceForm.value['moistureCounterMin'],
+        moistureCounterMax: this.editDeviceForm.value['moistureCounterMax']
       })
       .subscribe({
         next: () => {

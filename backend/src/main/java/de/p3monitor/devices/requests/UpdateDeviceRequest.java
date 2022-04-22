@@ -9,4 +9,8 @@ public class UpdateDeviceRequest
 	private Double latitude;
 	private Double longitude;
 	private Long qrCodeId;
+	private Double brightnessMin;
+	private Double brightnessMax;
+	private Double moistureCounterMin;
+	private Double moistureCounterMax;
 }

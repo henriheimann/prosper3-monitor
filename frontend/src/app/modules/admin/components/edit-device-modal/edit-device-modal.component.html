@@ -26,6 +26,22 @@
       <label for="qrCodeId">QR-Code ID</label>
       <input type="number" class="form-control" id="qrCodeId" formControlName="qrCodeId" pattern="[0-9]" />
     </div>
+    <div class="form-group">
+      <label for="ttnId">Minimaler Helligkeitsstrom</label>
+      <input type="number" class="form-control" id="brightnessMin" formControlName="brightnessMin" />
+    </div>
+    <div class="form-group">
+      <label for="ttnId">Maximaler Helligkeitsstrom</label>
+      <input type="number" class="form-control" id="brightnessMax" formControlName="brightnessMax" />
+    </div>
+    <div class="form-group">
+      <label for="ttnId">Minimaler Moisture Counter</label>
+      <input type="number" class="form-control" id="moistureCounterMin" formControlName="moistureCounterMin" />
+    </div>
+    <div class="form-group">
+      <label for="ttnId">Maximaler Moisture Counter</label>
+      <input type="number" class="form-control" id="moistureCounterMax" formControlName="moistureCounterMax" />
+    </div>
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-primary" [disabled]="editDeviceForm.invalid">Änderungen speichern</button>

@@ -11,4 +11,8 @@ export interface DeviceModel {
   ttnNetworkSessionKey?: string;
   ttnApplicationSessionKey?: string;
   lastContact?: LastContactModel;
+  brightnessMin?: number;
+  brightnessMax?: number;
+  moistureCounterMin?: number;
+  moistureCounterMax?: number;
 }

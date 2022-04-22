@@ -6,7 +6,8 @@ const envConfigFile = `export const environment = {
   production: true,
   backendUrl: '${process.env.P3M_BACKEND_URL}',
   deploymentUrl: '${process.env.P3M_DEPLOYMENT_URL}',
-  tileserverStyleUrl: '${process.env.P3M_TILESERVER_STYLE_URL}'
+  tileserverStyleUrl: '${process.env.P3M_TILESERVER_STYLE_URL}',
+  grafanaUrl: '${process.env.P3M_DEPLOYMENT_URL}/grafana'
 };
 `;
 

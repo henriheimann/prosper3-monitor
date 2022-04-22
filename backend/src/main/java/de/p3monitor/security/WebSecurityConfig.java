@@ -11,6 +11,7 @@ import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
@@ -59,16 +60,20 @@ public class WebSecurityConfig
 	{
 		return http
 				.csrf().disable()
-				.cors().configurationSource(corsConfigurationSource()).and()
+				.cors().configurationSource(corsConfigurationSource())
+				.and().headers().contentSecurityPolicy("frame-ancestors 'self' " + corsProperties.getAllowedOrigin()).and().and()
 				.addFilterAt(authenticationWebFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
 				.authorizeExchange()
 				.pathMatchers("/auth/login").permitAll()
 				.pathMatchers(HttpMethod.GET, "/devices").permitAll()
 				.pathMatchers(HttpMethod.POST, "/measurements/**").permitAll()
 				.pathMatchers(HttpMethod.POST, "/weather/**").permitAll()
+				.pathMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**").permitAll()
 				.pathMatchers(HttpMethod.OPTIONS).permitAll()
 				.anyExchange().authenticated()
 				.and()
+				.httpBasic().disable()
+				.formLogin().disable()
 				.build();
 	}
 }

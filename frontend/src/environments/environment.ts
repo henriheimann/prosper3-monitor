@@ -3,5 +3,6 @@ export const environment = {
   backendUrl: 'http://localhost:8080',
   deploymentUrl: 'http://localhost:4200',
   tileserverStyleUrl: 'http://localhost:8090/styles/my-style/style.json',
-  oauthClientLogin: 'p3m-client-id:p3m-client-secret'
+  oauthClientLogin: 'p3m-client-id:p3m-client-secret',
+  grafanaUrl: 'http://localhost:3000'
 };

@@ -13,7 +13,11 @@ export class CreateDeviceModalComponent {
     name: new FormControl('', Validators.required),
     latitude: new FormControl(0.0, Validators.required),
     longitude: new FormControl(0.0, Validators.required),
-    qrCodeId: new FormControl(null)
+    qrCodeId: new FormControl(null),
+    brightnessMin: new FormControl(null),
+    brightnessMax: new FormControl(null),
+    moistureCounterMin: new FormControl(null),
+    moistureCounterMax: new FormControl(null)
   });
 
   constructor(private modalRef: BsModalRef, private deviceService: DeviceService) {}
@@ -30,7 +34,11 @@ export class CreateDeviceModalComponent {
         name: this.createDeviceForm.value['name'],
         latitude: this.createDeviceForm.value['latitude'],
         longitude: this.createDeviceForm.value['longitude'],
-        qrCodeId: this.createDeviceForm.value['qrCodeId']
+        qrCodeId: this.createDeviceForm.value['qrCodeId'],
+        brightnessMin: this.createDeviceForm.value['brightnessMin'],
+        brightnessMax: this.createDeviceForm.value['brightnessMax'],
+        moistureCounterMin: this.createDeviceForm.value['moistureCounterMin'],
+        moistureCounterMax: this.createDeviceForm.value['moistureCounterMax']
       })
       .subscribe({
         next: () => {

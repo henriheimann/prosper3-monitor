@@ -22,4 +22,12 @@ public class CreateDeviceRequest
 	private Double longitude;
 
 	private Long qrCodeId;
+
+	private Double brightnessMin;
+
+	private Double brightnessMax;
+
+	private Double moistureCounterMin;
+
+	private Double moistureCounterMax;
 }
