@@ -41,6 +41,10 @@ class DeviceServiceTest
 		when(deviceRepositoryMock.save(any())).thenAnswer(i -> {
 			DeviceEntity deviceEntity = i.getArgument(0);
 			deviceEntity.setId(1L);
+			deviceEntity.setBrightnessMin(0.0);
+			deviceEntity.setBrightnessMax(1000000.0);
+			deviceEntity.setMoistureCounterMin(30.0);
+			deviceEntity.setMoistureCounterMax(500.0);
 			return Mono.just(deviceEntity);
 		});
 
@@ -50,15 +54,15 @@ class DeviceServiceTest
 
 		when(influxDbServiceMock.getLatestDeviceValues("dev-id")).thenReturn(Mono.empty());
 
-		Mono<DeviceResponse> response = deviceService.createDevice(new CreateDeviceRequest("name", 10.0, 20.0, 7L));
+		Mono<DeviceResponse> response = deviceService.createDevice(new CreateDeviceRequest("name", 10.0, 20.0, 7L, null, null, null, null));
 
 		StepVerifier.create(response)
-				.expectNext(new DeviceResponse(1L, 7L, "name", "dev-id", null, null, null, 10.0, 20.0, null))
+				.expectNext(new DeviceResponse(1L, 7L, "name", "dev-id", null, null, null, 10.0, 20.0, 0.0, 1000000.0, 30.0, 500.0, null))
 				.expectComplete()
 				.verify();
 
 		verify(deviceRepositoryMock, atLeastOnce()).save(new DeviceEntity(1L, 7L, "name", "dev-id", "dev-address",
-				"app-network-key", "app-session-key", 10.0, 20.0));
+				"app-network-key", "app-session-key", 10.0, 20.0, 0.0, 1000000.0, 30.0, 500.0));
 	}
 
 	@Test
@@ -73,7 +77,7 @@ class DeviceServiceTest
 		Exception exception = new RuntimeException("Any error");
 		when(ttnServiceMock.createEndDevice()).thenReturn(Mono.error(exception));
 
-		Mono<DeviceResponse> response = deviceService.createDevice(new CreateDeviceRequest("name", 10.0, 20.0, 7L));
+		Mono<DeviceResponse> response = deviceService.createDevice(new CreateDeviceRequest("name", 10.0, 20.0, 7L, null, null, null, null));
 
 		StepVerifier.create(response)
 				.expectError(RuntimeException.class)

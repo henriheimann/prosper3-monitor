@@ -3,14 +3,11 @@ package de.p3monitor.devices;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.jayway.jsonpath.JsonPath;
+import de.p3monitor.testhelper.AbstractIntegrationTest;
 import de.p3monitor.testhelper.mocks.ttn.mqtt.MockTtnMqttTestHelper;
 import de.p3monitor.testhelper.mocks.ttn.mqtt.UplinkMessage;
-import de.p3monitor.testhelper.AbstractIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import reactor.core.publisher.Flux;
-import reactor.test.StepVerifier;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -36,7 +33,11 @@ class DeviceControllerIntegrationTest extends AbstractIntegrationTest
 					"name": "device_name",
 					"latitude": 40.23,
 					"longitude": 12.43,
-					"qrCodeId": 10
+					"qrCodeId": 10,
+					"brightnessMin": 0.0,
+					"brightnessMax": 1000000.0,
+					"moistureCounterMin": 30.0,
+					"moistureCounterMax": 500.0
 				}
 				""")
 				.expectStatus().isOk()
@@ -46,8 +47,13 @@ class DeviceControllerIntegrationTest extends AbstractIntegrationTest
 				.jsonPath("$.name").isEqualTo("device_name")
 				.jsonPath("$.ttnId").isEqualTo("ttn-device-id-123")
 				.jsonPath("$.latitude").isEqualTo(40.23)
-				.jsonPath("$.longitude").isEqualTo(12.43);
+				.jsonPath("$.longitude").isEqualTo(12.43)
+				.jsonPath("$.brightnessMin").isEqualTo(0.0)
+				.jsonPath("$.brightnessMax").isEqualTo(1000000.0)
+				.jsonPath("$.moistureCounterMin").isEqualTo(30.0)
+				.jsonPath("$.moistureCounterMax").isEqualTo(500.0);
 	}
+
 
 	@Test
 	public void createDevice_returnsInternalServerError_ifAnyTtnRequestFails()
@@ -65,7 +71,11 @@ class DeviceControllerIntegrationTest extends AbstractIntegrationTest
 					"name": "device_name",
 					"latitude": 40.23,
 					"longitude": 12.43,
-					"qrCodeId": 10
+					"qrCodeId": 10,
+					"brightnessMin": 0.0,
+					"brightnessMax": 1000000.0,
+					"moistureCounterMin": 30.0,
+					"moistureCounterMax": 500.0
 				}
 				""")
 				.expectStatus().is5xxServerError();
@@ -84,7 +94,11 @@ class DeviceControllerIntegrationTest extends AbstractIntegrationTest
 					"name": "device_name",
 					"latitude": 40.23,
 					"longitude": 12.43,
-					"qrCodeId": 10
+					"qrCodeId": 10,
+					"brightnessMin": 0.0,
+					"brightnessMax": 1000000.0,
+					"moistureCounterMin": 30.0,
+					"moistureCounterMax": 500.0
 				}
 				""")
 				.expectStatus().isOk()
@@ -122,7 +136,11 @@ class DeviceControllerIntegrationTest extends AbstractIntegrationTest
 					"name": "device_name",
 					"latitude": 40.23,
 					"longitude": 12.43,
-					"qrCodeId": 10
+					"qrCodeId": 10,
+					"brightnessMin": 0.0,
+					"brightnessMax": 1000000.0,
+					"moistureCounterMin": 30.0,
+					"moistureCounterMax": 500.0
 				}
 				""")
 				.expectStatus().isOk()
@@ -156,7 +174,7 @@ class DeviceControllerIntegrationTest extends AbstractIntegrationTest
 				.jsonPath("$.lastContact.deviceValues.tmp").isEqualTo(20.0)
 				.jsonPath("$.lastContact.deviceValues.hum").isEqualTo(51.0)
 				.jsonPath("$.lastContact.deviceValues.irt").isEqualTo(22.0)
-				.jsonPath("$.lastContact.deviceValues.bgh").isEqualTo(1);
+				.jsonPath("$.lastContact.deviceValues.bgh").isEqualTo(0);
 	}
 
 	/*@Test
