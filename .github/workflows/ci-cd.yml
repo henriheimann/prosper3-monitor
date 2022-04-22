@@ -59,6 +59,20 @@ jobs:
         with:
           working-directory: e2e
 
+      - name: Upload cypress screenshots
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: e2e/cypress/screenshots
+
+      - name: Upload cypress videos
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-videos
+          path: e2e/cypress/videos
+
   deploy:
     runs-on: ubuntu-latest
 

@@ -7,7 +7,7 @@ describe("TTN Sync", () => {
     cy.getInputByLabel('Nutzername').type('admin');
     cy.getInputByLabel('Passwort').type('password');
     cy.get('form').submit();
-    cy.wait(500);
+    cy.wait(1000);
 
     // Navigate to Administration area
     cy.get('.nav-item > .btn').first().get('button').first().click();
@@ -16,9 +16,8 @@ describe("TTN Sync", () => {
     // Perform TTN Sync
     cy.contains('TTN Sync').click();
     cy.contains('Bist du sicher, dass du eine Synchronisation mit dem The Things Network durchführen möchtest?');
-    cy.wait(500);
     cy.contains('Synchronisieren').click();
-    cy.wait(500);
+    cy.wait(1000);
 
     // Check the imported device exists
     cy.contains('eui-70b3d57ed004fb7f');
