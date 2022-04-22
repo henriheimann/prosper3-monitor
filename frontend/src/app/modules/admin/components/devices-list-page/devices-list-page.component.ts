@@ -74,7 +74,7 @@ export class DevicesListPageComponent {
         },
         titleText: 'TTN Synchronisation',
         bodyText: `Bist du sicher, dass du eine Synchronisation mit dem The Things Network durchführen möchtest?`,
-        confirmButtonText: 'Synchonisieren',
+        confirmButtonText: 'Synchronisieren',
         abortButtonText: 'Abbrechen'
       }
     });
