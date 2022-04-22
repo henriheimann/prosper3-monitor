@@ -7,7 +7,7 @@ import { MeasurementTimespanModel } from '../../../sensor-maps/models/measuremen
   styleUrls: ['./climate-widget.component.sass']
 })
 export class ClimateWidgetComponent {
-  measurementTimespanModel = MeasurementTimespanModel;
+  measurementTimespanModels = [MeasurementTimespanModel.LAST_DAY, MeasurementTimespanModel.LAST_WEEK, MeasurementTimespanModel.LAST_MONTH, MeasurementTimespanModel.LAST_YEAR];
   selectedMeasurementTimespan = MeasurementTimespanModel.LAST_DAY;
 
   onTimespanSelected(value: MeasurementTimespanModel) {

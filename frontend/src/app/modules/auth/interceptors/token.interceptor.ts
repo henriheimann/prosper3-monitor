@@ -5,12 +5,13 @@ import { selectToken } from '../store/auth.selectors';
 import { Store } from '@ngrx/store';
 import { catchError } from 'rxjs/operators';
 import { requestUnauthorized } from '../store/auth.actions';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
   private token$ = new BehaviorSubject<string | null>(null);
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private router: Router) {
     this.store.select(selectToken).subscribe(this.token$);
   }
 
@@ -34,10 +35,9 @@ export class TokenInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error) => {
-        console.log(error);
         if (error.status === 401) {
-          console.log('401');
           this.store.dispatch(requestUnauthorized());
+          this.router.navigate(['/']).then();
         }
         return throwError(error);
       })

@@ -1,4 +1,4 @@
-<table class="table mb-2">
+<table class="table mb-2" *ngIf="devicesWithValues$ | async; else loading">
   <thead>
     <tr>
       <th scope="col" class="border-0">Ø Prosper III</th>
@@ -39,6 +39,13 @@
     </tr>
   </tbody>
 </table>
+<ng-template #loading>
+  <div class="d-flex justify-content-center pt-4 pb-4">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Lade...</span>
+    </div>
+  </div>
+</ng-template>
 <p3m-sensor-map
   [devicesWithValues]="devicesWithValues$ | async"
   [selectedMeasurementType]="measurementType.TEMPERATURE"

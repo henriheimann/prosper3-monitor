@@ -50,9 +50,11 @@ jobs:
         working-directory: ./deployment/p3m-local-e2e
         run: ./deploy-local-e2e.sh
 
-      - name: Sleep for 120 seconds
-        run: sleep 120s
-        shell: bash
+      - name: Sleep for 30 seconds
+        run: sleep 30s
+
+      - name: Print logs
+        run: docker logs p3m-backend
 
       - name: Execute End to End Tests
         uses: cypress-io/github-action@v2

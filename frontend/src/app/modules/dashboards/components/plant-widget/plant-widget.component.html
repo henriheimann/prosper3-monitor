@@ -1,10 +1,10 @@
 <ul class="nav nav-tabs">
-  <li *ngFor="let timespan of measurementTimespanModel | keyvalue" class="nav-item">
+  <li *ngFor="let timespan of measurementTimespanModels" class="nav-item">
     <a
       class="nav-link"
-      [class.active]="timespan.value === selectedMeasurementTimespan"
-      (click)="onTimespanSelected(timespan.value)"
-      >{{ timespan.value }}</a
+      [class.active]="timespan === selectedMeasurementTimespan"
+      (click)="onTimespanSelected(timespan)"
+      >{{ timespan }}</a
     >
   </li>
 </ul>

@@ -48,7 +48,7 @@
         <span class="pl-2">Zur Dokumentation...</span>
       </button>
     </div>
-    <div class="row mt-3 mb-3 p-3 bg-white rounded-lg shadow-sm d-flex d-flex-column justify-content-end">
+    <div *ngIf="isUserAdmin$ | async" class="row mt-3 mb-3 p-3 bg-white rounded-lg shadow-sm d-flex d-flex-column justify-content-end">
       <div class="w-100 mb-3 d-flex flex-row align-items-center">
         <img class="mr-2" srcset="assets/images/logo-admin.png 5x" alt="Klimamonitor" />
         <span> Neue Sensoren und Nutzer können im Administrationsbereich erstellt und verwaltet werden. </span>

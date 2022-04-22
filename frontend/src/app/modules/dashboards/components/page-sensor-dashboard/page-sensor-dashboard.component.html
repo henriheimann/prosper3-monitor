@@ -32,7 +32,7 @@
   <span>Ich bin ein Bewässerungssensor und überwache die Pflanze in diesem Hochbeet. </span>
   <span *ngIf="numberOfPlantsRequiringIrrigation !== undefined">
     <span>
-      Aktuell müssen auf dem roten Platz
+      Aktuell {{ numberOfPlantsRequiringIrrigation === 1 ? "müssen" : "muss" }} auf dem roten Platz
       {{ numberOfPlantsRequiringIrrigation === 0 ? "keine" : numberOfPlantsRequiringIrrigation }} Beet{{
         numberOfPlantsRequiringIrrigation === 1 ? "" : "e"
       }}
@@ -100,7 +100,7 @@
 <ng-template #climateSensorBlock2>
   <span *ngIf="numberOfPlantsRequiringIrrigation !== undefined">
     <span>
-      Aktuell müssen auf dem roten Platz
+      Aktuell {{ numberOfPlantsRequiringIrrigation === 1 ? "müssen" : "muss" }} auf dem roten Platz
       {{ numberOfPlantsRequiringIrrigation === 0 ? "keine" : numberOfPlantsRequiringIrrigation }} Beet{{
         numberOfPlantsRequiringIrrigation === 1 ? "" : "e"
       }}
